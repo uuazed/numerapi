@@ -10,12 +10,14 @@ This API provides access to the unofficial numer.ai API. The interface is progra
 #### Parameters
 * `dest_path`: Optional parameter. Destination folder for the dataset. Default: currrent working directory.
 * `unzip`: Optional parameter. Decide if you wish to unzip the downloaded training data. Default: True
+
 #### Return values
 * `status_code`: Status code of the requests operation.
 
 ### `upload_prediction`
 #### Parameters
 * `file_path`: Path to the prediction. It should already contain the file name ('path/to/file/prediction.csv')
+
 #### Return values
 * `status_code`: Status code of the requests operation.
 
@@ -26,6 +28,7 @@ This API provides access to the unofficial numer.ai API. The interface is progra
 ### `authorize`
 #### Parameters
 * `file_path`: Path to the prediction. It should already contain the file name ('path/to/file/prediction.csv')
+
 #### Return values
 * `array-like`: Tuple of size four containing the `filename`, `signedRequest`, `headers`, and the status code of the requests operation. If it fails all values except the status code will be `None`.
 
