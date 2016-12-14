@@ -23,6 +23,27 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 #### Return values
 * `status_code`: Status code of the requests operation.
 
+### `get_user`
+### Parameters
+* `username`: Name of the user you want to request.
+
+### Return values
+* `array-like`: Tuple of size five containing the `username`, `logloss`, `rank`, `carerr earnings` and the status code of the requests operation. If it fails all values except the status code will be `None`.
+
+### `get_scores`
+### Parameters
+* `username`: Name of the user you want to request.
+
+### Return values
+* `array-like`: Tuple of size 2 containing a `numpy.ndarray` containing the scores of all uploaded predictions with the newest first and the status code of the requests operation. If it fails all values except the status code will be `None`.
+
+### `get_earnings_per_round`
+### Parameters
+* `username`: Name of the user you want to request.
+
+### Return values
+* `array-like`: Tuple of size 2 containing a `numpy.ndarray` containing the earnings of each round with the oldest first and the status code of the requests operation. If it fails all values except the status code will be `None`.
+
 ### `login`
 #### Return values
 * `array-like`: Tuple of size four containing the `accessToken`, `refreshToken`, `id`, and the status code of the requests operation. If it fails all values except the status code will be `None`.
@@ -45,4 +66,7 @@ import numerapi
 napi = numerapi.NumerAPI('email', 'password')
 napi.download_current_dataset(dest_path='.', unzip=True)
 napi.upload_prediction('path/to/prediction.csv')
+napi.get_user('username')
+napi.get_scores('username')
+napi.get_earnings_per_round('username')
 ```
