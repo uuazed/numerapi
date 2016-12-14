@@ -2,6 +2,7 @@
 import requests
 import zipfile
 from datetime import datetime, timedelta
+import numpy as np
 
 class NumerAPI(object):
     def __init__(self, email, password):
@@ -9,6 +10,7 @@ class NumerAPI(object):
         self._auth_url = 'https://api.numer.ai/upload/auth'
         self._dataset_url = 'https://api.numer.ai/competitions/current/dataset'
         self._submissions_url = 'https://api.numer.ai/submissions'
+        self._users_url = 'https://api.numer.ai/users'
         self._payload = {'email':email, 'password':password}
 
 
@@ -30,6 +32,60 @@ class NumerAPI(object):
             with zipfile.ZipFile(dest_file_path, "r") as z:
                 z.extractall(dest_path)
         return r.status_code
+
+
+    def get_leaderboard(self):
+        now = datetime.now()
+        tdelta = timedelta(microseconds=55296e5)
+        dt = now - tdelta
+        dt_str = dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+        url = 'https://api.numer.ai/competitions?{ leaderboard :'
+        url += ' current , end_date :{ $gt : %s }}'
+        r = requests.get((url % (dt_str)).replace(' ', '%22'))
+        if r.status_code!=200:
+            return (None, r.status_code)
+        return (r.json(), r.status_code)
+
+
+
+    def get_earnings_per_round(self, username):
+        r = requests.get('{0}/{1}'.format(self._users_url, username))
+        if r.status_code!=200:
+            return (None, r.status_code)
+
+        rj = r.json()
+        rewards = rj['rewards']
+        earnings = np.zeros(len(rewards))
+        for i in range(len(rewards)):
+            earnings[i] = rewards[i]['amount']
+        return (earnings, r.status_code)
+
+
+
+    def get_scores(self, username):
+        r = requests.get('{0}/{1}'.format(self._users_url, username))
+        if r.status_code!=200:
+            return (None, r.status_code)
+
+        rj = r.json()
+        results = rj['submissions']['results']
+        scores = np.zeros(len(results))
+        for i in range(len(results)):
+            scores[i] = results[i]['accuracy_score']
+        return (scores, r.status_code)
+
+
+
+    def get_user(self, username):
+        leaderboard, status_code = self.get_leaderboard()
+        if status_code!=200:
+            return (None, None, None, None, status_code)
+
+        for user in leaderboard[0]['leaderboard']:
+            if user['username']==username:
+                return (user['username'], np.float(user['logloss']['public']),  user['rank']['public'],  user['earned'], status_code)
+        return (None, None, None, None, status_code)
 
 
 
@@ -63,22 +119,15 @@ class NumerAPI(object):
 
     def get_current_competition(self):
         now = datetime.now()
-        tdelta = timedelta(microseconds=55296e5)
-        dt = now - tdelta
-        dt_str = dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        leaderboard, status_code = self.get_leaderboard()
+        if status_code!=200:
+            return (None, None, None, None, status_code)
 
-        url = 'https://api.numer.ai/competitions?{ leaderboard :'
-        url += ' current , end_date :{ $gt : %s }}'
-        r = requests.get((url % (dt_str)).replace(' ', '%22'))
-        if r.status_code!=200:
-            return (None, None, r.status_code)
-
-        rj = r.json()
-        for c in rj:
+        for c in leaderboard:
             start_date = datetime.strptime(c['start_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
             end_date = datetime.strptime(c['end_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
             if start_date < now < end_date:
-                return (c['dataset_id'], c['_id'], r.status_code)
+                return (c['dataset_id'], c['_id'], status_code)
 
 
 
