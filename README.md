@@ -1,7 +1,9 @@
 # NumerAPI
 automatically download and upload data for the numer.ai machine learning competition
 
-This API provides access to the unofficial numer.ai API. The interface is programmed in Python and allows to simply download the training data and upload the predictions. Some parts of the code were taken from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch. Visit his [wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), if you need further information on the reverse engineering process.
+This API provides access to the unofficial numer.ai API. The interface is programmed in Python and allows to simply download the training data, upload predictions and access some user information. Some parts of the code were taken from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch. Visit his [wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), if you need further information on the reverse engineering process.
+
+If you encounter a problem or have suggestions, feel free to open an issue.
 
 * Requirements: Python 2.7
 
