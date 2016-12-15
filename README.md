@@ -5,7 +5,9 @@ This API provides access to the unofficial numer.ai API. The interface is progra
 
 If you encounter a problem or have suggestions, feel free to open an issue.
 
-* Requirements: Python 2.7
+Requirements: 
+* Python 2.7
+* numpy
 
 # Documentation
 ### `download_current_dataset`
@@ -24,7 +26,7 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 * `status_code`: Status code of the requests operation.
 
 #### Notes
-Uploading a prediction shortly before a new dataset is released may result in a 400 Bad Request. If this happen just wait for the new dataset and upload new predictions then.
+Uploading a prediction shortly before a new dataset is released may result in a <400 Bad Request>. If this happen just wait for the new dataset and upload new predictions then.
 
 ### `get_user`
 ### Parameters
