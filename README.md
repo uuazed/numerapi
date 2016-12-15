@@ -23,6 +23,9 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 #### Return values
 * `status_code`: Status code of the requests operation.
 
+#### Notes
+Uploading a prediction shortly before a new dataset is released may result in a 400 Bad Request. If this happen just wait for the new dataset and upload new predictions then.
+
 ### `get_user`
 ### Parameters
 * `username`: Name of the user you want to request.
