@@ -26,7 +26,8 @@ Requirements:
 * `status_code`: Status code of the requests operation.
 
 #### Notes
-Uploading a prediction shortly before a new dataset is released may result in a <400 Bad Request>. If this happen just wait for the new dataset and upload new predictions then.
+* Uploading a prediction shortly before a new dataset is released may result in a <400 Bad Request>. If this happen just wait for the new dataset and upload new predictions then.
+* Uploading too many predictions in a certain amount of time will result in a <429 Too Many Requests>.
 
 ### `get_user`
 ### Parameters
