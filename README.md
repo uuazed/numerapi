@@ -6,10 +6,7 @@ This API provides access to the Numerai API. The interface is programmed in Pyth
 If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Installation
-Clone this repository, then `cd` into this repository's directory.  Then:
-```
-pip install -e .
-```
+Clone this repository, then `cd` into this repository's directory.  Then `pip install -e .`
 
 # Usage
 ```
