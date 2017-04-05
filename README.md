@@ -30,6 +30,7 @@ See the example.py.  You can run it as `./example.py`
 #### Notes
 * Uploading a prediction shortly before a new dataset is released may result in a <400 Bad Request>. If this happens, just wait for the new dataset and upload new predictions then.
 * Uploading too many predictions in a certain amount of time will result in a <429 Too Many Requests>.
+* Uploading predictions to an account that has 2FA (Two Factor Authentication) enabled is not currently supported
 
 ### `get_user`
 ### Parameters
