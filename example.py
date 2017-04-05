@@ -14,7 +14,6 @@ print(napi.get_user(username))
 print(napi.get_scores(username))
 print(napi.get_earnings_per_round(username))
 
-
 # Uploading predicitons to your account require your credentials:
 # napi.credentials = ("YOUR_EMAIL", "YOUR_PASSWORD")
 # napi.upload_prediction('./numerai_datasets/example_predictions.csv')
