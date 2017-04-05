@@ -9,16 +9,7 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 Clone this repository, then `cd` into this repository's directory.  Then `pip install -e .`
 
 # Usage
-```
-import numerapi
-
-napi = numerapi.NumerAPI('email', 'password')
-napi.download_current_dataset(dest_path='.', unzip=True)
-napi.upload_prediction('path/to/prediction.csv')
-napi.get_user('username')
-napi.get_scores('username')
-napi.get_earnings_per_round('username')
-```
+See the example.py.  You can run it as `./example.py`
 
 # Documentation
 ### `download_current_dataset`
