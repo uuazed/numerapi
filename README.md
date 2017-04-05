@@ -67,3 +67,10 @@ See the example.py.  You can run it as `./example.py`
 ### `get_current_competition`
 #### Return values
 * `array-like`: Tuple of size three containing the `dataset_id`, `_id` and the status code of the requests operation. If it fails all values except the status code will be `None`.
+
+### `get_new_leaderboard`
+#### Return Values
+* `list`: A list of every user that has submitted in this round of the competition, including statistics like how much USD and NMR were earned by that user in that round.
+
+#### Notes
+* Each round of the competition is numbered.  The first competition is 1.  Specify a round of the competition to get leaderboard information for that round, or leave off the round of the competition to get the current round of the competition.

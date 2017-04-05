@@ -10,11 +10,16 @@ import numpy as np
 
 class NumerAPI(object):
     def __init__(self):
-        self._login_url = 'https://api.numer.ai/sessions'
-        self._auth_url = 'https://api.numer.ai/upload/auth'
-        self._dataset_url = 'https://api.numer.ai/competitions/current/dataset'
-        self._submissions_url = 'https://api.numer.ai/submissions'
-        self._users_url = 'https://api.numer.ai/users'
+        api_url = "https://api.numer.ai"
+        new_api_url = "https://api-hs.numer.ai"
+        self._login_url = api_url + '/sessions'
+        self._auth_url = api_url + '/upload/auth'
+        self._dataset_url = api_url + '/competitions/current/dataset'
+        self._submissions_url = api_url + '/submissions'
+        self._users_url = api_url + '/users'
+        self.leaderboard_url = api_url + '/competitions'
+        self.new_leaderboard_url = new_api_url + '/leaderboard'
+        self.new_current_leaderboard_url = new_api_url + '/currentLeaderboard'
 
     @property
     def credentials(self):
@@ -45,13 +50,21 @@ class NumerAPI(object):
         return r.status_code
 
 
+    def get_new_leaderboard(self, n=None):
+        if n is None:
+            url = self.new_current_leaderboard_url
+        else:
+            url = self.new_leaderboard_url + "?round={}".format(n)
+        r = requests.get(url)
+        return (r.json(), r.status_code)
+
     def get_leaderboard(self):
         now = datetime.now()
         tdelta = timedelta(microseconds=55296e5)
         dt = now - tdelta
         dt_str = dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
-        url = 'https://api.numer.ai/competitions?{ leaderboard :'
+        url = self.leaderboard_url + '?{ leaderboard :'
         url += ' current , end_date :{ $gt : %s }}'
         r = requests.get((url % (dt_str)).replace(' ', '%22'))
         if r.status_code != 200:
