@@ -1,12 +1,12 @@
 # Numerai Python API
-Automatically download and upload data for the numer.ai machine learning competition
+Automatically download and upload data for the Numerai machine learning competition
 
-This API provides access to the Numerai API. The interface is programmed in Python and allows downloading the training data, uploading predictions, and accessing some user information. Some parts of the code were taken from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch. Visit his [wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), if you need further information on the reverse engineering process.
+This library is a client to the Numerai API. The interface is programmed in Python and allows downloading the training data, uploading predictions, and accessing some user information. Some parts of the code were taken from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch. Visit his [wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), if you need further information on the reverse engineering process.
 
 If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Installation
-Clone this repository, then `cd` into this repository's directory.  Then `pip install -e .`
+This library supports both Python 2 and 3.  Clone this repository, then `cd` into this repository's directory.  Then `pip install -e .`
 
 # Usage
 See the example.py.  You can run it as `./example.py`

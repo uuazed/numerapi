@@ -31,13 +31,13 @@ class NumerAPI(object):
         file_name = 'numerai_dataset_{0}.zip'.format(now)
         dest_file_path = '{0}/{1}'.format(dest_path, file_name)
 
-        r = requests.get(self._dataset_url)
+        r = requests.get(self._dataset_url, stream=True)
         if r.status_code != 200:
             return r.status_code
 
-        with open(dest_file_path, "wb") as fp:
-            for byte in r.content:
-                fp.write(byte)
+        with open(dest_file_path, 'wb') as f:
+            for chunk in r.iter_content(1024):
+                f.write(chunk)
 
         if unzip:
             with zipfile.ZipFile(dest_file_path, "r") as z:
