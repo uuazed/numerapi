@@ -1,13 +1,15 @@
-# NumerAPI
-automatically download and upload data for the numer.ai machine learning competition
+# Numerai Python API
+Automatically download and upload data for the Numerai machine learning competition
 
-This API provides access to the unofficial numer.ai API. The interface is programmed in Python and allows to simply download the training data, upload predictions and access some user information. Some parts of the code were taken from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch. Visit his [wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), if you need further information on the reverse engineering process.
+This library is a client to the Numerai API. The interface is programmed in Python and allows downloading the training data, uploading predictions, and accessing some user information. Some parts of the code were taken from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch. Visit his [wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), if you need further information on the reverse engineering process.
 
 If you encounter a problem or have suggestions, feel free to open an issue.
 
-Requirements: 
-* Python 2.7
-* numpy
+# Installation
+This library supports both Python 2 and 3.  Clone this repository, then `cd` into this repository's directory.  Then `pip install -e .`
+
+# Usage
+See the example.py.  You can run it as `./example.py`
 
 # Documentation
 ### `download_current_dataset`
@@ -26,8 +28,9 @@ Requirements:
 * `status_code`: Status code of the requests operation.
 
 #### Notes
-* Uploading a prediction shortly before a new dataset is released may result in a <400 Bad Request>. If this happen just wait for the new dataset and upload new predictions then.
+* Uploading a prediction shortly before a new dataset is released may result in a <400 Bad Request>. If this happens, just wait for the new dataset and upload new predictions then.
 * Uploading too many predictions in a certain amount of time will result in a <429 Too Many Requests>.
+* Uploading predictions to an account that has 2FA (Two Factor Authentication) enabled is not currently supported
 
 ### `get_user`
 ### Parameters
@@ -65,14 +68,9 @@ Requirements:
 #### Return values
 * `array-like`: Tuple of size three containing the `dataset_id`, `_id` and the status code of the requests operation. If it fails all values except the status code will be `None`.
 
-# Usage
-```
-import numerapi
+### `get_new_leaderboard`
+#### Return Values
+* `list`: A list of every user that has submitted in this round of the competition, including statistics like how much USD and NMR were earned by that user in that round.
 
-napi = numerapi.NumerAPI('email', 'password')
-napi.download_current_dataset(dest_path='.', unzip=True)
-napi.upload_prediction('path/to/prediction.csv')
-napi.get_user('username')
-napi.get_scores('username')
-napi.get_earnings_per_round('username')
-```
+#### Notes
+* Each round of the competition is numbered.  The first competition is 1.  Specify a round of the competition to get leaderboard information for that round, or leave off the round of the competition to get the current round of the competition.
