@@ -101,12 +101,20 @@ class NumerAPI(object):
     def get_user(self, username):
         leaderboard, status_code = self.get_leaderboard()
         if status_code != 200:
-            return (None, None, None, None, status_code)
+            return (None, None, None, None, None, None, None, None, status_code)
 
         for user in leaderboard[0]['leaderboard']:
             if user['username'] == username:
-                return (user['username'], np.float(user['logloss']['public']), user['rank']['public'], user['earned'], status_code)
-        return (None, None, None, None, status_code)
+                uname = user['username']
+                sid = user['submission_id']
+                val_logloss = np.float(user['logloss']['validation'])
+                val_consistency = np.float(user['logloss']['consistency'])
+                career_usd = np.float(user['earnings']['career']['usd'])
+                career_nmr = np.float(user['earnings']['career']['nmr'])
+                concordant = user['concordant']
+                original = user['original']
+                return (uname, sid, val_logloss, val_consistency, original, concordant, career_usd, career_nmr, status_code)
+        return (None, None, None, None, None, None, None, None, status_code)
 
 
     def login(self):

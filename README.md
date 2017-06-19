@@ -37,7 +37,7 @@ See the example.py.  You can run it as `./example.py`
 * `username`: Name of the user you want to request.
 
 ### Return values
-* `array-like`: Tuple of size five containing the `username`, `logloss`, `rank`, `carerr earnings` and the status code of the requests operation. If it fails all values except the status code will be `None`.
+* `array-like`: Tuple of size nine containing the `username`, `submission_id`, `validation_logloss`, `validation_consistency`, `originality`, `concordance`, `career_usd`, `career_nmr` and the status code of the requests operation. If it fails all values except the status code will be `None`.
 
 ### `get_scores`
 ### Parameters
