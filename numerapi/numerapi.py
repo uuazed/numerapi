@@ -91,6 +91,7 @@ class NumerAPI(object):
             return (None, r.status_code)
 
         rj = r.json()
+        print rj
         results = rj['submissions']['results']
         scores = np.zeros(len(results))
         for i in range(len(results)):
@@ -109,8 +110,8 @@ class NumerAPI(object):
                 sid = user['submission_id']
                 val_logloss = np.float(user['logloss']['validation'])
                 val_consistency = np.float(user['logloss']['consistency'])
-                career_usd = np.float(user['earnings']['career']['usd'])
-                career_nmr = np.float(user['earnings']['career']['nmr'])
+                career_usd = np.float(user['earnings']['career']['usd'].replace(',',''))
+                career_nmr = np.float(user['earnings']['career']['nmr'].replace(',',''))
                 concordant = user['concordant']
                 original = user['original']
                 return (uname, sid, val_logloss, val_consistency, original, concordant, career_usd, career_nmr, status_code)
