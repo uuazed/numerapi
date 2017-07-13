@@ -91,7 +91,6 @@ class NumerAPI(object):
             return (None, r.status_code)
 
         rj = r.json()
-        print rj
         results = rj['submissions']['results']
         scores = np.zeros(len(results))
         for i in range(len(results)):
