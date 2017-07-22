@@ -82,9 +82,11 @@ class NumerAPI(object):
         rj = r.json()
         rewards = rj['rewards']
         earnings = np.zeros(len(rewards))
+        _id = np.zeros(len(rewards))
         for i in range(len(rewards)):
             earnings[i] = rewards[i]['amount']
-        return (earnings, r.status_code)
+            _id[i] = rewards[i]['_id']
+        return (earnings, _id, r.status_code)
 
 
     def get_scores(self, username):
