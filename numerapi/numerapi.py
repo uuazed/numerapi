@@ -58,15 +58,17 @@ class NumerAPI(object):
         r = requests.get(url)
         return (r.json(), r.status_code)
 
-    def get_leaderboard(self):
+    def get_leaderboard(self, round_id=None):
         now = datetime.now()
         tdelta = timedelta(microseconds=55296e5)
         dt = now - tdelta
         dt_str = dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
         url = self.leaderboard_url + '?{ leaderboard :'
-        url += ' current , end_date :{ $gt : %s }}'
-        r = requests.get((url % (dt_str)).replace(' ', '%22'))
+        url += ' current , end_date :{ $gt : ' + dt_str + ' }}'
+        if round_id is not None:
+            url = self.leaderboard_url + '/id?{ id :' + str(round_id) + '}'
+        r = requests.get((url).replace(' ', '%22'))
         if r.status_code != 200:
             return (None, r.status_code)
         return (r.json(), r.status_code)
