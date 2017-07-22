@@ -12,14 +12,14 @@ napi.download_current_dataset(dest_path='.', unzip=True)
 username = 'xanderai'
 print("Getting information about user {}...".format(username))
 print(napi.get_user(username))
-print(napi.get_scores(username))
+#print(napi.get_scores(username)) #users api no longer reports scores
 print(napi.get_earnings_per_round(username))
 
 # Get the leaderboard for the current round of the competition
-print(napi.get_new_leaderboard())
+print(napi.get_leaderboard())
 
 # Get the leaderboard for previous rounds of the competition
-print(napi.get_new_leaderboard(40))
+print(napi.get_leaderboard(64))
 
 # Uploading predicitons to your account require your credentials:
 # napi.credentials = ("YOUR_EMAIL", "YOUR_PASSWORD")
