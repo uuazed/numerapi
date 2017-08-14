@@ -314,7 +314,7 @@ class NumerAPI(object):
                                       leaderboard))
 
             # append scores if any exist for round i
-            if len(submissions) > 0:
+            if submissions:
                 logloss = submissions[0]["logloss"]
                 validation_scores.append(logloss["validation"])
                 consistency_scores.append(logloss["consistency"])
