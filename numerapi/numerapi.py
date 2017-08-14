@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
 
+# System
 import zipfile
 import json
 import os
 from datetime import datetime, timedelta
 import getpass
 import errno
-import requests
-import sys
 import logging
-l = logging.getLogger(__name__)
 
+# Third Party
+import requests
 import numpy as np
+
 
 class NumerAPI(object):
 
-    """Wrapper around the NumerAI API"""
+    """Wrapper around the Numerai API"""
 
     def __init__(self, verbosity="INFO"):
         """
-        initialize NumerAI API wrapper for Python
+        initialize Numerai API wrapper for Python
 
         verbosity: indicates what level of messages should be displayed
             valid values: "debug", "info", "warning", "error", "critical"
         """
+        self.logger = logging.getLogger(__name__)
 
         # set up logging
         numeric_log_level = getattr(logging, verbosity.upper())
@@ -32,9 +34,9 @@ class NumerAPI(object):
         log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
         self._date_format = "%Y-%m-%dT%H:%M:%S"
         logging.basicConfig(format=log_format, level=numeric_log_level,
-            datefmt=self._date_format)
+                            datefmt=self._date_format)
 
-        # NumerAI API base URL
+        # Numerai API base URL
         self.api_base_url = "https://api.numer.ai"
 
         # first round to check for scores
@@ -43,14 +45,17 @@ class NumerAPI(object):
         # error indicating user is not logged in
         not_logged_in_msg = "username not specified and not logged in"
         self._not_logged_in_error = ValueError(not_logged_in_msg)
+        self._username = None
+        self._access_token = None
+        self.url_paths = None
 
     def __get_url(self, url_path_name, query_params=None):
-        """get url with query params for NumerAI API"""
+        """get url with query params for Numerai API"""
 
         # mappings of URL path names to URL paths
         self.url_paths = {
             "login": "/sessions",
-            "auth": "/submission_authorizations", 
+            "auth": "/submission_authorizations",
             "dataset": "/competitions/current/dataset",
             "submissions": "/submissions",
             "users": "/users",
@@ -60,23 +65,23 @@ class NumerAPI(object):
         }
 
         # set query params based on type
-        if query_params == None:
+        if query_params is None:
             query_params_str = ""
         elif isinstance(query_params, dict):
             query_params_str = "?" + json.dumps(query_params)
         elif isinstance(query_params, str):
             query_params_str = "?" + query_params
         else:
-            l.warning("invalid query params")
+            self.logger.warning("invalid query params")
             query_params = ""
 
-        return (self.api_base_url
-                + self.url_paths[url_path_name]
-                + query_params_str)
+        return (self.api_base_url +
+                self.url_paths[url_path_name] +
+                query_params_str)
 
     def __get_username(self, username):
         """set username if logged in and not specified"""
-        if username == None:
+        if username is None:
             if hasattr(self, "_username"):
                 username = self._username
             else:
@@ -86,7 +91,7 @@ class NumerAPI(object):
 
     def __unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
-        l.info("unzipping file...")
+        self.logger.info("unzipping file...")
 
         # construct full path (including file name) for unzipping
         unzip_path = "{0}/{1}".format(dest_path, filename)
@@ -106,11 +111,11 @@ class NumerAPI(object):
 
     def __authorize_file_upload(self, file_path):
         """authorize file upload"""
-        l.info("authorizing file upload...")
+        self.logger.info("authorizing file upload...")
 
         # user must be logged in in order to upload files
         if not hasattr(self, "_access_token"):
-            l.error("you must log in first")
+            self.logger.error("you must log in first")
             self.login()
 
         # set up request parameters
@@ -125,7 +130,7 @@ class NumerAPI(object):
 
         # send auth request
         auth_res = requests.post(auth_url, data=auth_data,
-            headers=auth_headers)
+                                 headers=auth_headers)
         auth_res.raise_for_status()
 
         # parse auth response
@@ -137,12 +142,12 @@ class NumerAPI(object):
 
     def login(self, email=None, password=None, mfa_enabled=False):
         """log user in and store credentials"""
-        l.info("logging in...")
+        self.logger.info("logging in...")
 
         # get login parameters if necessary
-        if email == None:
+        if email is None:
             email = input("email: ")
-        if password == None:
+        if password is None:
             password = getpass.getpass("password: ")
         mfa_code = None
         if mfa_enabled:
@@ -171,11 +176,11 @@ class NumerAPI(object):
 
     def download_current_dataset(self, dest_path=".", unzip=True):
         """download dataset for current round
-        
+
         dest_path: desired location of dataset file
         unzip: indicates whether to unzip dataset
         """
-        l.info("downloading current dataset...")
+        self.logger.info("downloading current dataset...")
 
         # set up download path
         now = datetime.now().strftime("%Y%m%d")
@@ -207,7 +212,7 @@ class NumerAPI(object):
 
     def get_all_competitions(self):
         """get all competitions from first round stored in instance variable"""
-        l.info("getting all competitions...")
+        self.logger.info("getting all competitions...")
 
         # get latest round to determine end of round ID range
         current_round = self.get_competition()
@@ -223,7 +228,7 @@ class NumerAPI(object):
 
     def get_competition(self, round_id=None):
         """get a specific competiton, defaults to most recent"""
-        l.info("getting competition...")
+        self.logger.info("getting competition...")
 
         # set up request URL
         # defaults to getting most recent round
@@ -264,7 +269,7 @@ class NumerAPI(object):
 
     def get_earnings_per_round(self, username=None):
         """get earnings for every round"""
-        l.info("getting earnings...")
+        self.logger.info("getting earnings...")
 
         # construct user request URL
         username = self.__get_username(username)
@@ -288,7 +293,7 @@ class NumerAPI(object):
 
     def get_scores_for_user(self, username=None):
         """get scores for specified user"""
-        l.info("getting scores for user...")
+        self.logger.info("getting scores for user...")
 
         # get all competitions
         competitions = self.get_all_competitions()
@@ -305,11 +310,11 @@ class NumerAPI(object):
             # get submissions for user for round i
             competition = competitions[i]
             leaderboard = competition["leaderboard"]
-            submissions = list(filter(lambda s: s["username"]==username,
-                leaderboard))
+            submissions = list(filter(lambda s: s["username"] == username,
+                                      leaderboard))
 
             # append scores if any exist for round i
-            if len(submissions) > 0:
+            if submissions:
                 logloss = submissions[0]["logloss"]
                 validation_scores.append(logloss["validation"])
                 consistency_scores.append(logloss["consistency"])
@@ -324,7 +329,7 @@ class NumerAPI(object):
 
     def get_user(self, username=None):
         """get user information"""
-        l.info("getting user...")
+        self.logger.info("getting user...")
 
         # construct user request URL
         username = self.__get_username(username)
@@ -341,7 +346,7 @@ class NumerAPI(object):
 
     def get_submission_for_round(self, username=None, round_id=None):
         """gets submission for single round"""
-        l.info("getting user submission for round...")
+        self.logger.info("getting user submission for round...")
 
         # get username for filtering competition leaderboard
         username = self.__get_username(username)
@@ -355,8 +360,8 @@ class NumerAPI(object):
                 submission_id = user["submission_id"]
                 logloss_val = np.float(user["logloss"]["validation"])
                 logloss_consistency = np.float(user["logloss"]["consistency"])
-                career_usd = np.float(user["earnings"]["career"]["usd"].replace(",",""))
-                career_nmr = np.float(user["earnings"]["career"]["nmr"].replace(",",""))
+                career_usd = np.float(user["earnings"]["career"]["usd"].replace(",", ""))
+                career_nmr = np.float(user["earnings"]["career"]["nmr"].replace(",", ""))
                 concordant = user["concordant"]
                 original = user["original"]
 
@@ -364,12 +369,12 @@ class NumerAPI(object):
                         career_usd, career_nmr, concordant, original)
 
         # return an empty tuple if user is not on the leaderboard
-        l.warning("user \"{0}\" is not on leaderboard".format(username))
+        self.logger.warning("user \"{0}\" is not on leaderboard".format(username))
         return ()
 
     def upload_predictions(self, file_path):
         """uploads predictions from file"""
-        l.info("uploading prediction...")
+        self.logger.info("uploading prediction...")
 
         # parse information for file upload
         filename, signed_url, headers = self.__authorize_file_upload(file_path)
