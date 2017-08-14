@@ -13,11 +13,20 @@ if you need further information on the reverse engineering process.
 If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Installation
-This library supports both Python 2 and 3.  Clone this repository, then `cd` 
-into this repository's directory.  Then `pip install -e .`
+1. Obtain a copy of this API
+  * If you do not plan on contributing to this repository, download a release.
+    1. Navigate to [releases](https://github.com/numerai/NumerAPI/releases).
+    2. Download the latest version.
+    3. Extract with `unzip` or `tar` as necessary.
+    
+  * If you do plan on contributing, clone this repository instead.
+
+2. `cd` into the API directory (defaults to `numerai`, but make sure not to go 
+into the sub-directory also named `numerai`).
+3. `pip install -e .`
 
 # Usage
-See the example.py.  You can run it as `./example.py`
+See `example.py`.  You can run it as `./example.py`
 
 # Documentation
 ## Layout
