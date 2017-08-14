@@ -1,8 +1,8 @@
-# NumerAI Python API
+# Numerai Python API
 Automatically download and upload data for the Numerai machine learning 
 competition.
 
-This library is a Python client to the NumerAI API. The interface is programmed 
+This library is a Python client to the Numerai API. The interface is programmed 
 in Python and allows downloading the training data, uploading predictions, and 
 accessing user and submission information. Some parts of the code were taken 
 from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch.  
@@ -14,8 +14,7 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Installation
 This library supports both Python 2 and 3.  Clone this repository, then `cd` 
-into this repository's directory.  Then `pip install -e .` Using a Virtual 
-Environment is always recommended.
+into this repository's directory.  Then `pip install -e .`
 
 # Usage
 See the example.py.  You can run it as `./example.py`
