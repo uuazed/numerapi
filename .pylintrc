@@ -1,8 +1,9 @@
 [MESSAGES CONTROL]
-max-line-length=1000
+max-line-length=120
 max-args=7
 max-attributes=8
-disable=W0141,superfluous-parens,multiple-statements,C0111,C0103,E1101
+max-locals=17
+disable=W0141,superfluous-parens,multiple-statements,C0111,C0103,E1101,logging-format-interpolation
 
 [TYPECHECK]
 ignored-modules = numpy, numpy.random, tensorflow

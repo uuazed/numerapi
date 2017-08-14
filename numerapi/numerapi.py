@@ -47,6 +47,7 @@ class NumerAPI(object):
         self._not_logged_in_error = ValueError(not_logged_in_msg)
         self._username = None
         self._access_token = None
+        self.url_paths = None
 
     def __get_url(self, url_path_name, query_params=None):
         """get url with query params for Numerai API"""
