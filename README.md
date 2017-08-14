@@ -21,8 +21,8 @@ If you encounter a problem or have suggestions, feel free to open an issue.
     
   * If you do plan on contributing, clone this repository instead.
 
-2. `cd` into the API directory (defaults to `numerai`, but make sure not to go 
-into the sub-directory also named `numerai`).
+2. `cd` into the API directory (defaults to `numerapi`, but make sure not to go 
+into the sub-directory also named `numerapi`).
 3. `pip install -e .`
 
 # Usage
