@@ -4,15 +4,12 @@
 import zipfile
 import json
 import os
-from datetime import datetime, timedelta
-import getpass
+import datetime
 import errno
 import logging
 
 # Third Party
 import requests
-import numpy as np
-
 
 API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 
@@ -75,7 +72,7 @@ class NumerAPI(object):
         self.logger.info("downloading current dataset...")
 
         # set up download path
-        now = datetime.now().strftime("%Y%m%d")
+        now = datetime.datetime.now().strftime("%Y%m%d")
         dataset_name = "numerai_dataset_{0}".format(now)
         file_name = "{0}.zip".format(dataset_name)
         dataset_path = "{0}/{1}".format(dest_path, file_name)
