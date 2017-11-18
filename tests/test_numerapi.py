@@ -9,14 +9,13 @@ def test_get_competitions():
 
     # get all competions
     res = api.get_competitions()
-    assert isinstance(res, dict)
-    assert len(res['data']['rounds']) > 80
+    assert isinstance(res, list)
+    assert len(res) > 80
 
     # get one competion
     res = api.get_competitions(67)
-    assert isinstance(res, dict)
-    print(res)
-    assert len(res['data']['rounds']) == 1
+    assert isinstance(res, list)
+    assert len(res) == 1
 
 
 def test_download_current_dataset():

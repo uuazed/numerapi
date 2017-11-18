@@ -143,10 +143,17 @@ class NumerAPI(object):
             }}
         '''.format(query_rounds)
         result = self._call(query)
-        return result
+        return result['data']['rounds']
 
     def get_current_round(self):
-        data = self.get_competitions()
+        query = '''
+            query simpleRoundsRequest {
+              rounds {
+                number
+              }
+            }
+        '''
+        data = self._call(query)
         competitions = data['data']['rounds']
         rounds = [c['number'] for c in competitions]
         return max(rounds)
