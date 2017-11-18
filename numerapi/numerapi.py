@@ -80,6 +80,10 @@ class NumerAPI(object):
         file_name = "{0}.zip".format(dataset_name)
         dataset_path = "{0}/{1}".format(dest_path, file_name)
 
+        if os.path.exists(dataset_path):
+            self.logger.info("target file already exists")
+            return dataset_path
+
         # get data for current dataset
         url = 'https://api.numer.ai/competitions/current/dataset'
         dataset_res = requests.get(url, stream=True)
@@ -101,7 +105,7 @@ class NumerAPI(object):
         if unzip:
             self._unzip_file(dataset_path, dest_path, dataset_name)
 
-        return True
+        return dataset_path
 
     def _call(self, query, variables=None, authorization=False):
         body = {'query': query,
