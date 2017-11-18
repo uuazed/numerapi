@@ -277,3 +277,30 @@ class NumerAPI(object):
         create = self._call(create_query, variables, authorization=True)
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
+
+    def stake(self, confidence, value):
+        query = '''
+            mutation stake($code: String,
+            $confidence: String!
+            $password: String
+            $round: Int!
+            $value: String!) {
+              stake(code: $code
+                    confidence: $confidence
+                    password: $password
+                    round: $round
+                    value: $value) {
+                id
+                status
+                txHash
+                value
+              }
+        }
+        '''
+        arguments = {'code': 'somecode',
+                     'confidence': str(confidence),
+                     'password': "somepassword",
+                     'round': self.get_current_round(),
+                     'value': str(value)}
+        result = self._call(query, arguments, authorization=True)
+        return result
