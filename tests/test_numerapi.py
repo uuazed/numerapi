@@ -38,3 +38,19 @@ def test_get_leaderboard():
     api = NumerAPI()
     lb = api.get_leaderboard(67)
     assert len(lb) == 1425
+
+
+def test_error_handling():
+    api = NumerAPI()
+    # String instead of Int
+    with pytest.raises(ValueError):
+        api.get_leaderboard("foo")
+    # round that doesn't exist
+    with pytest.raises(ValueError):
+        api.get_leaderboard(-1)
+    # unauthendicated request
+    with pytest.raises(ValueError):
+        # set wrong token
+        api.token = ("foo", "bar")
+        api.submission_id = 1
+        api.submission_status()

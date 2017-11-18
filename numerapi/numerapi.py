@@ -107,6 +107,15 @@ class NumerAPI(object):
 
         return dataset_path
 
+    def _handle_call_error(self, errors):
+        if isinstance(errors, list):
+            for error in errors:
+                if "message" in error:
+                    self.logger.error(error['message'])
+        elif isinstance(errors, dict):
+            if "detail" in errors:
+                self.logger.error(errors['detail'])
+
     def _call(self, query, variables=None, authorization=False):
         body = {'query': query,
                 'variables': variables}
@@ -117,7 +126,13 @@ class NumerAPI(object):
             headers['Authorization'] = \
                 'Token {}${}'.format(public_id, secret_key)
         r = requests.post(API_TOURNAMENT_URL, json=body, headers=headers)
-        return r.json()
+        result = r.json()
+        if "errors" in result:
+            self._handle_call_error(result['errors'])
+            # fail!
+            raise ValueError
+
+        return result
 
     def get_leaderboard(self, round_num):
         self.logger.info("getting leaderboard for round {}".format(round_num))
@@ -161,7 +176,6 @@ class NumerAPI(object):
         arguments = {'number': round_num}
         result = self._call(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
-
 
     def get_competitions(self, round_num=None):
         """ get information about round
