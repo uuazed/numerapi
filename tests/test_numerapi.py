@@ -27,3 +27,9 @@ def test_download_current_dataset():
     directory = path.replace(".zip", "")
     filename = "numerai_tournament_data.csv"
     assert os.path.exists(os.path.join(directory, filename))
+
+
+def test_get_current_round():
+    api = NumerAPI()
+    current_round = api.get_current_round()
+    assert current_round >= 82

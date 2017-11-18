@@ -145,6 +145,12 @@ class NumerAPI(object):
         result = self._call(query)
         return result
 
+    def get_current_round(self):
+        data = self.get_competitions()
+        competitions = data['data']['rounds']
+        rounds = [c['number'] for c in competitions]
+        return max(rounds)
+
     def submission_status(self):
         """display submission status"""
         if self.submission_id is None:
