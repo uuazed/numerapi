@@ -119,6 +119,50 @@ class NumerAPI(object):
         r = requests.post(API_TOURNAMENT_URL, json=body, headers=headers)
         return r.json()
 
+    def get_leaderboard(self, round_num):
+        self.logger.info("getting leaderboard for round {}".format(round_num))
+        query = '''
+            query simpleRoundsRequest($number: Int!) {
+              rounds(number: $number) {
+                leaderboard {
+                  consistency
+                  concordance {
+                    pending
+                    value
+                  }
+                  originality {
+                    pending
+                    value
+                  }
+
+                  liveLogloss
+                  submissionId
+                  username
+                  validationLogloss
+                  paymentGeneral {
+                    nmrAmount
+                    tournament
+                    usdAmount
+                  }
+                  paymentStaking {
+                    nmrAmount
+                    tournament
+                    usdAmount
+                  }
+                  totalPayments {
+                    nmrAmount
+                    tournament
+                    usdAmount
+                  }
+                }
+              }
+            }
+        '''
+        arguments = {'number': round_num}
+        result = self._call(query, arguments)
+        return result['data']['rounds'][0]['leaderboard']
+
+
     def get_competitions(self, round_num=None):
         """ get information about round
 

@@ -32,3 +32,9 @@ def test_get_current_round():
     api = NumerAPI()
     current_round = api.get_current_round()
     assert current_round >= 82
+
+
+def test_get_leaderboard():
+    api = NumerAPI()
+    lb = api.get_leaderboard(67)
+    assert len(lb) == 1425
