@@ -12,11 +12,6 @@ def test_get_competitions():
     assert isinstance(res, list)
     assert len(res) > 80
 
-    # get one competion
-    res = api.get_competitions(67)
-    assert isinstance(res, list)
-    assert len(res) == 1
-
 
 def test_download_current_dataset():
     api = NumerAPI()

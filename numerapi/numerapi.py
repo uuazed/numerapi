@@ -174,29 +174,22 @@ class NumerAPI(object):
         result = self._call(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
 
-    def get_competitions(self, round_num=None):
-        """ get information about round
-
-        round_num: the requests round, defaults to all rounds
-        """
+    def get_competitions(self):
+        """ get information about rounds """
         self.logger.info("getting rounds...")
 
-        if round_num is None:
-            query_rounds = "rounds"
-        else:
-            query_rounds = "rounds(number: {})".format(round_num)
         query = '''
-            query simpleRoundsRequest {{
-              {} {{
+            query rounds {
+              rounds {
                 number
                 resolveTime
                 datasetId
                 openTime
                 resolvedGeneral
                 resolvedStaking
-              }}
-            }}
-        '''.format(query_rounds)
+              }
+            }
+        '''
         result = self._call(query)
         return result['data']['rounds']
 
@@ -216,7 +209,7 @@ class NumerAPI(object):
     def submission_status(self):
         """display submission status"""
         if self.submission_id is None:
-            raise ValueError('`submission_id` cannot be None')
+            raise ValueError('You need to submit something first')
 
         query = '''
             query submissions($submission_id: String!) {
@@ -260,8 +253,8 @@ class NumerAPI(object):
         variable = {'filename': os.path.basename(file_path)}
         submission_resp = self._call(auth_query, variable, authorization=True)
         submission_auth = submission_resp['data']['submission_upload_auth']
-        file_object = open(file_path, 'rb').read()
-        requests.put(submission_auth['url'], data=file_object)
+        with open(file_path, 'rb') as fh:
+            requests.put(submission_auth['url'], data=fh.read())
         create_query = \
             '''
             mutation($filename: String!) {
