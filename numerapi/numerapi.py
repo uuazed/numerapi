@@ -194,17 +194,17 @@ class NumerAPI(object):
         return result['data']['rounds']
 
     def get_current_round(self):
+        # zero is an alias for the current round!
         query = '''
             query simpleRoundsRequest {
-              rounds {
+              rounds(number: 0) {
                 number
               }
             }
         '''
         data = self._call(query)
-        competitions = data['data']['rounds']
-        rounds = [c['number'] for c in competitions]
-        return max(rounds)
+        round_num = data['data']['rounds'][0]["number"]
+        return round_num
 
     def submission_status(self):
         """display submission status"""
