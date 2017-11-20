@@ -174,6 +174,9 @@ class NumerAPI(object):
         result = self._call(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
 
+    def get_current_leaderboard(self):
+        return self.get_leaderboard(0)
+
     def get_competitions(self):
         """ get information about rounds """
         self.logger.info("getting rounds...")
