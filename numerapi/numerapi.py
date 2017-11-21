@@ -81,8 +81,10 @@ class NumerAPI(object):
             self.logger.info("target file already exists")
             return dataset_path
 
-        # get data for current dataset
-        url = 'https://api.numer.ai/competitions/current/dataset'
+        # get link to current dataset
+        query = "query {dataset}"
+        url = self._call(query)['data']['dataset']
+        # download
         dataset_res = requests.get(url, stream=True)
         dataset_res.raise_for_status()
 
