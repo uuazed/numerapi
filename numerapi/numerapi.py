@@ -144,7 +144,7 @@ class NumerAPI(object):
         """
         self.logger.info("getting leaderboard for round {}".format(round_num))
         query = '''
-            query simpleRoundsRequest($number: Int!) {
+            query($number: Int!) {
               rounds(number: $number) {
                 leaderboard {
                   consistency
@@ -186,7 +186,7 @@ class NumerAPI(object):
         self.logger.info("getting rounds...")
 
         query = '''
-            query rounds {
+            query {
               rounds {
                 number
                 resolveTime
@@ -204,7 +204,7 @@ class NumerAPI(object):
         """get information about the current active round"""
         # zero is an alias for the current round!
         query = '''
-            query simpleRoundsRequest {
+            query {
               rounds(number: 0) {
                 number
               }
@@ -217,7 +217,7 @@ class NumerAPI(object):
     def get_submission_ids(self):
         """get dict with username->submission_id mapping"""
         query = """
-            query simpleRoundsRequest {
+            query {
               rounds(number: 0) {
                 leaderboard {
                   username
@@ -229,6 +229,118 @@ class NumerAPI(object):
         data = self._call(query)['data']['rounds'][0]['leaderboard']
         mapping = {item['username']: item['submissionId'] for item in data}
         return mapping
+
+    def get_user(self):
+        """get all information about you! """
+        query = """
+          query {
+            user {
+              username
+              banned
+              assignedEthAddress
+              availableNmr
+              availableUsd
+              email
+              id
+              mfaEnabled
+              status
+              insertedAt
+              apiTokens {
+                name
+                public_id
+                scopes
+              }
+            }
+          }
+        """
+        data = self._call(query, authorization=True)['data']['user']
+        return data
+
+    def get_payments(self):
+        """all your payments"""
+        query = """
+          query {
+            user {
+              payments {
+                nmrAmount
+                round {
+                  number
+                  openTime
+                  resolveTime
+                  resolvedGeneral
+                  resolvedStaking
+                }
+                tournament
+                usdAmount
+              }
+
+            }
+          }
+        """
+        data = self._call(query, authorization=True)['data']['user']
+        return data['payments']
+
+    def get_transactions(self):
+        """all deposits and withdrawals"""
+        query = """
+          query {
+            user {
+
+              nmrDeposits {
+                from
+                id
+                posted
+                status
+                to
+                txHash
+                value
+              }
+              nmrWithdrawals {
+                from
+                id
+                posted
+                status
+                to
+                txHash
+                value
+              }
+              usdWithdrawals {
+                ethAmount
+                confirmTime
+                from
+                posted
+                sendTime
+                status
+                to
+                txHash
+                usdAmount
+              }
+            }
+          }
+        """
+        data = self._call(query, authorization=True)['data']['user']
+        return data
+
+    def get_stakes(self):
+        """all your stakes"""
+        query = """
+          query {
+            user {
+              stakeTxs {
+                confidence
+                insertedAt
+                roundNumber
+                soc
+                staker
+                status
+                txHash
+                value
+              }
+            }
+          }
+        """
+        data = self._call(query, authorization=True)['data']['user']
+        return data['stakeTxs']
 
     def submission_status(self, submission_id=None):
         """display submission status of the last submission associated with
@@ -244,7 +356,7 @@ class NumerAPI(object):
             raise ValueError('You need to submit something first or provide a submission ID')
 
         query = '''
-            query submissions($submission_id: String!) {
+            query($submission_id: String!) {
               submissions(id: $submission_id) {
                 originality {
                   pending
@@ -306,7 +418,7 @@ class NumerAPI(object):
         """
 
         query = '''
-            mutation stake($code: String,
+          mutation($code: String,
             $confidence: String!
             $password: String
             $round: Int!

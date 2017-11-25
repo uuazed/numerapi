@@ -35,6 +35,13 @@ def test_get_leaderboard():
     assert len(lb) == 1425
 
 
+def test_get_submission_ids():
+    api = NumerAPI()
+    ids = api.get_submission_ids()
+    assert len(ids) > 0
+    assert isinstance(ids, dict)
+
+
 def test_error_handling():
     api = NumerAPI()
     # String instead of Int
