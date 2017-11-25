@@ -22,6 +22,10 @@ class NumerAPI(object):
         """
         initialize Numerai API wrapper for Python
 
+        public_id: first part of your token generated at
+                   Numer.ai->Account->Custom API keys
+        secret_key: second part of your token generated at
+                    Numer.ai->Account->Custom API keys
         verbosity: indicates what level of messages should be displayed
             valid values: "debug", "info", "warning", "error", "critical"
         """
@@ -48,7 +52,7 @@ class NumerAPI(object):
         self.logger.info("unzipping file...")
 
         # construct full path (including file name) for unzipping
-        unzip_path = "{0}/{1}".format(dest_path, filename)
+        unzip_path = os.path.join(dest_path, filename)
 
         # create parent directory for unzipped data
         try:
@@ -133,7 +137,11 @@ class NumerAPI(object):
 
         return result
 
-    def get_leaderboard(self, round_num):
+    def get_leaderboard(self, round_num=0):
+        """ retrieves the leaderboard for the given round
+
+        round_num: The round you are interested in, defaults to current round.
+        """
         self.logger.info("getting leaderboard for round {}".format(round_num))
         query = '''
             query simpleRoundsRequest($number: Int!) {
@@ -155,17 +163,14 @@ class NumerAPI(object):
                   validationLogloss
                   paymentGeneral {
                     nmrAmount
-                    tournament
                     usdAmount
                   }
                   paymentStaking {
                     nmrAmount
-                    tournament
                     usdAmount
                   }
                   totalPayments {
                     nmrAmount
-                    tournament
                     usdAmount
                   }
                 }
@@ -175,9 +180,6 @@ class NumerAPI(object):
         arguments = {'number': round_num}
         result = self._call(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
-
-    def get_current_leaderboard(self):
-        return self.get_leaderboard(0)
 
     def get_competitions(self):
         """ get information about rounds """
@@ -199,6 +201,7 @@ class NumerAPI(object):
         return result['data']['rounds']
 
     def get_current_round(self):
+        """get information about the current active round"""
         # zero is an alias for the current round!
         query = '''
             query simpleRoundsRequest {
@@ -211,10 +214,34 @@ class NumerAPI(object):
         round_num = data['data']['rounds'][0]["number"]
         return round_num
 
-    def submission_status(self):
-        """display submission status"""
-        if self.submission_id is None:
-            raise ValueError('You need to submit something first')
+    def get_submission_ids(self):
+        """get dict with username->submission_id mapping"""
+        query = """
+            query simpleRoundsRequest {
+              rounds(number: 0) {
+                leaderboard {
+                  username
+                  submissionId
+                }
+            }
+        }
+        """
+        data = self._call(query)['data']['rounds'][0]['leaderboard']
+        mapping = {item['username']: item['submissionId'] for item in data}
+        return mapping
+
+    def submission_status(self, submission_id=None):
+        """display submission status of the last submission associated with
+        the account
+
+        submission_id: submission of interest, defaults to the last submission
+            done with the account
+        """
+        if submission_id is None:
+            submission_id = self.submission_id
+
+        if submission_id is None:
+            raise ValueError('You need to submit something first or provide a submission ID')
 
         query = '''
             query submissions($submission_id: String!) {
@@ -232,18 +259,16 @@ class NumerAPI(object):
               }
             }
             '''
-        variable = {'submission_id': self.submission_id}
-        status_raw = self._call(query, variable, authorization=True)
-        status_raw = status_raw['data']['submissions'][0]
-        status = {}
-        for key, value in status_raw.items():
-            if isinstance(value, dict):
-                value = value['value']
-            status[key] = value
+        variable = {'submission_id': submission_id}
+        data = self._call(query, variable, authorization=True)
+        status = data['data']['submissions'][0]
         return status
 
     def upload_predictions(self, file_path):
-        """uploads predictions from file"""
+        """uploads predictions from file
+
+        file_path: CSV file with predictions that will get uploaded
+        """
         self.logger.info("uploading prediction...")
 
         auth_query = \
@@ -273,7 +298,13 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def stake(self, confidence, value):
+    def stake(self, confidence, amount):
+        """ participate in the staking competition
+
+        confidence: your confidence (C) value
+        amount: amount of NMR you are willing to stake
+        """
+
         query = '''
             mutation stake($code: String,
             $confidence: String!
@@ -284,7 +315,7 @@ class NumerAPI(object):
                     confidence: $confidence
                     password: $password
                     round: $round
-                    value: $value) {
+                    value: $amount) {
                 id
                 status
                 txHash
@@ -296,6 +327,6 @@ class NumerAPI(object):
                      'confidence': str(confidence),
                      'password': "somepassword",
                      'round': self.get_current_round(),
-                     'value': str(value)}
+                     'value': str(amount)}
         result = self._call(query, arguments, authorization=True)
         return result
