@@ -43,37 +43,37 @@ retrieves the leaderboard for the given round
 ### Return Values
 * `participants` (`list`): information about all competitors
   * `participants` (`dict`)
-    * `concordance` (`dict`)
-      * `pending` (`bool`)
-      * `value` (`bool`)
-    * `originality` (`dict`)
-      * `pending` (`bool`)
-      * `value` (`bool`)
-    * `consistency` (`float`)
-    * `liveLogloss` (`float` or `None`)
-    * `validationLogloss` (`float`)
-    * `paymentGeneral` (`dict` or `None`)
-      * `nmrAmount` (`float`)
-      * `usdAmount` (`float`)
-    * `paymentStaking` (`dict` or `None`)
-      * `nmrAmount` (`float`)
-      * `usdAmount` (`float`)
-    * `submissionId` (`str`)
-    * `totalPayments` (`dict`)
-      * `nmrAmount` (`float`)
-      * `usdAmount` (`float`)
-    * `username` (`str`)
+    * `"concordance"` (`dict`)
+      * `"pending"` (`bool`)
+      * `"value"` (`bool`)
+    * `"originality"` (`dict`)
+      * `"pending"` (`bool`)
+      * `"value"` (`bool`)
+    * `"consistency"` (`float`)
+    * `"liveLogloss"` (`float` or `None`)
+    * `"validationLogloss"` (`float`)
+    * `"paymentGeneral"` (`dict` or `None`)
+      * `"nmrAmount"` (`float`)
+      * `"usdAmount"` (`float`)
+    * `"paymentStaking"` (`dict` or `None`)
+      * `"nmrAmount"` (`float`)
+      * `"usdAmount"` (`float`)
+    * `"submissionId"` (`str`)
+    * `"totalPayments"` (`dict`)
+      * `"nmrAmount"` (`float`)
+      * `"usdAmount"` (`float`)
+    * `"username"` (`str`)
 
 ## `get_competitions`
 ### Return Values
 * `all_competitions` (`list`): information about all competitions
   * `competition` (`dict`)
-    * `datasetId` (`str`)
-    * `number` (`int`)
-    * `openTime` (`str (datetime)`)
-    * `resolveTime` (`str (datetime)`)
-    * `resolvedGeneral` (`bool`)
-    * `resolvedStaking` (`bool`)
+    * `"datasetId"` (`str`)
+    * `"number"` (`int`)
+    * `"openTime"` (`str (datetime)`)
+    * `"resolveTime"` (`str (datetime)`)
+    * `"resolvedGeneral"` (`bool`)
+    * `"resolvedStaking"` (`bool`)
 
 ## `get_current_round`
 ### Return Values
@@ -83,8 +83,8 @@ retrieves the leaderboard for the given round
 get dict with username->submission_id mapping
 ### Return Values
 * `submission_ids` (`dict`)
-  * `username` (`str`)
-  * `submissionId` (`str`): ID of submission
+  * `"username"` (`str`)
+  * `"submissionId"` (`str`): ID of submission
 
 ## `submission_status`
 submission status of the given submission_id or the last submission done
@@ -93,14 +93,14 @@ within the same session.
 * `submission_id` (`str`, optional, default: `None`):
 ### Return Values
 * `status` (`dict`)
-  * `concordance` (`dict`):
-    * `pending` (`bool`)
-    * `value` (`bool`): whether the submission is concordant
-  * `originality` (`dict`)
-    * `pending` (`bool`)
-    * `value` (`bool`): whether the submission is original
-  * `consistency` (`float`): consistency of the submission
-  * `validation_logloss` (`float`): amount of logloss for the submission
+  * `"concordance"` (`dict`):
+    * `"pending"` (`bool`)
+    * `"value"` (`bool`): whether the submission is concordant
+  * `"originality"` (`dict`)
+    * `"pending"` (`bool`)
+    * `"value"` (`bool`): whether the submission is original
+  * `"consistency"` (`float`): consistency of the submission
+  * `"validation_logloss"` (`float`): amount of logloss for the submission
 
 ## `upload_predictions`
   ### Parameters
@@ -111,78 +111,79 @@ within the same session.
 ## `get_user`
 ### Return Values
 * `user` (`dict`)
-  * `apiTokens` (`list`)
-    * `name` (`str`)
-    * `public_id` (`str`)
-    * `scopes` (`list`)
-      * `scope` (`str`)
-    * `assignedEthAddress` (`str`)
-    * `availableNmr` (`float`)
-    * `availableUsd` (`float`)
-    * `banned` (`bool`)
-    * `email` (`str`)
-    * `id` (`str`)
-    * `insertedAt` (`str (datetime)`)
-    * `mfaEnabled` (`bool`)
-    * `status` (`str`)
-    * `username` (`str`)
+  * `"apiTokens"` (`list`)
+    * `token` (`dict`)
+      * `"name"` (`str`)
+      * `"public_id"` (`str`)
+      * `"scopes"` (`list`)
+        * `scope` (`str`)
+  * `"assignedEthAddress"` (`str`)
+  * `"availableNmr"` (`float`)
+  * `"availableUsd"` (`float`)
+  * `"banned"` (`bool`)
+  * `"email"` (`str`)
+  * `"id"` (`str`)
+  * `"insertedAt"` (`str (datetime)`)
+  * `"mfaEnabled"` (`bool`)
+  * `"status"` (`str`)
+  * `"username"` (`str`)
 
 ## `get_payments`
 ### Return Values
 * `payments` (`list`)
   * `payment` (`dict`)
-    * `nmrAmount` (`str`)
-    * `usdAmount` (`str`)
-    * `tournament` (`str`)
-    * `round` (`dict`)
-      * `number` (`int`)
-      * `openTime` (`str (datetime)`)
-      * `resolveTime` (`str (datetime)`)
-      * `resolvedGeneral` (`bool`)
-      * `resolvedStaking` (`bool`)
+    * `"nmrAmount"` (`str`)
+    * `"usdAmount"` (`str`)
+    * `"tournament"` (`str`)
+    * `"round"` (`dict`)
+      * `"number"` (`int`)
+      * `"openTime"` (`str (datetime)`)
+      * `"resolveTime"` (`str (datetime)`)
+      * `"resolvedGeneral"` (`bool`)
+      * `"resolvedStaking"` (`bool`)
 
 ## `get_transactions`
 ### Return Values
 * `transactions` (`dict`)
-  * `nmrDeposits` (`list`)
+  * `"nmrDeposits"` (`list`)
     * `nmrDeposit` (`dict`)
-      * `from` (`str`)
-      * `id` (`str`)
-      * `posted` (`bool`)
-      * `status` (`str`)
-      * `to` (`str`)
-      * `txHash` (`str`)
-      * `value` (`str`)
-  * `nmrWithdrawals` (`list`)
+      * `"from"` (`str`)
+      * `"id"` (`str`)
+      * `"posted"` (`bool`)
+      * `"status"` (`str`)
+      * `"to"` (`str`)
+      * `"txHash"` (`str`)
+      * `"value"` (`str`)
+  * `"nmrWithdrawals"` (`list`)
     * `nmrWithdrawal` (`dict`)
-      * `from` (`str`)
-      * `id` (`str`)
-      * `posted` (`bool`)
-      * `status` (`str`)
-      * `to` (`str`)
-      * `txHash` (`str`)
-      * `value` (`str`)
-  * `usdWithdrawals` (`list`)
+      * `"from"` (`str`)
+      * `"id"` (`str`)
+      * `"posted"` (`bool`)
+      * `"status"` (`str`)
+      * `"to"` (`str`)
+      * `"txHash"` (`str`)
+      * `"value"` (`str`)
+  * `"usdWithdrawals"` (`list`)
     * `usdWithdrawal` (`dict`)
-      * `confirmeTime` (`str (datetime)` or `None`)
-      * `ethAmount` (`str`)
-      * `from` (`str`)
-      * `posted` (`bool`)
-      * `sendTime` (`str (datetime)`)
-      * `status` (`str`)
-      * `to` (`str`)
-      * `txHash` (`str`)
-      * `usdAmount` (`str`)
+      * `"confirmTime"` (`str (datetime)` or `None`)
+      * `"ethAmount"` (`str`)
+      * `"from"` (`str`)
+      * `"posted"` (`bool`)
+      * `"sendTime"` (`str (datetime)`)
+      * `"status"` (`str`)
+      * `"to"` (`str`)
+      * `"txHash"` (`str`)
+      * `"usdAmount"` (`str`)
 
 ## `get_stakes`
 ### Return Values
 * `stakes` (`list`)
   * `stake` (`dict`)
-    * `confidence` (`str`)
-    * `roundNumber` (`int`)
-    * `soc` (`float`)
-    * `insertedAt` (`str (datetime)`)
-    * `staker` (`str`): NMR adress used for staking
-    * `status` (`str`)
-    * `txHash` (`str`)
-    * `value` (`str`)
+    * `"confidence"` (`str`)
+    * `"roundNumber"` (`int`)
+    * `"soc"` (`float`)
+    * `"insertedAt"` (`str (datetime)`)
+    * `"staker"` (`str`): NMR adress used for staking
+    * `"status"` (`str`)
+    * `"txHash"` (`str`)
+    * `"value"` (`str`)

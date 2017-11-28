@@ -14,7 +14,10 @@ def main():
     napi.download_current_dataset(unzip=True)
     # get competitions
     all_competitions = napi.get_competitions()
-    competition_67 = napi.get_competition(round_id=67)
+    # get leaderboard for the current round
+    leaderboard = napi.get_leaderboard()
+    # leaderboard for a historic round
+    leaderboard_67 = napi.get_leaderboard(round_num=67)
 
     # provide api tokens
     napi = NumerAPI(example_public_id, example_secret_key)
