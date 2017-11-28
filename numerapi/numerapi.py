@@ -87,7 +87,7 @@ class NumerAPI(object):
 
         # get link to current dataset
         query = "query {dataset}"
-        url = self._call(query)['data']['dataset']
+        url = self.raw_query(query)['data']['dataset']
         # download
         dataset_res = requests.get(url, stream=True)
         dataset_res.raise_for_status()
@@ -119,7 +119,13 @@ class NumerAPI(object):
             if "detail" in errors:
                 self.logger.error(errors['detail'])
 
-    def _call(self, query, variables=None, authorization=False):
+    def raw_query(self, query, variables=None, authorization=False):
+        """send a raw request to the Numerai's GraphQL API
+
+        query (str): the query
+        variables (dict): dict of variables
+        authorization (bool): does the request require authorization
+        """
         body = {'query': query,
                 'variables': variables}
         headers = {'Content-type': 'application/json',
@@ -178,7 +184,7 @@ class NumerAPI(object):
             }
         '''
         arguments = {'number': round_num}
-        result = self._call(query, arguments)
+        result = self.raw_query(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
 
     def get_competitions(self):
@@ -197,7 +203,7 @@ class NumerAPI(object):
               }
             }
         '''
-        result = self._call(query)
+        result = self.raw_query(query)
         return result['data']['rounds']
 
     def get_current_round(self):
@@ -210,7 +216,7 @@ class NumerAPI(object):
               }
             }
         '''
-        data = self._call(query)
+        data = self.raw_query(query)
         round_num = data['data']['rounds'][0]["number"]
         return round_num
 
@@ -226,7 +232,7 @@ class NumerAPI(object):
             }
         }
         """
-        data = self._call(query)['data']['rounds'][0]['leaderboard']
+        data = self.raw_query(query)['data']['rounds'][0]['leaderboard']
         mapping = {item['username']: item['submissionId'] for item in data}
         return mapping
 
@@ -253,7 +259,7 @@ class NumerAPI(object):
             }
           }
         """
-        data = self._call(query, authorization=True)['data']['user']
+        data = self.raw_query(query, authorization=True)['data']['user']
         return data
 
     def get_payments(self):
@@ -277,7 +283,7 @@ class NumerAPI(object):
             }
           }
         """
-        data = self._call(query, authorization=True)['data']['user']
+        data = self.raw_query(query, authorization=True)['data']['user']
         return data['payments']
 
     def get_transactions(self):
@@ -318,7 +324,7 @@ class NumerAPI(object):
             }
           }
         """
-        data = self._call(query, authorization=True)['data']['user']
+        data = self.raw_query(query, authorization=True)['data']['user']
         return data
 
     def get_stakes(self):
@@ -339,7 +345,7 @@ class NumerAPI(object):
             }
           }
         """
-        data = self._call(query, authorization=True)['data']['user']
+        data = self.raw_query(query, authorization=True)['data']['user']
         return data['stakeTxs']
 
     def submission_status(self, submission_id=None):
@@ -372,7 +378,7 @@ class NumerAPI(object):
             }
             '''
         variable = {'submission_id': submission_id}
-        data = self._call(query, variable, authorization=True)
+        data = self.raw_query(query, variable, authorization=True)
         status = data['data']['submissions'][0]
         return status
 
@@ -393,7 +399,7 @@ class NumerAPI(object):
             }
             '''
         variable = {'filename': os.path.basename(file_path)}
-        submission_resp = self._call(auth_query, variable, authorization=True)
+        submission_resp = self.raw_query(auth_query, variable, authorization=True)
         submission_auth = submission_resp['data']['submission_upload_auth']
         with open(file_path, 'rb') as fh:
             requests.put(submission_auth['url'], data=fh.read())
@@ -406,7 +412,7 @@ class NumerAPI(object):
             }
             '''
         variables = {'filename': submission_auth['filename']}
-        create = self._call(create_query, variables, authorization=True)
+        create = self.raw_query(create_query, variables, authorization=True)
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
@@ -440,5 +446,5 @@ class NumerAPI(object):
                      'password': "somepassword",
                      'round': self.get_current_round(),
                      'value': str(amount)}
-        result = self._call(query, arguments, authorization=True)
+        result = self.raw_query(query, arguments, authorization=True)
         return result

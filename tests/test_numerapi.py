@@ -29,6 +29,14 @@ def test_get_current_round():
     assert current_round >= 82
 
 
+def test_raw_query():
+    api = NumerAPI()
+    query = "query {dataset}"
+    result = api.raw_query(query)
+    assert isinstance(result, dict)
+    assert "data" in result
+
+
 def test_get_leaderboard():
     api = NumerAPI()
     lb = api.get_leaderboard(67)

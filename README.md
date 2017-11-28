@@ -103,10 +103,10 @@ within the same session.
   * `"validation_logloss"` (`float`): amount of logloss for the submission
 
 ## `upload_predictions`
-  ### Parameters
-  * `file_path` (`str`): path to CSV of predictions (e.g. `"path/to/file/prediction.csv"`)
-  ### Return Values
-  * `submission_id`: ID of submission
+### Parameters
+* `file_path` (`str`): path to CSV of predictions (e.g. `"path/to/file/prediction.csv"`)
+### Return Values
+* `submission_id`: ID of submission
 
 ## `get_user`
 ### Return Values
@@ -187,3 +187,15 @@ within the same session.
     * `"status"` (`str`)
     * `"txHash"` (`str`)
     * `"value"` (`str`)
+
+## `raw_query`
+This function allows to build your own queries and fetch results from
+Numerai's GraphQL API. Checkout
+https://medium.com/numerai/getting-started-with-numerais-new-tournament-api-77396e895e72
+for an introduction.
+### Parameters
+* `query` (`str`)
+* `variables` (`dict`, optional)
+* `authorization` (`bool`, optional, default: `False`): indicates if a token is required
+### Return Values
+* `data` (`dict`)
