@@ -67,19 +67,25 @@ class NumerAPI(object):
 
         return True
 
-    def download_current_dataset(self, dest_path=".", unzip=True):
+    def download_current_dataset(self, dest_path=".", dest_filename=None,
+                                 unzip=True):
         """download dataset for current round
 
-        dest_path: desired location of dataset file
+        dest_path: desired location of dataset file (optional)
+        dest_filename: desired filename of dataset file (optional)
         unzip: indicates whether to unzip dataset
         """
         self.logger.info("downloading current dataset...")
 
         # set up download path
-        now = datetime.datetime.now().strftime("%Y%m%d")
-        dataset_name = "numerai_dataset_{0}".format(now)
-        file_name = "{0}.zip".format(dataset_name)
-        dataset_path = "{0}/{1}".format(dest_path, file_name)
+        if dest_filename is None:
+            now = datetime.datetime.now().strftime("%Y%m%d")
+            dest_filename = "numerai_dataset_{0}.zip".format(now)
+        else:
+            # ensure it ends with ".zip"
+            if not dest_filename.endswith(".zip"):
+                dest_filename += ".zip"
+        dataset_path = "{0}/{1}".format(dest_path, dest_filename)
 
         if os.path.exists(dataset_path):
             self.logger.info("target file already exists")
@@ -106,6 +112,8 @@ class NumerAPI(object):
 
         # unzip dataset
         if unzip:
+            # remove the ".zip" in the end
+            dataset_name = dest_filename[:-4]
             self._unzip_file(dataset_path, dest_path, dataset_name)
 
         return dataset_path

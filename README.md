@@ -31,7 +31,8 @@ itself.
 ### Parameters
 * `dest_path` (`str`, optional, default: `.`): destination folder for the
   dataset
-* `unzip` (`bool`, optional, default: `True`): indication of whether the
+* `dest_filename` (`str`, optional, default: `numerai_dataset_<date>.zip`)
+* `unzip (`bool`, optional, default: `True`): indication of whether the
   training data should be unzipped
 ### Return Values
 * `path` (`string`): location of the downloaded dataset
