@@ -1,207 +1,201 @@
 # Numerai Python API
-Automatically download and upload data for the Numerai machine learning 
+Automatically download and upload data for the Numerai machine learning
 competition.
 
-This library is a Python client to the Numerai API. The interface is programmed 
-in Python and allows downloading the training data, uploading predictions, and 
-accessing user and submission information. Some parts of the code were taken 
-from [numerflow](https://github.com/ChristianSch/numerflow) by ChristianSch.  
-Visit his 
-[wiki](https://github.com/ChristianSch/numerflow/wiki/API-Reverse-Engineering), 
-if you need further information on the reverse engineering process.
+This library is a Python client to the Numerai API. The interface is programmed
+in Python and allows downloading the training data, uploading predictions, and
+accessing user, submission and competitions information.
 
 If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Installation
-1. Obtain a copy of this API
-  * If you do not plan on contributing to this repository, download a release.
-    1. Navigate to [releases](https://github.com/numerai/NumerAPI/releases).
-    2. Download the latest version.
-    3. Extract with `unzip` or `tar` as necessary.
-    
-  * If you do plan on contributing, clone this repository instead.
-
-2. `cd` into the API directory (defaults to `numerapi`, but make sure not to go 
-into the sub-directory also named `numerapi`).
-3. `pip install -e .`
+`pip install git+https://github.com/numerai/NumerAPI.git`
 
 # Usage
 See `example.py`.  You can run it as `./example.py`
 
+Some actions (like uploading predictions or staking) requires a token to verify
+that it is really you interacting with Numerai's API. These tokens consists of
+a `public_id` and `secret_key`. Both can be obtained by login in to Numer.ai and
+going to Account -> Custom API Keys.
+
 # Documentation
 ## Layout
-Parameters and return values are given with Python types. Dictionary keys are 
-given in quotes; other names to the left of colons are for reference 
-convenience only. In particular, `list`s of `dict`s have names for the `dict`s; 
-these names will not show up in the actual data, only the actual `dict` data 
+Parameters and return values are given with Python types. Dictionary keys are
+given in quotes; other names to the left of colons are for reference
+convenience only. In particular, `list`s of `dict`s have names for the `dict`s;
+these names will not show up in the actual data, only the actual `dict` data
 itself.
-
-## `login`
-### Parameters
-* `email` (`str`, optional): email of user account
-  * will prompt for this value if not supplied
-* `password` (`str`, optional): password of user account
-  * will prompt for this value if not supplied
-  * prompting is recommended for security reasons
-* `prompt_for_mfa` (`bool`, optional): indication of whether to prompt for MFA 
-  code
-  * only necessary if MFA is enabled for user account
-### Return Values
-* `user_credentials` (`dict`): credentials for logged-in user
-  * `"username"` (`str`)
-  * `"access_token"` (`str`)
-  * `"refresh_token"` (`str`)
 
 ## `download_current_dataset`
 ### Parameters
-* `dest_path` (`str`, optional, default: `.`): destination folder for the 
+* `dest_path` (`str`, optional, default: `.`): destination folder for the
   dataset
-* `unzip` (`bool`, optional, default: `True`): indication of whether the 
+* `unzip` (`bool`, optional, default: `True`): indication of whether the
   training data should be unzipped
 ### Return Values
-* `success` (`bool`): indication of whether the current dataset was 
-  successfully downloaded
+* `path` (`string`): location of the downloaded dataset
 
-## `get_all_competitions`
+## `get_leaderboard`
+retrieves the leaderboard for the given round
+### Parameters
+* `round_num` (`int`) The round you are interested in.
+### Return Values
+* `participants` (`list`): information about all competitors
+  * `participants` (`dict`)
+    * `"concordance"` (`dict`)
+      * `"pending"` (`bool`)
+      * `"value"` (`bool`)
+    * `"originality"` (`dict`)
+      * `"pending"` (`bool`)
+      * `"value"` (`bool`)
+    * `"consistency"` (`float`)
+    * `"liveLogloss"` (`float` or `None`)
+    * `"validationLogloss"` (`float`)
+    * `"paymentGeneral"` (`dict` or `None`)
+      * `"nmrAmount"` (`float`)
+      * `"usdAmount"` (`float`)
+    * `"paymentStaking"` (`dict` or `None`)
+      * `"nmrAmount"` (`float`)
+      * `"usdAmount"` (`float`)
+    * `"submissionId"` (`str`)
+    * `"totalPayments"` (`dict`)
+      * `"nmrAmount"` (`float`)
+      * `"usdAmount"` (`float`)
+    * `"username"` (`str`)
+
+## `get_competitions`
 ### Return Values
 * `all_competitions` (`list`): information about all competitions
   * `competition` (`dict`)
-    * `"_id"` (`int`)
-        * `"dataset_id"` (`str`)
-        * `"start_date"` (`str (datetime)`)
-        * `"end_date"` (`str (datetime)`)
-        * `"paid"` (`bool`)
-        * `"leaderboard`" (`list`)
-          * `submission` (`dict`)
-            * `"concordant"` (`dict`)
-              * `"pending"` (`bool`)
-              * `"value"` (`bool`)
-            * `"earnings"` (`dict`)
-              * `"career"` (`dict`)
-                * `"nmr"` (`str`)
-                * `"usd"` (`str`)
-              * `"competition"` (`dict`)
-                * `"nmr"` (`str`)
-                * `"usd"` (`str`)
-            * `"logloss"` (`dict`)
-              * `"consistency"` (`int`)
-              * `"validation"` (`float`)
-            * `"original"` (`dict`)
-              * `"pending"` (`bool`)
-              * `"value"` (`bool`)
-            * `"submission_id"` (`str`)
-            * `"username"` (`str`)
+    * `"datasetId"` (`str`)
+    * `"number"` (`int`)
+    * `"openTime"` (`str (datetime)`)
+    * `"resolveTime"` (`str (datetime)`)
+    * `"resolvedGeneral"` (`bool`)
+    * `"resolvedStaking"` (`bool`)
 
-## `get_competition`
+## `get_current_round`
 ### Return Values
-* `competition` (`dict`): information about requested competition
-  * `_id` (`int`)
-    * `"dataset_id"` (`str`)
-    * `"start_date"` (`str (datetime)`)
-    * `"end_date"` (`str (datetime)`)
-    * `"paid"` (`bool`)
-    * `"leaderboard"` (`list`)
-      * `submission` (`dict`)
-        * `"concordant"` (`dict`)
-          * `"pending"` (`bool`)
-          * `"value"` (`bool`)
-        * `"earnings"` (`dict`)
-          * `"career"` (`dict`)
-            * `"nmr"` (`str`)
-            * `"usd"` (`str`)
-          * `"competition"` (`dict`)
-            * `"nmr"` (`str`)
-            * `"usd"` (`str`)
-        * `"logloss"` (`dict`)
-          `"consistency"`: (int`)
-          `"validation"`: (float`)
-        * `"original"` (`dict`)
-          * `"pending"` (`bool`)
-          * `"value"` (`bool`)
-        * `"submission_id"` (`str`)
-        * `"username"` (`str`)
+* `number` (`int`): number of the current round
 
-## `get_earnings_per_round`
-### Parameters
-* `username`: user for which earnings are requested
+## `get_submission_ids`
+get dict with username->submission_id mapping
 ### Return Values
-* `round_ids` (`np.ndarray(int)`): IDs of each round for which there are 
-  earnings
-* `earnings` (`np.ndarray(float)`): earnings for each round
-
-## `get_scores_for_user`
-### Parameters
-* `username`: user for which scores are being requested
-### Return Values
-* `validation_scores` (`np.ndarray(float)`): logloss validation scores
-* `consistency_scoress` (`np.ndarray(float)`): logloss consistency scores
-* `round_ids` (`np.ndarray(int`): IDs of the rounds for which there are scores
-
-## `get_user`
-### Parameters
-* `username`: `str` - name of requested user
-### Return Values
-* `user` (`dict`): information about the requested user
-  * `"_id"` (`str`)
+* `submission_ids` (`dict`)
   * `"username"` (`str`)
-  * `"assignedEthAddress"` (`str`)
-  * `"created"` (`str (datetime)`)
-  * `"earnings"` (`float`)
-  * `"followers"` (`int`)
-  * `"rewards"` (`list`)
-    * `reward` (`dict`)
-      * `"_id"` (`int`)
-      * `"amount"` (`float`)
-      * `"earned"` (`float`)
-      * `"nmr_earned"` (`str`)
-      * `"start_date"` (`str (datetime)`)
-      * `"end_date"` (`str (datetime)`)
-  * `"submissions"` (`dict`)
-    * `"results"` (`list`)
-      * `result` (`dict`)
-        * `"_id"` (`str`)
-        * `"competition"` (`dict`)
-          * `"_id"` (`str`)
-          * `"start_date"` (`str (datetime)`)
-          * `"end_date"` (`str (datetime)`)
-        * `"competition_id"` (`int`)
-        * `"created"` (`str (datetime)`)
-        * `"id"` (`str`)
-        * `"username"` (`str`)
+  * `"submissionId"` (`str`): ID of submission
 
-## `get_submission_for_round`
+## `submission_status`
+submission status of the given submission_id or the last submission done
+within the same session.
 ### Parameters
-* `username` (`str`): user for which submission is requested
-* `round_id` (`int`, optional): round for which submission is requested
-  * if no `round_id` is supplied, the submission for the current round will be 
-    retrieved
+* `submission_id` (`str`, optional, default: `None`):
 ### Return Values
-* `username` (`str`): user for which submission is requested
-* `submission_id` (`str`): ID of submission for which data was found
-* `logloss_val` (`float`): amount of logloss for given submission
-* `logloss_consistency` (`float`): consistency of given submission
-* `career_usd` (`float`): amount of USD earned by given user
-* `career_nmr` (`float`): amount of NMR earned by given user
-* `concordant` (`bool` OR `dict` (see note)): whether given submission is 
-  concordant
-  * for rounds before 64, this was only a boolean, but from 64 on, it is a dict
-    which indicates whether concordance is still being computed
-* `original` (`bool` OR `dict` (see note)): whether given submission is 
-  original
-  * for rounds before 64, this was only a boolean, but from 64 on, it is a dict
-    which indicates whether originality is still being computed
+* `status` (`dict`)
+  * `"concordance"` (`dict`):
+    * `"pending"` (`bool`)
+    * `"value"` (`bool`): whether the submission is concordant
+  * `"originality"` (`dict`)
+    * `"pending"` (`bool`)
+    * `"value"` (`bool`): whether the submission is original
+  * `"consistency"` (`float`): consistency of the submission
+  * `"validation_logloss"` (`float`): amount of logloss for the submission
 
 ## `upload_predictions`
 ### Parameters
-* `file_path` (`str`): path to CSV of predictions
-  * should already contain the file name (e.g. `"path/to/file/prediction.csv"`)
-
+* `file_path` (`str`): path to CSV of predictions (e.g. `"path/to/file/prediction.csv"`)
 ### Return Values
-* `success`: indicator of whether the upload succeeded
+* `submission_id`: ID of submission
 
-### Notes
-* Uploading a prediction shortly before a new dataset is released may result in 
-  a `400 Bad Request`. If this happens, wait for the new dataset and attempt to 
-  upload again.
-* Uploading too many predictions in a certain amount of time will result in a 
-  `429 Too Many Requests`.
+## `get_user`
+### Return Values
+* `user` (`dict`)
+  * `"apiTokens"` (`list`)
+    * `token` (`dict`)
+      * `"name"` (`str`)
+      * `"public_id"` (`str`)
+      * `"scopes"` (`list`)
+        * `scope` (`str`)
+  * `"assignedEthAddress"` (`str`)
+  * `"availableNmr"` (`float`)
+  * `"availableUsd"` (`float`)
+  * `"banned"` (`bool`)
+  * `"email"` (`str`)
+  * `"id"` (`str`)
+  * `"insertedAt"` (`str (datetime)`)
+  * `"mfaEnabled"` (`bool`)
+  * `"status"` (`str`)
+  * `"username"` (`str`)
+
+## `get_payments`
+### Return Values
+* `payments` (`list`)
+  * `payment` (`dict`)
+    * `"nmrAmount"` (`str`)
+    * `"usdAmount"` (`str`)
+    * `"tournament"` (`str`)
+    * `"round"` (`dict`)
+      * `"number"` (`int`)
+      * `"openTime"` (`str (datetime)`)
+      * `"resolveTime"` (`str (datetime)`)
+      * `"resolvedGeneral"` (`bool`)
+      * `"resolvedStaking"` (`bool`)
+
+## `get_transactions`
+### Return Values
+* `transactions` (`dict`)
+  * `"nmrDeposits"` (`list`)
+    * `nmrDeposit` (`dict`)
+      * `"from"` (`str`)
+      * `"id"` (`str`)
+      * `"posted"` (`bool`)
+      * `"status"` (`str`)
+      * `"to"` (`str`)
+      * `"txHash"` (`str`)
+      * `"value"` (`str`)
+  * `"nmrWithdrawals"` (`list`)
+    * `nmrWithdrawal` (`dict`)
+      * `"from"` (`str`)
+      * `"id"` (`str`)
+      * `"posted"` (`bool`)
+      * `"status"` (`str`)
+      * `"to"` (`str`)
+      * `"txHash"` (`str`)
+      * `"value"` (`str`)
+  * `"usdWithdrawals"` (`list`)
+    * `usdWithdrawal` (`dict`)
+      * `"confirmTime"` (`str (datetime)` or `None`)
+      * `"ethAmount"` (`str`)
+      * `"from"` (`str`)
+      * `"posted"` (`bool`)
+      * `"sendTime"` (`str (datetime)`)
+      * `"status"` (`str`)
+      * `"to"` (`str`)
+      * `"txHash"` (`str`)
+      * `"usdAmount"` (`str`)
+
+## `get_stakes`
+### Return Values
+* `stakes` (`list`)
+  * `stake` (`dict`)
+    * `"confidence"` (`str`)
+    * `"roundNumber"` (`int`)
+    * `"soc"` (`float`)
+    * `"insertedAt"` (`str (datetime)`)
+    * `"staker"` (`str`): NMR adress used for staking
+    * `"status"` (`str`)
+    * `"txHash"` (`str`)
+    * `"value"` (`str`)
+
+## `raw_query`
+This function allows to build your own queries and fetch results from
+Numerai's GraphQL API. Checkout
+https://medium.com/numerai/getting-started-with-numerais-new-tournament-api-77396e895e72
+for an introduction.
+### Parameters
+* `query` (`str`)
+* `variables` (`dict`, optional)
+* `authorization` (`bool`, optional, default: `False`): indicates if a token is required
+### Return Values
+* `data` (`dict`)
