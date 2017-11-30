@@ -85,7 +85,7 @@ class NumerAPI(object):
             # ensure it ends with ".zip"
             if not dest_filename.endswith(".zip"):
                 dest_filename += ".zip"
-        dataset_path = "{0}/{1}".format(dest_path, dest_filename)
+        dataset_path = os.path.join(dest_path, dest_filename)
 
         if os.path.exists(dataset_path):
             self.logger.info("target file already exists")
