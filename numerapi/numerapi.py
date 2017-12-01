@@ -195,6 +195,40 @@ class NumerAPI(object):
         result = self.raw_query(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
 
+    def get_staking_leaderboard(self, round_num=0):
+        """ retrieves the leaderboard of the staking competition for the given
+        round
+
+        round_num: The round you are interested in, defaults to current round.
+        """
+        self.logger.info("getting stakes for round {}".format(round_num))
+        query = '''
+            query($number: Int!) {
+              rounds(number: $number) {
+                leaderboard {
+                  consistency
+                  liveLogloss
+                  username
+                  validationLogloss
+                  stake {
+                    insertedAt
+                    soc
+                    confidence
+                    value
+                    txHash
+                  }
+
+                }
+              }
+            }
+        '''
+        arguments = {'number': round_num}
+        result = self.raw_query(query, arguments)
+        stakes = result['data']['rounds'][0]['leaderboard']
+        # filter those with actual stakes
+        stakes = [item for item in stakes if item["stake"]["soc"] is not None]
+        return stakes
+
     def get_competitions(self):
         """ get information about rounds """
         self.logger.info("getting rounds...")

@@ -40,7 +40,7 @@ itself.
 ## `get_leaderboard`
 retrieves the leaderboard for the given round
 ### Parameters
-* `round_num` (`int`) The round you are interested in.
+* `round_num` (`int`, optional, defaults to current round): The round you are interested in.
 ### Return Values
 * `participants` (`list`): information about all competitors
   * `participants` (`dict`)
@@ -64,6 +64,24 @@ retrieves the leaderboard for the given round
       * `"nmrAmount"` (`float`)
       * `"usdAmount"` (`float`)
     * `"username"` (`str`)
+
+## `get_staking_leaderboard`
+retrieves the leaderboard of the staking competition for the given round
+### Parameters
+* `round_num` (`int`, optional, defaults to current round): The round you are interested in.
+### Return Values
+* `stakes` (`list`): information about all competitors
+  * `participants` (`dict`)
+    * `"username"` (`str`)
+    * `"consistency"` (`float`)
+    * `"liveLogloss"` (`float` or `None`)
+    * `"validationLogloss"` (`float`)
+    * `"stake"` (`dict`)
+      * `"confidence"` (`str`)
+      * `"insertedAt"` (`str (datetime)`)
+      * `"soc"` (`str`)
+      * `"txHash"` (`str`)
+      * `"value"` (`str`)
 
 ## `get_competitions`
 ### Return Values
