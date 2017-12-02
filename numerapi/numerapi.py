@@ -424,11 +424,11 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def stake(self, confidence, amount):
+    def stake(self, confidence, value):
         """ participate in the staking competition
 
         confidence: your confidence (C) value
-        amount: amount of NMR you are willing to stake
+        value: amount of NMR you are willing to stake
         """
 
         query = '''
@@ -441,7 +441,7 @@ class NumerAPI(object):
                     confidence: $confidence
                     password: $password
                     round: $round
-                    value: $amount) {
+                    value: $value) {
                 id
                 status
                 txHash
@@ -453,6 +453,6 @@ class NumerAPI(object):
                      'confidence': str(confidence),
                      'password': "somepassword",
                      'round': self.get_current_round(),
-                     'value': str(amount)}
+                     'value': str(value)}
         result = self.raw_query(query, arguments, authorization=True)
         return result
