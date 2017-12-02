@@ -43,6 +43,16 @@ def test_get_leaderboard():
     assert len(lb) == 1425
 
 
+def test_stake():
+    api = NumerAPI()
+    with pytest.raises(ValueError) as err:
+        # while this won't work because we are not authorized, it still tells
+        # us if the request is formatted correctly
+        api.stake(3, 2)
+    # error should warn about not beeing logged in.
+    assert "You must be authenticated" in str(err.value)
+
+
 def test_get_submission_ids():
     api = NumerAPI()
     ids = api.get_submission_ids()

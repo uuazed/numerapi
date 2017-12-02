@@ -114,10 +114,13 @@ class NumerAPI(object):
         if isinstance(errors, list):
             for error in errors:
                 if "message" in error:
-                    self.logger.error(error['message'])
+                    msg = error['message']
+                    self.logger.error(msg)
         elif isinstance(errors, dict):
             if "detail" in errors:
-                self.logger.error(errors['detail'])
+                msg = errors['detail']
+                self.logger.error(msg)
+        return msg
 
     def raw_query(self, query, variables=None, authorization=False):
         """send a raw request to the Numerai's GraphQL API
@@ -137,9 +140,9 @@ class NumerAPI(object):
         r = requests.post(API_TOURNAMENT_URL, json=body, headers=headers)
         result = r.json()
         if "errors" in result:
-            self._handle_call_error(result['errors'])
+            err = self._handle_call_error(result['errors'])
             # fail!
-            raise ValueError
+            raise ValueError(err)
 
         return result
 
