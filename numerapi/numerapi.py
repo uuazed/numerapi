@@ -447,4 +447,4 @@ class NumerAPI(object):
                      'round': self.get_current_round(),
                      'value': str(value)}
         result = self.raw_query(query, arguments, authorization=True)
-        return result
+        return result['data']
