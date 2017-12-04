@@ -194,6 +194,18 @@ within the same session.
       * `"txHash"` (`str`)
       * `"usdAmount"` (`str`)
 
+## `stake`
+participate in the staking competition
+### Parameters
+* `confidence` (`float`)
+* `value` (`float`): the amount of NMR you want to stake
+### Return Values
+* `stake` (`dict`)
+  * `"id"` (`str`)
+  * `"status"` (`str`)
+  * `"txHash"` (`str`)
+  * `"value"` (`str`)
+
 ## `get_stakes`
 ### Return Values
 * `stakes` (`list`)
