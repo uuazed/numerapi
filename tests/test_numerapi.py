@@ -53,6 +53,13 @@ def test_stake():
     assert "You must be authenticated" in str(err.value)
 
 
+def test_get_staking_leaderboard():
+    api = NumerAPI()
+    stakes = api.get_staking_leaderboard(82)
+    # 115 people staked that round
+    assert len(stakes) == 115
+
+
 def test_get_submission_ids():
     api = NumerAPI()
     ids = api.get_submission_ids()

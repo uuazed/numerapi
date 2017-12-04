@@ -67,19 +67,25 @@ class NumerAPI(object):
 
         return True
 
-    def download_current_dataset(self, dest_path=".", unzip=True):
+    def download_current_dataset(self, dest_path=".", dest_filename=None,
+                                 unzip=True):
         """download dataset for current round
 
-        dest_path: desired location of dataset file
+        dest_path: desired location of dataset file (optional)
+        dest_filename: desired filename of dataset file (optional)
         unzip: indicates whether to unzip dataset
         """
         self.logger.info("downloading current dataset...")
 
         # set up download path
-        now = datetime.datetime.now().strftime("%Y%m%d")
-        dataset_name = "numerai_dataset_{0}".format(now)
-        file_name = "{0}.zip".format(dataset_name)
-        dataset_path = "{0}/{1}".format(dest_path, file_name)
+        if dest_filename is None:
+            now = datetime.datetime.now().strftime("%Y%m%d")
+            dest_filename = "numerai_dataset_{0}.zip".format(now)
+        else:
+            # ensure it ends with ".zip"
+            if not dest_filename.endswith(".zip"):
+                dest_filename += ".zip"
+        dataset_path = os.path.join(dest_path, dest_filename)
 
         if os.path.exists(dataset_path):
             self.logger.info("target file already exists")
@@ -106,6 +112,8 @@ class NumerAPI(object):
 
         # unzip dataset
         if unzip:
+            # remove the ".zip" in the end
+            dataset_name = dest_filename[:-4]
             self._unzip_file(dataset_path, dest_path, dataset_name)
 
         return dataset_path
@@ -189,6 +197,40 @@ class NumerAPI(object):
         arguments = {'number': round_num}
         result = self.raw_query(query, arguments)
         return result['data']['rounds'][0]['leaderboard']
+
+    def get_staking_leaderboard(self, round_num=0):
+        """ retrieves the leaderboard of the staking competition for the given
+        round
+
+        round_num: The round you are interested in, defaults to current round.
+        """
+        self.logger.info("getting stakes for round {}".format(round_num))
+        query = '''
+            query($number: Int!) {
+              rounds(number: $number) {
+                leaderboard {
+                  consistency
+                  liveLogloss
+                  username
+                  validationLogloss
+                  stake {
+                    insertedAt
+                    soc
+                    confidence
+                    value
+                    txHash
+                  }
+
+                }
+              }
+            }
+        '''
+        arguments = {'number': round_num}
+        result = self.raw_query(query, arguments)
+        stakes = result['data']['rounds'][0]['leaderboard']
+        # filter those with actual stakes
+        stakes = [item for item in stakes if item["stake"]["soc"] is not None]
+        return stakes
 
     def get_competitions(self):
         """ get information about rounds """
