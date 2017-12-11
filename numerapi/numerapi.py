@@ -83,7 +83,7 @@ class NumerAPI(object):
             dest_filename = "numerai_dataset_{0}.zip".format(now)
         else:
             # ensure it ends with ".zip"
-            if not dest_filename.endswith(".zip"):
+            if unzip and not dest_filename.endswith(".zip"):
                 dest_filename += ".zip"
         dataset_path = os.path.join(dest_path, dest_filename)
 
