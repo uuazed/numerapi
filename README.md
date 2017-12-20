@@ -9,7 +9,7 @@ accessing user, submission and competitions information.
 If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Installation
-`pip install git+https://github.com/numerai/NumerAPI.git`
+`pip install --upgrade numerapi`
 
 # Usage
 See `example.py`.  You can run it as `./example.py`
