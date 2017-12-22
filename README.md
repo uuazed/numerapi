@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/uuazed/numerapi.png)](https://travis-ci.org/uuazed/numerapi)
+
 # Numerai Python API
 Automatically download and upload data for the Numerai machine learning
 competition.
