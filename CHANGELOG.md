@@ -3,6 +3,9 @@ Notable changes to this project.
 
 
 ## [unreleased]
+- setup travis to run test automatically
+- run tests on different Python versions (2.7, 3.5 and 3.6)
+- test coverage reports via codecov.io
 - only append .zip to downloaded dataset if zip=True
 
 
