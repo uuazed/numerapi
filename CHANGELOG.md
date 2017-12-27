@@ -3,10 +3,11 @@ Notable changes to this project.
 
 
 ## [unreleased]
+- only append .zip to downloaded dataset if zip=True
+- use round_number instead of date in default download filename
 - setup travis to run test automatically
 - run tests on different Python versions (2.7, 3.5 and 3.6)
 - test coverage reports via codecov.io
-- only append .zip to downloaded dataset if zip=True
 
 
 ## [0.6.3] - 2017-12-20

@@ -3,7 +3,6 @@
 # System
 import zipfile
 import os
-import datetime
 import errno
 import logging
 
@@ -78,8 +77,8 @@ class NumerAPI(object):
 
         # set up download path
         if dest_filename is None:
-            now = datetime.datetime.now().strftime("%Y%m%d")
-            dest_filename = "numerai_dataset_{0}.zip".format(now)
+            round_number = self.get_current_round()
+            dest_filename = "numerai_dataset_{0}.zip".format(round_number)
         else:
             # ensure it ends with ".zip"
             if unzip and not dest_filename.endswith(".zip"):
