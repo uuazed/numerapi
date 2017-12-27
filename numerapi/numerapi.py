@@ -2,7 +2,6 @@
 
 # System
 import zipfile
-import json
 import os
 import datetime
 import errno
