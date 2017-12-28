@@ -171,7 +171,6 @@ class NumerAPI(object):
                     pending
                     value
                   }
-
                   liveLogloss
                   submissionId
                   username
@@ -218,7 +217,6 @@ class NumerAPI(object):
                     value
                     txHash
                   }
-
                 }
               }
             }
@@ -402,7 +400,8 @@ class NumerAPI(object):
             submission_id = self.submission_id
 
         if submission_id is None:
-            raise ValueError('You need to submit something first or provide a submission ID')
+            raise ValueError('You need to submit something first or provide\
+                              a submission ID')
 
         query = '''
             query($submission_id: String!) {
@@ -442,12 +441,12 @@ class NumerAPI(object):
             }
             '''
         variable = {'filename': os.path.basename(file_path)}
-        submission_resp = self.raw_query(auth_query, variable, authorization=True)
+        submission_resp = self.raw_query(auth_query, variable,
+                                         authorization=True)
         submission_auth = submission_resp['data']['submission_upload_auth']
         with open(file_path, 'rb') as fh:
             requests.put(submission_auth['url'], data=fh.read())
-        create_query = \
-            '''
+        create_query = '''
             mutation($filename: String!) {
                 create_submission(filename: $filename) {
                     id
