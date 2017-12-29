@@ -2,14 +2,16 @@
 Notable changes to this project.
 
 
-## [unreleased]
+## [0.7.1] - 2017-12-29
+- fix import issues (py2 vs py3)
+
+## [0.7.0] - 2017-12-29
 - convert datetime strings to proper Python datetime objects
 - only append .zip to downloaded dataset if zip=True
 - use round_number instead of date in default download filename
 - setup travis to run test automatically
 - run tests with different Python versions (2.7, 3.5 and 3.6)
 - test coverage reports via codecov.io
-
 
 ## [0.6.3] - 2017-12-20
 - complete rewrite to adapt to Numerai's API swich to GraphQL
