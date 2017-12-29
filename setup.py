@@ -1,7 +1,7 @@
 from setuptools import setup
 from setuptools import find_packages
 
-numerapi_version = '0.7.0'
+numerapi_version = '0.7.1'
 
 
 classifiers = [
