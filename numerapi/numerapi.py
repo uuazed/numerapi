@@ -9,6 +9,8 @@ import logging
 # Third Party
 import requests
 
+from numerapi import utils
+
 API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 
 
@@ -226,6 +228,10 @@ class NumerAPI(object):
         stakes = result['data']['rounds'][0]['leaderboard']
         # filter those with actual stakes
         stakes = [item for item in stakes if item["stake"]["soc"] is not None]
+        # convert datetime strings to datetime.datetime objects
+        for stake in stakes:
+            parsed = utils.parse_datetime_string(stake["stake"]["insertedAt"])
+            stake["stake"]["insertedAt"] = parsed
         return stakes
 
     def get_competitions(self):
@@ -245,7 +251,12 @@ class NumerAPI(object):
             }
         '''
         result = self.raw_query(query)
-        return result['data']['rounds']
+        rounds = result['data']['rounds']
+        # convert datetime strings to datetime.datetime objects
+        for r in rounds:
+            r["openTime"] = utils.parse_datetime_string(r["openTime"])
+            r["resolveTime"] = utils.parse_datetime_string(r["resolveTime"])
+        return rounds
 
     def get_current_round(self):
         """get information about the current active round"""
@@ -301,6 +312,8 @@ class NumerAPI(object):
           }
         """
         data = self.raw_query(query, authorization=True)['data']['user']
+        # convert datetime strings to datetime.datetime objects
+        data["insertedAt"] = utils.parse_datetime_string(data["insertedAt"])
         return data
 
     def get_payments(self):
@@ -320,19 +333,24 @@ class NumerAPI(object):
                 tournament
                 usdAmount
               }
-
             }
           }
         """
-        data = self.raw_query(query, authorization=True)['data']['user']
-        return data['payments']
+        data = self.raw_query(query, authorization=True)['data']
+        payments = data['user']['payments']
+        # convert datetime strings to datetime.datetime objects
+        for p in payments:
+            p['round']['openTime'] = \
+                utils.parse_datetime_string(p['round']['openTime'])
+            p['round']['resolveTime'] = \
+                utils.parse_datetime_string(p['round']['resolveTime'])
+        return payments
 
     def get_transactions(self):
         """all deposits and withdrawals"""
         query = """
           query {
             user {
-
               nmrDeposits {
                 from
                 id
@@ -365,8 +383,12 @@ class NumerAPI(object):
             }
           }
         """
-        data = self.raw_query(query, authorization=True)['data']['user']
-        return data
+        txs = self.raw_query(query, authorization=True)['data']['user']
+        # convert datetime strings to datetime.datetime objects
+        for t in txs['usdWithdrawals']:
+            t["confirmTime"] = utils.parse_datetime_string(t["confirmTime"])
+            t["sendTime"] = utils.parse_datetime_string(t["sendTime"])
+        return txs
 
     def get_stakes(self):
         """all your stakes"""
@@ -386,8 +408,12 @@ class NumerAPI(object):
             }
           }
         """
-        data = self.raw_query(query, authorization=True)['data']['user']
-        return data['stakeTxs']
+        data = self.raw_query(query, authorization=True)['data']
+        stakes = data['user']['stakeTxs']
+        # convert datetime strings to datetime.datetime objects
+        for s in stakes:
+            s['insertedAt'] = utils.parse_datetime_string(s['insertedAt'])
+        return stakes
 
     def submission_status(self, submission_id=None):
         """display submission status of the last submission associated with
