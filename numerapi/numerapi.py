@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 # System
 import zipfile
 import os
@@ -9,7 +11,7 @@ import logging
 # Third Party
 import requests
 
-from numerapi import utils
+from . import utils
 
 API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 
