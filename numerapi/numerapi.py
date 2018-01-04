@@ -151,6 +151,7 @@ class NumerAPI(object):
                 'Token {}${}'.format(public_id, secret_key)
         r = requests.post(API_TOURNAMENT_URL, json=body, headers=headers)
         result = r.json()
+        print(result)
         if "errors" in result:
             err = self._handle_call_error(result['errors'])
             # fail!

@@ -1,7 +1,12 @@
 import pytest
 import os
+import datetime
+import pytz
+import json
+import requests_mock
 
 from numerapi.numerapi import NumerAPI
+import numerapi
 
 
 def test_get_competitions():
@@ -81,3 +86,17 @@ def test_error_handling():
         api.token = ("foo", "bar")
         api.submission_id = 1
         api.submission_status()
+
+
+def test_check_new_round():
+    api = NumerAPI()
+    with requests_mock.mock() as m:
+        open_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
+        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
+        assert api.check_new_round()
+
+        open_time = datetime.datetime(2000, 1, 1).replace(tzinfo=pytz.utc)
+        data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
+        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
+        assert not api.check_new_round()
