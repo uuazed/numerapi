@@ -7,9 +7,11 @@ import zipfile
 import os
 import errno
 import logging
+import datetime
 
 # Third Party
 import requests
+import pytz
 
 from . import utils
 
@@ -518,3 +520,23 @@ class NumerAPI(object):
                      'value': str(value)}
         result = self.raw_query(query, arguments, authorization=True)
         return result['data']
+
+    def check_new_round(self, hours=24):
+        """ checks wether a new round has started within the last `hours`
+
+        hours: timeframe to consider
+        """
+        query = '''
+            query {
+              rounds(number: 0) {
+                number
+                openTime
+              }
+            }
+        '''
+        raw = self.raw_query(query)
+        open_time = raw['data']['rounds'][0]['openTime']
+        open_time = utils.parse_datetime_string(open_time)
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        is_new_round = open_time > now - datetime.timedelta(hours=hours)
+        return is_new_round

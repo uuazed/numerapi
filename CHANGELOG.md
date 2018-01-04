@@ -2,6 +2,10 @@
 Notable changes to this project.
 
 
+## [unreleased]
+- added `check_new_round` to check if a new round has started
+
+
 ## [0.7.1] - 2017-12-29
 - fix import issues (py2 vs py3)
 
@@ -19,7 +23,7 @@ Notable changes to this project.
 - added staking via API - `stake`
 - added `get_staking_leaderboard`
 - allow passing desired filename to data download
-- allow custom API calls - 'raw_query'
+- allow custom API calls - `raw_query`
 - started a test suite
 - moved numerapi to it's new home (https://github.com/uuazed/numerapi)
 - make numerapi available on pypi (https://pypi.org/project/numerapi)

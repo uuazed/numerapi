@@ -234,3 +234,10 @@ for an introduction.
 * `authorization` (`bool`, optional, default: `False`): indicates if a token is required
 ### Return Values
 * `data` (`dict`)
+
+## `check_new_round`
+Checks if a new round has started recently.
+### Parameters
+* `hour` (`int`, optional): timeframe to consider
+### Return Value
+* `is_new_round` (`bool`)
