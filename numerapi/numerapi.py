@@ -33,22 +33,24 @@ class NumerAPI(object):
         verbosity: indicates what level of messages should be displayed
             valid values: "debug", "info", "warning", "error", "critical"
         """
-        if public_id and secret_key:
-            self.token = (public_id, secret_key)
-        elif not public_id and not secret_key:
-            self.token = None
-        else:
-            print("You need to supply both a public id and a secret key.")
-            self.token = None
-
-        self.logger = logging.getLogger(__name__)
 
         # set up logging
+        self.logger = logging.getLogger(__name__)
         numeric_log_level = getattr(logging, verbosity.upper())
         if not isinstance(numeric_log_level, int):
             raise ValueError('invalid verbosity: %s' % verbosity)
         log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
         logging.basicConfig(format=log_format, level=numeric_log_level)
+
+        if public_id and secret_key:
+            self.token = (public_id, secret_key)
+        elif not public_id and not secret_key:
+            self.token = None
+        else:
+            self.logger.warning(
+                "You need to supply both a public id and a secret key.")
+            self.token = None
+
         self.submission_id = None
 
     def _unzip_file(self, src_path, dest_path, filename):
@@ -151,7 +153,6 @@ class NumerAPI(object):
                 'Token {}${}'.format(public_id, secret_key)
         r = requests.post(API_TOURNAMENT_URL, json=body, headers=headers)
         result = r.json()
-        print(result)
         if "errors" in result:
             err = self._handle_call_error(result['errors'])
             # fail!
