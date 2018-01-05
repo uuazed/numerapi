@@ -18,6 +18,11 @@ def main():
     leaderboard = napi.get_leaderboard()
     # leaderboard for a historic round
     leaderboard_67 = napi.get_leaderboard(round_num=67)
+    # check if a new round has started
+    if napi.check_new_round():
+        print("new round has started wihtin the last 24hours!")
+    else:
+        print("no new round within the last 24 hours")
 
     # provide api tokens
     napi = NumerAPI(example_public_id, example_secret_key)
