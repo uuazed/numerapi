@@ -1,6 +1,8 @@
 import pytest
 import datetime
+import os
 from dateutil.tz import tzutc
+import requests_mock
 from numerapi import utils
 
 
@@ -29,3 +31,11 @@ def test_replace():
     d = {"a": "1"}
     utils.replace(d, "a", float)
     assert d["a"] == 1.0
+
+
+def test_download_file(tmpdir):
+    with requests_mock.mock() as m:
+        m.get(requests_mock.ANY, text="")
+        path = os.path.join(tmpdir, "somefilepath")
+        utils.download_file("https://someurl", path)
+        assert os.path.exists(path)
