@@ -36,6 +36,7 @@ def test_replace():
 def test_download_file(tmpdir):
     with requests_mock.mock() as m:
         m.get(requests_mock.ANY, text="")
-        path = os.path.join(tmpdir, "somefilepath")
+        # convert to string to make python<3.6 happy
+        path = str(tmpdir.join("somefilepath"))
         utils.download_file("https://someurl", path)
         assert os.path.exists(path)
