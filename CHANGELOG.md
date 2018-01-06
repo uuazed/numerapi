@@ -4,6 +4,8 @@ Notable changes to this project.
 
 ## [unreleased]
 - added `check_new_round` to check if a new round has started
+- added `check_submission_successful` to check if the last submission passes
+  concordance, originality and consistency
 - return proper Python data types, for example the NMR amounts are now
   floats and no longer strings
 - show progress bar while downloading dataset

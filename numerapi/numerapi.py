@@ -558,3 +558,16 @@ class NumerAPI(object):
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
+
+    def check_submission_successful(self, submission_id=None):
+        """Check if the last submission passes concordance, originality and
+        consistency tests
+
+        submission_id: submission of interest, defaults to the last submission
+            done with the account
+        """
+        status = self.submission_status(submission_id)
+        success = (status['consistency'] >= 75 and
+                   status["originality"]["value"] and
+                   status["concordance"]["value"])
+        return success

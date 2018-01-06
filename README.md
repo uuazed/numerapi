@@ -113,7 +113,7 @@ get dict with username->submission_id mapping
 submission status of the given submission_id or the last submission done
 within the same session.
 ### Parameters
-* `submission_id` (`str`, optional, default: `None`):
+* `submission_id` (`str`, optional, default: `None`)
 ### Return Values
 * `status` (`dict`)
   * `"concordance"` (`dict`):
@@ -241,3 +241,10 @@ Checks if a new round has started recently.
 * `hour` (`int`, optional): timeframe to consider
 ### Return Value
 * `is_new_round` (`bool`)
+
+## `check_submission_successful`
+Check if the last submission passes concordance, originality and consistency tests
+### Parameters
+* `submission_id` (`str`, optional, default: `None`)
+### Return Value
+* `success` (`bool`)
