@@ -12,6 +12,7 @@ import datetime
 # Third Party
 import requests
 import pytz
+import tqdm
 
 from . import utils
 
@@ -73,6 +74,20 @@ class NumerAPI(object):
 
         return True
 
+    def _download_file(self, url, dest_path):
+        r = requests.get(url, stream=True)
+        r.raise_for_status()
+        # Total size in bytes.
+        total_size = int(r.headers.get('content-length', 0))
+
+        # write dataset to file and show progress bar
+        pbar = tqdm.tqdm(total=total_size, unit='B', unit_scale=True,
+                         desc=dest_path)
+        with open(dest_path, "wb") as f:
+            for chunk in r.iter_content(1024):
+                f.write(chunk)
+                pbar.update(1024)
+
     def download_current_dataset(self, dest_path=".", dest_filename=None,
                                  unzip=True):
         """download dataset for current round
@@ -100,9 +115,6 @@ class NumerAPI(object):
         # get link to current dataset
         query = "query {dataset}"
         url = self.raw_query(query)['data']['dataset']
-        # download
-        dataset_res = requests.get(url, stream=True)
-        dataset_res.raise_for_status()
 
         # create parent folder if necessary
         try:
@@ -111,10 +123,7 @@ class NumerAPI(object):
             if exception.errno != errno.EEXIST:
                 raise
 
-        # write dataset to file
-        with open(dataset_path, "wb") as f:
-            for chunk in dataset_res.iter_content(1024):
-                f.write(chunk)
+        self._download_file(url, dataset_path)
 
         # unzip dataset
         if unzip:
