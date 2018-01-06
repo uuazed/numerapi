@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [unreleased]
+## [0.8.0] - 2018-01-06
 - added `check_new_round` to check if a new round has started
 - added `check_submission_successful` to check if the last submission passes
   concordance, originality and consistency
