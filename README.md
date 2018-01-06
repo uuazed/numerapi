@@ -81,11 +81,11 @@ retrieves the leaderboard of the staking competition for the given round
     * `"liveLogloss"` (`float` or `None`)
     * `"validationLogloss"` (`float`)
     * `"stake"` (`dict`)
-      * `"confidence"` (`str`)
+      * `"confidence"` (`float`)
       * `"insertedAt"` (`datetime`)
-      * `"soc"` (`str`)
+      * `"soc"` (`float`)
       * `"txHash"` (`str`)
-      * `"value"` (`str`)
+      * `"value"` (`float`)
 
 ## `get_competitions`
 ### Return Values
@@ -155,8 +155,8 @@ within the same session.
 ### Return Values
 * `payments` (`list`)
   * `payment` (`dict`)
-    * `"nmrAmount"` (`str`)
-    * `"usdAmount"` (`str`)
+    * `"nmrAmount"` (`float`)
+    * `"usdAmount"` (`float`)
     * `"tournament"` (`str`)
     * `"round"` (`dict`)
       * `"number"` (`int`)
@@ -176,7 +176,7 @@ within the same session.
       * `"status"` (`str`)
       * `"to"` (`str`)
       * `"txHash"` (`str`)
-      * `"value"` (`str`)
+      * `"value"` (`float`)
   * `"nmrWithdrawals"` (`list`)
     * `nmrWithdrawal` (`dict`)
       * `"from"` (`str`)
@@ -185,7 +185,7 @@ within the same session.
       * `"status"` (`str`)
       * `"to"` (`str`)
       * `"txHash"` (`str`)
-      * `"value"` (`str`)
+      * `"value"` (`float`)
   * `"usdWithdrawals"` (`list`)
     * `usdWithdrawal` (`dict`)
       * `"confirmTime"` (`datetime` or `None`)
@@ -196,7 +196,7 @@ within the same session.
       * `"status"` (`str`)
       * `"to"` (`str`)
       * `"txHash"` (`str`)
-      * `"usdAmount"` (`str`)
+      * `"usdAmount"` (`float`)
 
 ## `stake`
 participate in the staking competition
@@ -208,20 +208,20 @@ participate in the staking competition
   * `"id"` (`str`)
   * `"status"` (`str`)
   * `"txHash"` (`str`)
-  * `"value"` (`str`)
+  * `"value"` (`float`)
 
 ## `get_stakes`
 ### Return Values
 * `stakes` (`list`)
   * `stake` (`dict`)
-    * `"confidence"` (`str`)
+    * `"confidence"` (`float`)
     * `"roundNumber"` (`int`)
     * `"soc"` (`float`)
     * `"insertedAt"` (`str (datetime)`)
     * `"staker"` (`str`): NMR adress used for staking
     * `"status"` (`str`)
     * `"txHash"` (`str`)
-    * `"value"` (`str`)
+    * `"value"` (`float`)
 
 ## `raw_query`
 This function allows to build your own queries and fetch results from

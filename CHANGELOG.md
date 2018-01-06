@@ -4,7 +4,8 @@ Notable changes to this project.
 
 ## [unreleased]
 - added `check_new_round` to check if a new round has started
-
+- return proper Python data types, for example the NMR amounts are now
+  floats and no longer strings
 
 ## [0.7.1] - 2017-12-29
 - fix import issues (py2 vs py3)

@@ -201,7 +201,13 @@ class NumerAPI(object):
         '''
         arguments = {'number': round_num}
         result = self.raw_query(query, arguments)
-        return result['data']['rounds'][0]['leaderboard']
+        leaderboard = result['data']['rounds'][0]['leaderboard']
+        # parse to correct data types
+        for item in leaderboard:
+            for p in ["totalPayments", "paymentGeneral", "paymentStaking"]:
+                utils.replace(item[p], "nmrAmount", utils.parse_float_string)
+                utils.replace(item[p], "usdAmount", utils.parse_float_string)
+        return leaderboard
 
     def get_staking_leaderboard(self, round_num=0):
         """ retrieves the leaderboard of the staking competition for the given
@@ -234,10 +240,13 @@ class NumerAPI(object):
         stakes = result['data']['rounds'][0]['leaderboard']
         # filter those with actual stakes
         stakes = [item for item in stakes if item["stake"]["soc"] is not None]
-        # convert datetime strings to datetime.datetime objects
-        for stake in stakes:
-            parsed = utils.parse_datetime_string(stake["stake"]["insertedAt"])
-            stake["stake"]["insertedAt"] = parsed
+        # convert strings to pyton objects
+        for s in stakes:
+            utils.replace(s["stake"], "insertedAt",
+                          utils.parse_datetime_string)
+            utils.replace(s["stake"], "confidence", utils.parse_float_string)
+            utils.replace(s["stake"], "soc", utils.parse_float_string)
+            utils.replace(s["stake"], "value", utils.parse_float_string)
         return stakes
 
     def get_competitions(self):
@@ -260,8 +269,8 @@ class NumerAPI(object):
         rounds = result['data']['rounds']
         # convert datetime strings to datetime.datetime objects
         for r in rounds:
-            r["openTime"] = utils.parse_datetime_string(r["openTime"])
-            r["resolveTime"] = utils.parse_datetime_string(r["resolveTime"])
+            utils.replace(r, "openTime", utils.parse_datetime_string)
+            utils.replace(r, "resolveTime", utils.parse_datetime_string)
         return rounds
 
     def get_current_round(self):
@@ -318,8 +327,10 @@ class NumerAPI(object):
           }
         """
         data = self.raw_query(query, authorization=True)['data']['user']
-        # convert datetime strings to datetime.datetime objects
-        data["insertedAt"] = utils.parse_datetime_string(data["insertedAt"])
+        # convert strings to python objects
+        utils.replace(data, "insertedAt", utils.parse_datetime_string)
+        utils.replace(data, "availableUsd", utils.parse_float_string)
+        utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
     def get_payments(self):
@@ -344,12 +355,13 @@ class NumerAPI(object):
         """
         data = self.raw_query(query, authorization=True)['data']
         payments = data['user']['payments']
-        # convert datetime strings to datetime.datetime objects
+        # convert strings to python objects
         for p in payments:
-            p['round']['openTime'] = \
-                utils.parse_datetime_string(p['round']['openTime'])
-            p['round']['resolveTime'] = \
-                utils.parse_datetime_string(p['round']['resolveTime'])
+            utils.replace(p['round'], "openTime", utils.parse_datetime_string)
+            utils.replace(p['round'], "resolveTime",
+                          utils.parse_datetime_string)
+            utils.replace(p, "usdAmount", utils.parse_float_string)
+            utils.replace(p, "nmrAmount", utils.parse_float_string)
         return payments
 
     def get_transactions(self):
@@ -390,10 +402,15 @@ class NumerAPI(object):
           }
         """
         txs = self.raw_query(query, authorization=True)['data']['user']
-        # convert datetime strings to datetime.datetime objects
+        # convert strings to python objects
         for t in txs['usdWithdrawals']:
-            t["confirmTime"] = utils.parse_datetime_string(t["confirmTime"])
-            t["sendTime"] = utils.parse_datetime_string(t["sendTime"])
+            utils.replace(t, "confirmTime", utils.parse_datetime_string)
+            utils.replace(t, "sendTime", utils.parse_datetime_string)
+            utils.replace(t, "usdAmount", utils.parse_float_string)
+        for t in txs["nmrWithdrawals"]:
+            utils.replace(t, "value", utils.parse_float_string)
+        for t in txs["nmrDeposits"]:
+            utils.replace(t, "value", utils.parse_float_string)
         return txs
 
     def get_stakes(self):
@@ -416,9 +433,12 @@ class NumerAPI(object):
         """
         data = self.raw_query(query, authorization=True)['data']
         stakes = data['user']['stakeTxs']
-        # convert datetime strings to datetime.datetime objects
+        # convert strings to python objects
         for s in stakes:
-            s['insertedAt'] = utils.parse_datetime_string(s['insertedAt'])
+            utils.replace(s, "insertedAt", utils.parse_datetime_string)
+            utils.replace(s, "soc", utils.parse_float_string)
+            utils.replace(s, "confidence", utils.parse_float_string)
+            utils.replace(s, "value", utils.parse_float_string)
         return stakes
 
     def submission_status(self, submission_id=None):
@@ -521,7 +541,9 @@ class NumerAPI(object):
                      'round': self.get_current_round(),
                      'value': str(value)}
         result = self.raw_query(query, arguments, authorization=True)
-        return result['data']
+        stake = result['data']
+        utils.replace(stake, "value", utils.parse_float_string)
+        return stake
 
     def check_new_round(self, hours=24):
         """ checks wether a new round has started within the last `hours`
