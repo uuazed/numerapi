@@ -98,25 +98,23 @@ def test_check_new_round(api):
 
 def test_check_submission_successful(api):
     test_cases = [
-        (True, None, False, True, 80, 0.69, False),
-        (False, False, False, True, 80, 0.69, False),
-        (False, True, True, None, 80, 0.69, False),
-        (False, True, False, False, 80, 0.69, False),
-        (False, True, False, True, 70, 0.69, False),
-        (False, True, False, True, 75, 0.70, False),
-        (False, True, False, True, 75, 0.69, True),
+        (True, None, False, True, 80, False),
+        (False, False, False, True, 80, False),
+        (False, True, True, None, 80, False),
+        (False, True, False, False, 80, False),
+        (False, True, False, True, 70, False),
+        (False, True, False, True, 75, True)
     ]
     with requests_mock.mock() as m:
         for (originality_pending, originality_value, concordance_pending,
-             concordance_value, consistency, logloss, expected) in test_cases:
+             concordance_value, consistency, expected) in test_cases:
             data = {"data": {"submissions": [
               {"originality":
                   {"pending": originality_pending, "value": originality_value},
                "concordance":
                   {"pending": concordance_pending, "value": concordance_value},
-               "consistency": consistency,
-               "validation_logloss": logloss}
+               "consistency": consistency
+               }
             ]}}
-        print(data)
-        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
-        assert api.check_submission_successful(submission_id="foo") == expected
+            m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
+            assert api.check_submission_successful(submission_id="") == expected

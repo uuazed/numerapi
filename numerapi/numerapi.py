@@ -567,7 +567,8 @@ class NumerAPI(object):
             done with the account
         """
         status = self.submission_status(submission_id)
-        success = (status['consistency'] >= 75 and
-                   status["originality"]["value"] and
-                   status["concordance"]["value"])
+        # need to cast to bool to not return None in some cases.
+        success = bool(status['consistency'] >= 75 and
+                       status["originality"]["value"] and
+                       status["concordance"]["value"])
         return success
