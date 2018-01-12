@@ -95,25 +95,26 @@ def test_check_new_round(api):
         assert not api.check_new_round()
 
 
-def test_check_submission_successful(api):
-    test_cases = [
-        (True, None, False, True, 80, False),
-        (False, False, False, True, 80, False),
-        (False, True, True, None, 80, False),
-        (False, True, False, False, 80, False),
-        (False, True, False, True, 70, False),
-        (False, True, False, True, 75, True)
-    ]
+@pytest.mark.parametrize('''originality_pending, originality_value,
+    concordance_pending, concordance_value, consistency, expected''', [
+    (True, None, False, True, 80, False),
+    (False, False, False, True, 80, False),
+    (False, True, True, None, 80, False),
+    (False, True, False, False, 80, False),
+    (False, True, False, True, 70, False),
+    (False, True, False, True, 75, True)])
+def test_check_submission_successful(api, originality_pending,
+                                     originality_value, concordance_pending,
+                                     concordance_value, consistency,
+                                     expected):
     with requests_mock.mock() as m:
-        for (originality_pending, originality_value, concordance_pending,
-             concordance_value, consistency, expected) in test_cases:
-            data = {"data": {"submissions": [
-              {"originality":
-                  {"pending": originality_pending, "value": originality_value},
-               "concordance":
-                  {"pending": concordance_pending, "value": concordance_value},
-               "consistency": consistency
-               }
-            ]}}
-            m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
-            assert api.check_submission_successful(submission_id="") == expected
+        data = {"data": {"submissions": [
+          {"originality":
+              {"pending": originality_pending, "value": originality_value},
+           "concordance":
+              {"pending": concordance_pending, "value": concordance_value},
+           "consistency": consistency
+           }
+        ]}}
+        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
+        assert api.check_submission_successful(submission_id="") == expected
