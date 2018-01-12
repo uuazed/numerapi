@@ -40,3 +40,12 @@ def test_download_file(tmpdir):
         path = str(tmpdir.join("somefilepath"))
         utils.download_file("https://someurl", path)
         assert os.path.exists(path)
+
+
+def test_ensure_directory_exists(tmpdir):
+    path = str(tmpdir.join("somedirectory"))
+    utils.ensure_directory_exists(path)
+    assert os.path.exists(path)
+    # doing it again with the same (existing) path
+    utils.ensure_directory_exists(path)
+    assert os.path.exists(path)

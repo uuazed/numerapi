@@ -1,6 +1,8 @@
 import dateutil.parser
 import requests
 import tqdm
+import os
+import errno
 
 
 def parse_datetime_string(s):
@@ -38,3 +40,12 @@ def download_file(url, dest_path):
         for chunk in r.iter_content(1024):
             f.write(chunk)
             pbar.update(1024)
+
+
+def ensure_directory_exists(path):
+    try:
+        # `exist_ok` option is only available in Python 3.2+
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise

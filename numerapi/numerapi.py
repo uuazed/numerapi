@@ -5,7 +5,6 @@ from __future__ import absolute_import
 # System
 import zipfile
 import os
-import errno
 import logging
 import datetime
 
@@ -59,13 +58,7 @@ class NumerAPI(object):
 
         # construct full path (including file name) for unzipping
         unzip_path = os.path.join(dest_path, filename)
-
-        # create parent directory for unzipped data
-        try:
-            os.makedirs(unzip_path)
-        except OSError as exception:
-            if exception.errno != errno.EEXIST:
-                raise
+        utils.ensure_directory_exists(unzip_path)
 
         # extract data
         with zipfile.ZipFile(src_path, "r") as z:
@@ -106,11 +99,7 @@ class NumerAPI(object):
             return dataset_path
 
         # create parent folder if necessary
-        try:
-            os.makedirs(dest_path)
-        except OSError as exception:
-            if exception.errno != errno.EEXIST:
-                raise
+        utils.ensure_directory_exists(dest_path)
 
         url = self.get_dataset_url()
         utils.download_file(url, dataset_path)
