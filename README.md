@@ -36,10 +36,15 @@ itself.
 * `dest_path` (`str`, optional, default: `.`): destination folder for the
   dataset
 * `dest_filename` (`str`, optional, default: `numerai_dataset_<round number>.zip`)
-* `unzip (`bool`, optional, default: `True`): indication of whether the
+* `unzip` (`bool`, optional, default: `True`): indication of whether the
   training data should be unzipped
 ### Return Values
 * `path` (`string`): location of the downloaded dataset
+
+## `get_dataset_url`
+Fetch url of the current dataset.
+### Return Values
+* `url` (`str`): url of the current dataset
 
 ## `get_leaderboard`
 retrieves the leaderboard for the given round

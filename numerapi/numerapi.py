@@ -73,6 +73,16 @@ class NumerAPI(object):
 
         return True
 
+    def get_dataset_url(self):
+        """Fetch url of the current dataset.
+
+        Returns:
+            str: url of the current dataset
+        """
+        query = "query {dataset}"
+        url = self.raw_query(query)['data']['dataset']
+        return url
+
     def download_current_dataset(self, dest_path=".", dest_filename=None,
                                  unzip=True):
         """download dataset for current round
@@ -81,8 +91,6 @@ class NumerAPI(object):
         dest_filename: desired filename of dataset file (optional)
         unzip: indicates whether to unzip dataset
         """
-        self.logger.info("downloading current dataset...")
-
         # set up download path
         if dest_filename is None:
             round_number = self.get_current_round()
@@ -97,10 +105,6 @@ class NumerAPI(object):
             self.logger.info("target file already exists")
             return dataset_path
 
-        # get link to current dataset
-        query = "query {dataset}"
-        url = self.raw_query(query)['data']['dataset']
-
         # create parent folder if necessary
         try:
             os.makedirs(dest_path)
@@ -108,6 +112,7 @@ class NumerAPI(object):
             if exception.errno != errno.EEXIST:
                 raise
 
+        url = self.get_dataset_url()
         utils.download_file(url, dataset_path)
 
         # unzip dataset
