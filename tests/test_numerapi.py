@@ -5,13 +5,12 @@ import pytz
 import json
 import requests_mock
 
-from numerapi.numerapi import NumerAPI
 import numerapi
 
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
-    api = NumerAPI(verbosity='DEBUG')
+    api = numerapi.NumerAPI(verbosity='DEBUG')
     return api
 
 

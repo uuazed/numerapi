@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from numerapi.numerapi import NumerAPI
+import numerapi
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
     example_secret_key = "somesecretkey"
 
     # some API calls do not require logging in
-    napi = NumerAPI(verbosity="info")
+    napi = numerapi.NumerAPI(verbosity="info")
     # download current dataset
     napi.download_current_dataset(unzip=True)
     # get competitions
