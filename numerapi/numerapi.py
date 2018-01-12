@@ -13,7 +13,7 @@ import datetime
 import requests
 import pytz
 
-from . import utils
+from numerapi import utils
 
 API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 
