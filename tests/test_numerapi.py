@@ -2,8 +2,7 @@ import pytest
 import os
 import datetime
 import pytz
-import json
-import requests_mock
+import responses
 
 import numerapi
 
@@ -82,19 +81,25 @@ def test_error_handling(api):
         api.submission_status()
 
 
+@responses.activate
 def test_check_new_round(api):
-    with requests_mock.mock() as m:
-        open_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
-        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
-        assert api.check_new_round()
+    open_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
+    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
+                  json=data)
 
-        open_time = datetime.datetime(2000, 1, 1).replace(tzinfo=pytz.utc)
-        data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
-        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
-        assert not api.check_new_round()
+    open_time = datetime.datetime(2000, 1, 1).replace(tzinfo=pytz.utc)
+    data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
+    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
+                  json=data)
+
+    # first example
+    assert api.check_new_round()
+    # second
+    assert not api.check_new_round()
 
 
+@responses.activate
 @pytest.mark.parametrize('''originality_pending, originality_value,
     concordance_pending, concordance_value, consistency, expected''', [
     (True, None, False, True, 80, False),
@@ -107,14 +112,14 @@ def test_check_submission_successful(api, originality_pending,
                                      originality_value, concordance_pending,
                                      concordance_value, consistency,
                                      expected):
-    with requests_mock.mock() as m:
-        data = {"data": {"submissions": [
-          {"originality":
-              {"pending": originality_pending, "value": originality_value},
-           "concordance":
-              {"pending": concordance_pending, "value": concordance_value},
-           "consistency": consistency
-           }
-        ]}}
-        m.post(numerapi.numerapi.API_TOURNAMENT_URL, text=json.dumps(data))
-        assert api.check_submission_successful(submission_id="") == expected
+    data = {"data": {"submissions": [
+      {"originality":
+          {"pending": originality_pending, "value": originality_value},
+       "concordance":
+          {"pending": concordance_pending, "value": concordance_value},
+       "consistency": consistency
+       }
+    ]}}
+    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
+                  json=data)
+    assert api.check_submission_successful(submission_id="") == expected

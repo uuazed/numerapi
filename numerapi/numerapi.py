@@ -471,8 +471,7 @@ class NumerAPI(object):
         """
         self.logger.info("uploading prediction...")
 
-        auth_query = \
-            '''
+        auth_query = '''
             query($filename: String!) {
                 submission_upload_auth(filename: $filename) {
                     filename
