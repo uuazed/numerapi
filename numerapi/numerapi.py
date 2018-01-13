@@ -36,8 +36,6 @@ class NumerAPI(object):
         # set up logging
         self.logger = logging.getLogger(__name__)
         numeric_log_level = getattr(logging, verbosity.upper())
-        if not isinstance(numeric_log_level, int):
-            raise ValueError('invalid verbosity: %s' % verbosity)
         log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
         logging.basicConfig(format=log_format, level=numeric_log_level)
 

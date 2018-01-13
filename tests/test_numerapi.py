@@ -13,6 +13,21 @@ def api_fixture():
     return api
 
 
+def test_NumerAPI():
+    # passing only one of public_id and secret_key is not enough
+    api = numerapi.NumerAPI(public_id="foo", secret_key=None)
+    assert api.token is None
+    api = numerapi.NumerAPI(public_id=None, secret_key="bar")
+    assert api.token is None
+    # passing both works
+    api = numerapi.NumerAPI(public_id="foo", secret_key="bar")
+    assert api.token == ("foo", "bar")
+
+    # invalid log level should raise
+    with pytest.raises(AttributeError):
+        numerapi.NumerAPI(verbosity="FOO")
+
+
 def test_get_competitions(api):
     res = api.get_competitions()
     assert isinstance(res, list)
