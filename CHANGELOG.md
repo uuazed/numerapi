@@ -5,7 +5,7 @@ Notable changes to this project.
 ## [dev] - unreleased
 - import NumerAPI class to toplevel. now `from numerapi import NumerAPI` works
 - added `get_dataset_url`
-- improved tests
+- more & improved tests
 
 ## [0.8.0] - 2018-01-06
 - added `check_new_round` to check if a new round has started

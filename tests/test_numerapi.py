@@ -34,13 +34,19 @@ def test_get_competitions(api):
     assert len(res) > 80
 
 
-def test_download_current_dataset(api):
-    path = api.download_current_dataset(unzip=True)
+def test_download_current_dataset(api, tmpdir):
+    path = api.download_current_dataset(dest_path=tmpdir, unzip=True)
     assert os.path.exists(path)
 
     directory = path.replace(".zip", "")
     filename = "numerai_tournament_data.csv"
     assert os.path.exists(os.path.join(directory, filename))
+
+    # calling again shouldn't download again
+    with responses.RequestsMock() as rsps:
+        api.download_current_dataset(dest_path=tmpdir,
+                                     dest_filename=os.path.basename(path))
+        assert len(rsps.calls) == 0
 
 
 def test_get_current_round(api):
