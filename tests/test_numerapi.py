@@ -35,7 +35,7 @@ def test_get_competitions(api):
 
 
 def test_download_current_dataset(api, tmpdir):
-    path = api.download_current_dataset(dest_path=tmpdir, unzip=True)
+    path = api.download_current_dataset(dest_path=str(tmpdir), unzip=True)
     assert os.path.exists(path)
 
     directory = path.replace(".zip", "")
@@ -44,7 +44,7 @@ def test_download_current_dataset(api, tmpdir):
 
     # calling again shouldn't download again
     with responses.RequestsMock() as rsps:
-        api.download_current_dataset(dest_path=tmpdir,
+        api.download_current_dataset(dest_path=str(tmpdir),
                                      dest_filename=os.path.basename(path))
         assert len(rsps.calls) == 0
 
