@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [dev] - unreleased
+## [0.8.1] - 2018-01-27
 - import NumerAPI class to toplevel. now `from numerapi import NumerAPI` works
 - added `get_dataset_url`
 - more & improved tests
