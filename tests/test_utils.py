@@ -3,6 +3,7 @@ import datetime
 import os
 from dateutil.tz import tzutc
 import responses
+import decimal
 from numerapi import utils
 
 
@@ -16,9 +17,10 @@ def test_parse_datetime_string():
 def test_parse_float_string():
     assert utils.parse_float_string(None) is None
     assert utils.parse_float_string("") is None
-    assert utils.parse_float_string("1.23") == 1.23
-    assert utils.parse_float_string("12") == 12.0
-    assert utils.parse_float_string("1,000.0") == 1000.0
+    assert utils.parse_float_string("1.23") == decimal.Decimal("1.23")
+    assert utils.parse_float_string("12") == decimal.Decimal("12.0")
+    assert utils.parse_float_string("1,000.0") == decimal.Decimal("1000.0")
+    assert utils.parse_float_string("0.4") == decimal.Decimal("0.4")
 
 
 def test_replace():

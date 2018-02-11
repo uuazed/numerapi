@@ -3,6 +3,7 @@ import requests
 import tqdm
 import os
 import errno
+import decimal
 
 
 def parse_datetime_string(s):
@@ -16,8 +17,8 @@ def parse_float_string(s):
     if s is None:
         return None
     try:
-        f = float(s.replace(",", ""))
-    except ValueError:
+        f = decimal.Decimal(s.replace(",", ""))
+    except decimal.InvalidOperation:
         f = None
     return f
 
