@@ -554,7 +554,7 @@ class NumerAPI(object):
         return is_new_round
 
     def check_submission_successful(self, submission_id=None):
-        """Check if the last submission passes concordance, originality and
+        """Check if the last submission passes concordance and
         consistency tests
 
         submission_id: submission of interest, defaults to the last submission
@@ -563,6 +563,5 @@ class NumerAPI(object):
         status = self.submission_status(submission_id)
         # need to cast to bool to not return None in some cases.
         success = bool(status['consistency'] >= 75 and
-                       status["originality"]["value"] and
                        status["concordance"]["value"])
         return success

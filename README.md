@@ -248,7 +248,7 @@ Checks if a new round has started recently.
 * `is_new_round` (`bool`)
 
 ## `check_submission_successful`
-Check if the last submission passes concordance, originality and consistency tests
+Check if the last submission passes concordance and consistency tests
 ### Parameters
 * `submission_id` (`str`, optional, default: `None`)
 ### Return Value
