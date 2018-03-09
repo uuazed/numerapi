@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [dev] - unreleased
+## [0.8.2] - 2018-03-09
 - use `decimal.Decimal` instead of floats to avoid rounding errors (#3)
 - optional flag to turn of tqdm's progress bars (#4)
 - update `check_submission_successful` to recent rule changes (originality
