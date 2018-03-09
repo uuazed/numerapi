@@ -28,7 +28,7 @@ def replace(dictionary, key, function):
         dictionary[key] = function(dictionary[key])
 
 
-def download_file(url, dest_path):
+def download_file(url, dest_path, show_progress_bars=True):
     r = requests.get(url, stream=True)
     r.raise_for_status()
     # Total size in bytes.
@@ -36,7 +36,7 @@ def download_file(url, dest_path):
 
     # write dataset to file and show progress bar
     pbar = tqdm.tqdm(total=total_size, unit='B', unit_scale=True,
-                     desc=dest_path)
+                     desc=dest_path, disable=not show_progress_bars)
     with open(dest_path, "wb") as f:
         for chunk in r.iter_content(1024):
             f.write(chunk)

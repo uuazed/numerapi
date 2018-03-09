@@ -21,7 +21,8 @@ class NumerAPI(object):
 
     """Wrapper around the Numerai API"""
 
-    def __init__(self, public_id=None, secret_key=None, verbosity="INFO"):
+    def __init__(self, public_id=None, secret_key=None, verbosity="INFO",
+                 show_progress_bars=True):
         """
         initialize Numerai API wrapper for Python
 
@@ -31,6 +32,7 @@ class NumerAPI(object):
                     Numer.ai->Account->Custom API keys
         verbosity: indicates what level of messages should be displayed
             valid values: "debug", "info", "warning", "error", "critical"
+        show_progress_bars: flag to turn of progress bars
         """
 
         # set up logging
@@ -49,6 +51,7 @@ class NumerAPI(object):
             self.token = None
 
         self.submission_id = None
+        self.show_progress_bars = show_progress_bars
 
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
@@ -100,7 +103,7 @@ class NumerAPI(object):
         utils.ensure_directory_exists(dest_path)
 
         url = self.get_dataset_url()
-        utils.download_file(url, dataset_path)
+        utils.download_file(url, dataset_path, self.show_progress_bars)
 
         # unzip dataset
         if unzip:
