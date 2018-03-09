@@ -63,15 +63,15 @@ retrieves the leaderboard for the given round
     * `"liveLogloss"` (`float` or `None`)
     * `"validationLogloss"` (`float`)
     * `"paymentGeneral"` (`dict` or `None`)
-      * `"nmrAmount"` (`float`)
-      * `"usdAmount"` (`float`)
+      * `"nmrAmount"` (`decimal.Decimal`)
+      * `"usdAmount"` (`decimal.Decimal`)
     * `"paymentStaking"` (`dict` or `None`)
-      * `"nmrAmount"` (`float`)
-      * `"usdAmount"` (`float`)
+      * `"nmrAmount"` (`decimal.Decimal`)
+      * `"usdAmount"` (`decimal.Decimal`)
     * `"submissionId"` (`str`)
     * `"totalPayments"` (`dict`)
-      * `"nmrAmount"` (`float`)
-      * `"usdAmount"` (`float`)
+      * `"nmrAmount"` (`decimal.Decimal`)
+      * `"usdAmount"` (`decimal.Decimal`)
     * `"username"` (`str`)
 
 ## `get_staking_leaderboard`
@@ -86,11 +86,11 @@ retrieves the leaderboard of the staking competition for the given round
     * `"liveLogloss"` (`float` or `None`)
     * `"validationLogloss"` (`float`)
     * `"stake"` (`dict`)
-      * `"confidence"` (`float`)
+      * `"confidence"` (`decimal.Decimal`)
       * `"insertedAt"` (`datetime`)
-      * `"soc"` (`float`)
+      * `"soc"` (`decimal.Decimal`)
       * `"txHash"` (`str`)
-      * `"value"` (`float`)
+      * `"value"` (`decimal.Decimal`)
 
 ## `get_competitions`
 ### Return Values
@@ -146,8 +146,8 @@ within the same session.
       * `"scopes"` (`list`)
         * `scope` (`str`)
   * `"assignedEthAddress"` (`str`)
-  * `"availableNmr"` (`float`)
-  * `"availableUsd"` (`float`)
+  * `"availableNmr"` (`decimal.Decimal`)
+  * `"availableUsd"` (`decimal.Decimal`)
   * `"banned"` (`bool`)
   * `"email"` (`str`)
   * `"id"` (`str`)
@@ -160,8 +160,8 @@ within the same session.
 ### Return Values
 * `payments` (`list`)
   * `payment` (`dict`)
-    * `"nmrAmount"` (`float`)
-    * `"usdAmount"` (`float`)
+    * `"nmrAmount"` (`decimal.Decimal`)
+    * `"usdAmount"` (`decimal.Decimal`)
     * `"tournament"` (`str`)
     * `"round"` (`dict`)
       * `"number"` (`int`)
@@ -181,7 +181,7 @@ within the same session.
       * `"status"` (`str`)
       * `"to"` (`str`)
       * `"txHash"` (`str`)
-      * `"value"` (`float`)
+      * `"value"` (`decimal.Decimal`)
   * `"nmrWithdrawals"` (`list`)
     * `nmrWithdrawal` (`dict`)
       * `"from"` (`str`)
@@ -190,7 +190,7 @@ within the same session.
       * `"status"` (`str`)
       * `"to"` (`str`)
       * `"txHash"` (`str`)
-      * `"value"` (`float`)
+      * `"value"` (`decimal.Decimal`)
   * `"usdWithdrawals"` (`list`)
     * `usdWithdrawal` (`dict`)
       * `"confirmTime"` (`datetime` or `None`)
@@ -201,7 +201,7 @@ within the same session.
       * `"status"` (`str`)
       * `"to"` (`str`)
       * `"txHash"` (`str`)
-      * `"usdAmount"` (`float`)
+      * `"usdAmount"` (`decimal.Decimal`)
 
 ## `stake`
 participate in the staking competition
@@ -213,20 +213,20 @@ participate in the staking competition
   * `"id"` (`str`)
   * `"status"` (`str`)
   * `"txHash"` (`str`)
-  * `"value"` (`float`)
+  * `"value"` (`decimal.Decimal`)
 
 ## `get_stakes`
 ### Return Values
 * `stakes` (`list`)
   * `stake` (`dict`)
-    * `"confidence"` (`float`)
+    * `"confidence"` (`decimal.Decimal`)
     * `"roundNumber"` (`int`)
-    * `"soc"` (`float`)
+    * `"soc"` (`decimal.Decimal`)
     * `"insertedAt"` (`str (datetime)`)
     * `"staker"` (`str`): NMR adress used for staking
     * `"status"` (`str`)
     * `"txHash"` (`str`)
-    * `"value"` (`float`)
+    * `"value"` (`decimal.Decimal`)
 
 ## `raw_query`
 This function allows to build your own queries and fetch results from
