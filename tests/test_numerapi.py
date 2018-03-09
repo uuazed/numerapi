@@ -123,8 +123,8 @@ def test_check_new_round(api):
 @responses.activate
 @pytest.mark.parametrize('''originality_pending, originality_value,
     concordance_pending, concordance_value, consistency, expected''', [
-    (True, None, False, True, 80, False),
-    (False, False, False, True, 80, False),
+    (True, None, False, True, 80, True),
+    (False, False, False, True, 80, True),
     (False, True, True, None, 80, False),
     (False, True, False, False, 80, False),
     (False, True, False, True, 70, False),
