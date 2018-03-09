@@ -2,6 +2,9 @@
 Notable changes to this project.
 
 
+## [dev] - unreleased
+- more tests
+
 ## [0.8.2] - 2018-03-09
 - use `decimal.Decimal` instead of floats to avoid rounding errors (#3)
 - optional flag to turn of tqdm's progress bars (#4)

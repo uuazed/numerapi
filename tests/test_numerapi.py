@@ -75,6 +75,16 @@ def test_stake(api):
     assert "You must be authenticated" in str(err.value)
 
 
+@pytest.mark.parametrize("fun", ["get_user", "get_stakes", "get_transactions"])
+def test_unauthorized_requests(api, fun):
+    with pytest.raises(ValueError) as err:
+        # while this won't work because we are not authorized, it still tells
+        # us if the request is formatted correctly
+        getattr(api, fun)()
+    # error should warn about not beeing logged in.
+    assert "You must be authenticated" in str(err.value)
+
+
 def test_get_staking_leaderboard(api):
     stakes = api.get_staking_leaderboard(82)
     # 115 people staked that round
