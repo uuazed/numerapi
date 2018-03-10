@@ -222,7 +222,7 @@ participate in the staking competition
     * `"confidence"` (`decimal.Decimal`)
     * `"roundNumber"` (`int`)
     * `"soc"` (`decimal.Decimal`)
-    * `"insertedAt"` (`str (datetime)`)
+    * `"insertedAt"` (`datetime`)
     * `"staker"` (`str`): NMR adress used for staking
     * `"status"` (`str`)
     * `"txHash"` (`str`)
