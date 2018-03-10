@@ -75,7 +75,8 @@ def test_stake(api):
     assert "You must be authenticated" in str(err.value)
 
 
-@pytest.mark.parametrize("fun", ["get_user", "get_stakes", "get_transactions"])
+@pytest.mark.parametrize("fun", ["get_user", "get_stakes", "get_transactions",
+                                 "get_payments"])
 def test_unauthorized_requests(api, fun):
     with pytest.raises(ValueError) as err:
         # while this won't work because we are not authorized, it still tells
@@ -110,6 +111,25 @@ def test_error_handling(api):
         api.token = ("foo", "bar")
         api.submission_id = 1
         api.submission_status()
+
+
+@responses.activate
+def test_upload_predictions(api, tmpdir):
+    # we need to mock 3 network calls: 1. auth 2. file upload and 3. submission
+    data = {"data": {"submission_upload_auth": {"url": "https://uploadurl",
+                                                "filename": "filename"}}}
+    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
+                  json=data)
+    responses.add(responses.PUT, "https://uploadurl")
+    data = {"data": {"create_submission": {"id": "1234"}}}
+    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
+                  json=data)
+
+    path = tmpdir.join("somefilepath")
+    path.write("content")
+    submission_id = api.upload_predictions(str(path))
+    assert submission_id == "1234"
+    assert len(responses.calls) == 3
 
 
 @responses.activate
