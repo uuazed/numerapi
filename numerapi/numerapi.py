@@ -136,10 +136,13 @@ class NumerAPI(object):
                 'variables': variables}
         headers = {'Content-type': 'application/json',
                    'Accept': 'application/json'}
-        if authorization and self.token:
-            public_id, secret_key = self.token
-            headers['Authorization'] = \
-                'Token {}${}'.format(public_id, secret_key)
+        if authorization:
+            if self.token:
+                public_id, secret_key = self.token
+                headers['Authorization'] = \
+                    'Token {}${}'.format(public_id, secret_key)
+            else:
+                raise ValueError("API keys required for this action.")
         r = requests.post(API_TOURNAMENT_URL, json=body, headers=headers)
         result = r.json()
         if "errors" in result:

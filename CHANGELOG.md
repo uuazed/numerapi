@@ -3,7 +3,9 @@ Notable changes to this project.
 
 
 ## [dev] - unreleased
-- more tests
+- don't query Numerai's API if the action requires an auth token, but there
+  is none provided
+- more & improved tests
 
 ## [0.8.2] - 2018-03-09
 - use `decimal.Decimal` instead of floats to avoid rounding errors (#3)

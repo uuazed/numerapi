@@ -69,10 +69,10 @@ def test_get_leaderboard(api):
 def test_stake(api):
     with pytest.raises(ValueError) as err:
         # while this won't work because we are not authorized, it still tells
-        # us if the request is formatted correctly
+        # us if the remaining code works
         api.stake(3, 2)
     # error should warn about not beeing logged in.
-    assert "You must be authenticated" in str(err.value)
+    assert "API keys required for this action" in str(err.value)
 
 
 @pytest.mark.parametrize("fun", ["get_user", "get_stakes", "get_transactions",
@@ -80,10 +80,10 @@ def test_stake(api):
 def test_unauthorized_requests(api, fun):
     with pytest.raises(ValueError) as err:
         # while this won't work because we are not authorized, it still tells
-        # us if the request is formatted correctly
+        # us if the remaining code works
         getattr(api, fun)()
     # error should warn about not beeing logged in.
-    assert "You must be authenticated" in str(err.value)
+    assert "API keys required for this action" in str(err.value)
 
 
 def test_get_staking_leaderboard(api):
@@ -115,6 +115,7 @@ def test_error_handling(api):
 
 @responses.activate
 def test_upload_predictions(api, tmpdir):
+    api.token = ("", "")
     # we need to mock 3 network calls: 1. auth 2. file upload and 3. submission
     data = {"data": {"submission_upload_auth": {"url": "https://uploadurl",
                                                 "filename": "filename"}}}
@@ -163,6 +164,7 @@ def test_check_submission_successful(api, originality_pending,
                                      originality_value, concordance_pending,
                                      concordance_value, consistency,
                                      expected):
+    api.token = ("", "")
     data = {"data": {"submissions": [
       {"originality":
           {"pending": originality_pending, "value": originality_value},
