@@ -210,8 +210,8 @@ def test_check_new_round(api):
     (False, False, False, True, 80, True),
     (False, True, True, None, 80, False),
     (False, True, False, False, 80, False),
-    (False, True, False, True, 70, False),
-    (False, True, False, True, 75, True)])
+    (False, True, False, True, 50, False),
+    (False, True, False, True, 58, True)])
 def test_check_submission_successful(api, originality_pending,
                                      originality_value, concordance_pending,
                                      concordance_value, consistency,

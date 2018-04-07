@@ -565,6 +565,6 @@ class NumerAPI(object):
         """
         status = self.submission_status(submission_id)
         # need to cast to bool to not return None in some cases.
-        success = bool(status['consistency'] >= 75 and
+        success = bool(status['consistency'] >= 58 and
                        status["concordance"]["value"])
         return success
