@@ -473,36 +473,41 @@ class NumerAPI(object):
         status = data['data']['submissions'][0]
         return status
 
-    def upload_predictions(self, file_path):
+    def upload_predictions(self, file_path, tournament=1):
         """uploads predictions from file
 
         file_path: CSV file with predictions that will get uploaded
+        tournament: ID of the tournament (optional, defaults to 1)
         """
         self.logger.info("uploading prediction...")
 
         auth_query = '''
-            query($filename: String!) {
-                submission_upload_auth(filename: $filename) {
+            query($filename: String!, $tournament: Int!) {
+                submission_upload_auth(filename: $filename,
+                                       tournament: $tournament) {
                     filename
                     url
                 }
             }
             '''
-        variable = {'filename': os.path.basename(file_path)}
-        submission_resp = self.raw_query(auth_query, variable,
+        arguments = {'filename': os.path.basename(file_path),
+                     'tournament': tournament}
+        submission_resp = self.raw_query(auth_query, arguments,
                                          authorization=True)
         submission_auth = submission_resp['data']['submission_upload_auth']
         with open(file_path, 'rb') as fh:
             requests.put(submission_auth['url'], data=fh.read())
         create_query = '''
-            mutation($filename: String!) {
-                create_submission(filename: $filename) {
+            mutation($filename: String!, $tournament: Int!) {
+                create_submission(filename: $filename,
+                                  tournament: $tournament) {
                     id
                 }
             }
             '''
-        variables = {'filename': submission_auth['filename']}
-        create = self.raw_query(create_query, variables, authorization=True)
+        arguments = {'filename': submission_auth['filename'],
+                     'tournament': tournament}
+        create = self.raw_query(create_query, arguments, authorization=True)
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 

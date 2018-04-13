@@ -38,14 +38,14 @@ itself.
 * `dest_filename` (`str`, optional, default: `numerai_dataset_<round number>.zip`)
 * `unzip` (`bool`, optional, default: `True`): indication of whether the
   training data should be unzipped
-* `tournament` ('int', optional, default: 1) tournament number
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `path` (`string`): location of the downloaded dataset
 
 ## `get_dataset_url`
 Fetch url of the current dataset.
 ### Parameters
-* `tournament` ('int', optional, default: 1) tournament number
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `url` (`str`): url of the current dataset
 
@@ -136,6 +136,7 @@ within the same session.
 ## `upload_predictions`
 ### Parameters
 * `file_path` (`str`): path to CSV of predictions (e.g. `"path/to/file/prediction.csv"`)
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `submission_id`: ID of submission
 
