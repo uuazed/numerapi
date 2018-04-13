@@ -2,6 +2,9 @@
 Notable changes to this project.
 
 
+## [dev] - unreleased
+- add tournamentId to `get_stakes`
+
 ## [0.9.0] - 2018-04-13
 - support tournament parameter for various endpoints. Numer.ai is planning to
   run more than one tournament at a time. This change makes numerapi ready for

@@ -139,6 +139,7 @@ def test_get_stakes(api):
     api.token = ("", "")
     stake = {"confidence": "0.4",
              "roundNumber": 99,
+             "tournamentId": 1,
              "soc": "0.4",
              "insertedAt": "2018-01-01 11:11:11",
              "staker": "-",

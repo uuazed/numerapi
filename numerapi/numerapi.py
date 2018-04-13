@@ -453,6 +453,7 @@ class NumerAPI(object):
                 confidence
                 insertedAt
                 roundNumber
+                tournamentId
                 soc
                 staker
                 status

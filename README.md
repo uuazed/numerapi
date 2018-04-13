@@ -234,6 +234,7 @@ participate in the staking competition
   * `stake` (`dict`)
     * `"confidence"` (`decimal.Decimal`)
     * `"roundNumber"` (`int`)
+    * `"tournamentId"` (`int`)
     * `"soc"` (`decimal.Decimal`)
     * `"insertedAt"` (`datetime`)
     * `"staker"` (`str`): NMR adress used for staking
