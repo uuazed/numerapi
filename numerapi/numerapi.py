@@ -75,8 +75,10 @@ class NumerAPI(object):
         Returns:
             str: url of the current dataset
         """
-        query = """query($tournament: Int!) {
-          dataset(tournament: $tournament)}"""
+        query = """
+            query($tournament: Int!) {
+                dataset(tournament: $tournament)
+            }"""
         arguments = {'tournament': tournament}
         url = self.raw_query(query, arguments)['data']['dataset']
         return url
@@ -482,8 +484,9 @@ class NumerAPI(object):
         self.logger.info("uploading prediction...")
 
         auth_query = '''
-            query($filename: String!, $tournament: Int!) {
-                submission_upload_auth(filename: $filename,
+            query($filename: String!
+                  $tournament: Int!) {
+                submission_upload_auth(filename: $filename
                                        tournament: $tournament) {
                     filename
                     url
@@ -498,8 +501,9 @@ class NumerAPI(object):
         with open(file_path, 'rb') as fh:
             requests.put(submission_auth['url'], data=fh.read())
         create_query = '''
-            mutation($filename: String!, $tournament: Int!) {
-                create_submission(filename: $filename,
+            mutation($filename: String!
+                     $tournament: Int!) {
+                create_submission(filename: $filename
                                   tournament: $tournament) {
                     id
                 }
