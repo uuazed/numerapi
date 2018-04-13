@@ -212,6 +212,7 @@ participate in the staking competition
 ### Parameters
 * `confidence` (`float`)
 * `value` (`float`): the amount of NMR you want to stake
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `stake` (`dict`)
   * `"id"` (`str`)

@@ -511,24 +511,27 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def stake(self, confidence, value):
+    def stake(self, confidence, value, tournament=1):
         """ participate in the staking competition
 
         confidence: your confidence (C) value
         value: amount of NMR you are willing to stake
+        tournament: ID of the tournament (optional, defaults to 1)
         """
 
         query = '''
-          mutation($code: String,
+          mutation($code: String
             $confidence: String!
             $password: String
             $round: Int!
-            $value: String!) {
+            $value: String!
+            $tournament: Int!) {
               stake(code: $code
                     confidence: $confidence
                     password: $password
                     round: $round
-                    value: $value) {
+                    value: $value
+                    tournament: $tournament) {
                 id
                 status
                 txHash
@@ -540,7 +543,8 @@ class NumerAPI(object):
                      'confidence': str(confidence),
                      'password': "somepassword",
                      'round': self.get_current_round(),
-                     'value': str(value)}
+                     'value': str(value),
+                     'tournament': tournament}
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']
         utils.replace(stake, "value", utils.parse_float_string)
