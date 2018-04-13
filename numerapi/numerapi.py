@@ -159,15 +159,19 @@ class NumerAPI(object):
 
         return result
 
-    def get_leaderboard(self, round_num=0):
-        """ retrieves the leaderboard for the given round
+    def get_leaderboard(self, round_num=0, tournament=1):
+        """ retrieves the leaderboard for the given round and tournament
 
-        round_num: The round you are interested in, defaults to current round.
+        round_num: The round you are interested in, defaults to current round
+        tournament: ID of the tournament (optional, defaults to 1)
         """
-        self.logger.info("getting leaderboard for round {}".format(round_num))
+        msg = "getting leaderboard for tournament {} round {}"
+        self.logger.info(msg.format(tournament, round_num))
         query = '''
-            query($number: Int!) {
-              rounds(number: $number) {
+            query($number: Int!
+                  $tournament: Int!) {
+              rounds(number: $number
+                     tournament: $tournament) {
                 leaderboard {
                   consistency
                   concordance {
@@ -198,9 +202,12 @@ class NumerAPI(object):
               }
             }
         '''
-        arguments = {'number': round_num}
-        result = self.raw_query(query, arguments)
-        leaderboard = result['data']['rounds'][0]['leaderboard']
+        arguments = {'number': round_num, 'tournament': tournament}
+        result = self.raw_query(query, arguments)['data']['rounds'][0]
+        # happens for non-existent tournament IDs
+        if result is None:
+            return None
+        leaderboard = result['leaderboard']
         # parse to correct data types
         for item in leaderboard:
             for p in ["totalPayments", "paymentGeneral", "paymentStaking"]:
@@ -208,16 +215,20 @@ class NumerAPI(object):
                 utils.replace(item[p], "usdAmount", utils.parse_float_string)
         return leaderboard
 
-    def get_staking_leaderboard(self, round_num=0):
+    def get_staking_leaderboard(self, round_num=0, tournament=1):
         """ retrieves the leaderboard of the staking competition for the given
         round
 
         round_num: The round you are interested in, defaults to current round.
+        tournament: ID of the tournament (optional, defaults to 1)
         """
-        self.logger.info("getting stakes for round {}".format(round_num))
+        msg = "getting stakes for tournament {} round {}"
+        self.logger.info(msg.format(tournament, round_num))
         query = '''
-            query($number: Int!) {
-              rounds(number: $number) {
+            query($number: Int!
+                  $tournament: Int!) {
+              rounds(number: $number
+                     tournament: $tournament) {
                 leaderboard {
                   consistency
                   liveLogloss
@@ -234,9 +245,11 @@ class NumerAPI(object):
               }
             }
         '''
-        arguments = {'number': round_num}
-        result = self.raw_query(query, arguments)
-        stakes = result['data']['rounds'][0]['leaderboard']
+        arguments = {'number': round_num, 'tournament': tournament}
+        result = self.raw_query(query, arguments)['data']['rounds'][0]
+        if result is None:
+            return None
+        stakes = result['leaderboard']
         # filter those with actual stakes
         stakes = [item for item in stakes if item["stake"]["soc"] is not None]
         # convert strings to pyton objects
@@ -248,13 +261,16 @@ class NumerAPI(object):
             utils.replace(s["stake"], "value", utils.parse_float_string)
         return stakes
 
-    def get_competitions(self):
-        """ get information about rounds """
+    def get_competitions(self, tournament=1):
+        """ get information about tournament rounds
+
+        tournament: ID of the tournament (optional, defaults to 1)
+        """
         self.logger.info("getting rounds...")
 
         query = '''
-            query {
-              rounds {
+            query($tournament: Int!) {
+              rounds(tournament: $tournament) {
                 number
                 resolveTime
                 datasetId
@@ -264,7 +280,8 @@ class NumerAPI(object):
               }
             }
         '''
-        result = self.raw_query(query)
+        arguments = {'tournament': tournament}
+        result = self.raw_query(query, arguments)
         rounds = result['data']['rounds']
         # convert datetime strings to datetime.datetime objects
         for r in rounds:
@@ -272,25 +289,36 @@ class NumerAPI(object):
             utils.replace(r, "resolveTime", utils.parse_datetime_string)
         return rounds
 
-    def get_current_round(self):
-        """get information about the current active round"""
+    def get_current_round(self, tournament=1):
+        """get information about the current active round
+
+        tournament: ID of the tournament (optional, defaults to 1)
+        """
         # zero is an alias for the current round!
         query = '''
-            query {
-              rounds(number: 0) {
+            query($tournament: Int!) {
+              rounds(tournament: $tournament
+                     number: 0) {
                 number
               }
             }
         '''
-        data = self.raw_query(query)
-        round_num = data['data']['rounds'][0]["number"]
+        arguments = {'tournament': tournament}
+        data = self.raw_query(query, arguments)['data']['rounds'][0]
+        if data is None:
+            return None
+        round_num = data["number"]
         return round_num
 
-    def get_submission_ids(self):
-        """get dict with username->submission_id mapping"""
+    def get_submission_ids(self, tournament=1):
+        """get dict with username->submission_id mapping
+
+        tournament: ID of the tournament (optional, defaults to 1)
+        """
         query = """
-            query {
-              rounds(number: 0) {
+            query($tournament: Int!) {
+              rounds(tournament: $tournament
+                     number: 0) {
                 leaderboard {
                   username
                   submissionId
@@ -298,8 +326,12 @@ class NumerAPI(object):
             }
         }
         """
-        data = self.raw_query(query)['data']['rounds'][0]['leaderboard']
-        mapping = {item['username']: item['submissionId'] for item in data}
+        arguments = {'tournament': tournament}
+        data = self.raw_query(query, arguments)['data']['rounds'][0]
+        if data is None:
+            return None
+        mapping = {item['username']: item['submissionId']
+                   for item in data['leaderboard']}
         return mapping
 
     def get_user(self):
@@ -554,22 +586,26 @@ class NumerAPI(object):
         utils.replace(stake, "value", utils.parse_float_string)
         return stake
 
-    def check_new_round(self, hours=24):
+    def check_new_round(self, hours=24, tournament=1):
         """ checks wether a new round has started within the last `hours`
 
-        hours: timeframe to consider
+        hours: timeframe to consider (optional, defaults to 24)
+        tournament: ID of the tournament (optional, defaults to 1)
         """
         query = '''
-            query {
-              rounds(number: 0) {
+            query($tournament: Int!) {
+              rounds(tournament: $tournament
+                     number: 0) {
                 number
                 openTime
               }
             }
         '''
-        raw = self.raw_query(query)
-        open_time = raw['data']['rounds'][0]['openTime']
-        open_time = utils.parse_datetime_string(open_time)
+        arguments = {'tournament': tournament}
+        raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        if raw is None:
+            return False
+        open_time = utils.parse_datetime_string(raw['openTime'])
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round

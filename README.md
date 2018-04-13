@@ -50,9 +50,10 @@ Fetch url of the current dataset.
 * `url` (`str`): url of the current dataset
 
 ## `get_leaderboard`
-retrieves the leaderboard for the given round
+retrieves the leaderboard for the given round and tournament
 ### Parameters
 * `round_num` (`int`, optional, defaults to current round): The round you are interested in.
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `participants` (`list`): information about all competitors
   * `participants` (`dict`)
@@ -81,6 +82,7 @@ retrieves the leaderboard for the given round
 retrieves the leaderboard of the staking competition for the given round
 ### Parameters
 * `round_num` (`int`, optional, defaults to current round): The round you are interested in.
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `stakes` (`list`): information about all competitors
   * `participants` (`dict`)
@@ -96,6 +98,8 @@ retrieves the leaderboard of the staking competition for the given round
       * `"value"` (`decimal.Decimal`)
 
 ## `get_competitions`
+### Parameters
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `all_competitions` (`list`): information about all competitions
   * `competition` (`dict`)
@@ -107,11 +111,15 @@ retrieves the leaderboard of the staking competition for the given round
     * `"resolvedStaking"` (`bool`)
 
 ## `get_current_round`
+### Parameters
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `number` (`int`): number of the current round
 
 ## `get_submission_ids`
 get dict with username->submission_id mapping
+### Parameters
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `submission_ids` (`dict`)
   * `"username"` (`str`)
@@ -248,7 +256,8 @@ for an introduction.
 ## `check_new_round`
 Checks if a new round has started recently.
 ### Parameters
-* `hour` (`int`, optional): timeframe to consider
+* `hour` (`int`, optional, default: 24): timeframe to consider
+* `tournament` (`int`, optional, default: 1) tournament number
 ### Return Value
 * `is_new_round` (`bool`)
 
