@@ -67,23 +67,28 @@ class NumerAPI(object):
 
         return True
 
-    def get_dataset_url(self):
+    def get_dataset_url(self, tournament=1):
         """Fetch url of the current dataset.
+
+        tournament: ID of the tournament (optional, defaults to 1)
 
         Returns:
             str: url of the current dataset
         """
-        query = "query {dataset}"
-        url = self.raw_query(query)['data']['dataset']
+        query = """query($tournament: Int!) {
+          dataset(tournament: $tournament)}"""
+        arguments = {'tournament': tournament}
+        url = self.raw_query(query, arguments)['data']['dataset']
         return url
 
     def download_current_dataset(self, dest_path=".", dest_filename=None,
-                                 unzip=True):
+                                 unzip=True, tournament=1):
         """download dataset for current round
 
         dest_path: desired location of dataset file (optional)
         dest_filename: desired filename of dataset file (optional)
-        unzip: indicates whether to unzip dataset
+        unzip: indicates whether to unzip dataset (optional)
+        tournament: ID of the tournament (optional, defaults to 1)
         """
         # set up download path
         if dest_filename is None:
@@ -102,7 +107,7 @@ class NumerAPI(object):
         # create parent folder if necessary
         utils.ensure_directory_exists(dest_path)
 
-        url = self.get_dataset_url()
+        url = self.get_dataset_url(tournament)
         utils.download_file(url, dataset_path, self.show_progress_bars)
 
         # unzip dataset
