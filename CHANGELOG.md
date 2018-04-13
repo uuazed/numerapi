@@ -2,6 +2,12 @@
 Notable changes to this project.
 
 
+## [0.9.0] - 2018-04-13
+- support tournament parameter for various endpoints. Numer.ai is planning to
+  run more than one tournament at a time. This change makes numerapi ready for
+  that.
+- minor code cleanup
+
 ## [0.8.3] - 2018-04-07
 - don't query Numerai's API if the action requires an auth token, but there
   is none provided
