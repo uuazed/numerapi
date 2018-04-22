@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [dev] - unreleased
+## [0.9.1] - 2018-04-22
 - add tournamentId to `get_stakes`
 - fixed `stake` after API change on Numerai's side
 
