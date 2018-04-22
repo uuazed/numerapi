@@ -223,10 +223,11 @@ participate in the staking competition
 * `tournament` (`int`, optional, default: 1) tournament number
 ### Return Values
 * `stake` (`dict`)
-  * `"id"` (`str`)
+  * `"insertedAt"` (`datetime`)
   * `"status"` (`str`)
   * `"txHash"` (`str`)
   * `"value"` (`decimal.Decimal`)
+  * `"from"` (`str`)
 
 ## `get_stakes`
 ### Return Values

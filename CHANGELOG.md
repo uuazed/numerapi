@@ -4,6 +4,7 @@ Notable changes to this project.
 
 ## [dev] - unreleased
 - add tournamentId to `get_stakes`
+- fixed `stake` after API change on Numerai's side
 
 ## [0.9.0] - 2018-04-13
 - support tournament parameter for various endpoints. Numer.ai is planning to

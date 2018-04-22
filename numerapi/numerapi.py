@@ -569,10 +569,11 @@ class NumerAPI(object):
                     round: $round
                     value: $value
                     tournament: $tournament) {
-                id
+                insertedAt
                 status
                 txHash
                 value
+                from
               }
         }
         '''
@@ -585,6 +586,7 @@ class NumerAPI(object):
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']
         utils.replace(stake, "value", utils.parse_float_string)
+        utils.replace(stake, "insertedAt", utils.parse_datetime_string)
         return stake
 
     def check_new_round(self, hours=24, tournament=1):
