@@ -18,21 +18,31 @@ API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 
 
 class NumerAPI(object):
+    """Wrapper around the Numerai API
 
-    """Wrapper around the Numerai API"""
+    Automatically download and upload data for the Numerai machine learning
+    competition.
+
+    This library is a Python client to the Numerai API. The interface is
+    implemented in Python and allows downloading the training data, uploading
+    predictions, accessing user, submission and competitions information and
+    much more.
+    """
 
     def __init__(self, public_id=None, secret_key=None, verbosity="INFO",
                  show_progress_bars=True):
         """
         initialize Numerai API wrapper for Python
 
-        public_id: first part of your token generated at
-                   Numer.ai->Account->Custom API keys
-        secret_key: second part of your token generated at
-                    Numer.ai->Account->Custom API keys
-        verbosity: indicates what level of messages should be displayed
-            valid values: "debug", "info", "warning", "error", "critical"
-        show_progress_bars: flag to turn of progress bars
+        Args:
+            public_id (str): first part of your token generated at
+                Numer.ai->Account->Custom API keys
+            secret_key (str): second part of your token generated at
+                Numer.ai->Account->Custom API keys
+            verbosity (str): indicates what level of messages should be
+                displayed. valid values are "debug", "info", "warning",
+                "error" and "critical"
+            show_progress_bars (bool): flag to turn of progress bars
         """
 
         # set up logging
@@ -85,12 +95,17 @@ class NumerAPI(object):
 
     def download_current_dataset(self, dest_path=".", dest_filename=None,
                                  unzip=True, tournament=1):
-        """download dataset for current round
+        """Download dataset for current active round.
 
-        dest_path: desired location of dataset file (optional)
-        dest_filename: desired filename of dataset file (optional)
-        unzip: indicates whether to unzip dataset (optional)
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            dest_path (str, optional): destination folder, defaults to `.`
+            dest_filename (str, optional): desired filename of dataset file,
+                defaults to `numerai_dataset_<round number>.zip`
+            unzip (bool, optional): indication of whether the training data
+                should be unzipped, defaults to `True`
+            tournament (int, optional): ID of the tournament, defaults to 1
+        Returns:
+            str: Path to the downloaded dataset
         """
         # set up download path
         if dest_filename is None:
@@ -133,11 +148,27 @@ class NumerAPI(object):
         return msg
 
     def raw_query(self, query, variables=None, authorization=False):
-        """send a raw request to the Numerai's GraphQL API
+        """Send a raw request to the Numerai's GraphQL API.
 
-        query (str): the query
-        variables (dict): dict of variables
-        authorization (bool): does the request require authorization
+        This function allows to build your own queries and fetch results from
+        Numerai's GraphQL API. Checkout
+        https://medium.com/numerai/getting-started-with-numerais-new-tournament-api-77396e895e72
+        for an introduction.
+
+        Args:
+            query (str): your query
+            variables (dict, optional): dict of variables
+            authorization (bool, optional): does the request require
+                authorization, defaults to `False`
+
+        Returns:
+            dict: Result of the request
+
+        Raises:
+            ValueError: if something went wrong with the requests. For example,
+                this could be a wrongly formatted query or a problem at
+                Numerai's end. Have a look at the error messages, in most cases
+                the problem is obvious.
         """
         body = {'query': query,
                 'variables': variables}
@@ -160,10 +191,34 @@ class NumerAPI(object):
         return result
 
     def get_leaderboard(self, round_num=0, tournament=1):
-        """ retrieves the leaderboard for the given round and tournament
+        """Retrieves the leaderboard for the given round.
 
-        round_num: The round you are interested in, defaults to current round
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            round_num (int, optional): The round you are interested in,
+                defaults to current round.
+            tournament (int, optional): ID of the tournament, defaults to 1
+
+        round_num: The round you are interested in, defaults to current round.
+        Returns:
+            dict: list of participants with the following structure
+
+                [
+                  {
+                    'concordance': {'pending': False, 'value': True},
+                    'consistency': 75.0,
+                    # float or `None` if the round isn't resolved
+                    'liveLogloss': 0.61234,
+                    'originality': {'pending': False, 'value': True},
+                    # dict if there is a payment, `None` otherwise
+                    'paymentGeneral': {'nmrAmount': 20.52, 'usdAmount': 1.8},
+                    # dict if there is a payment, `None` otherwise
+                    'paymentStaking': {'nmrAmount': 20.52, 'usdAmount': 1.8},
+                    'submissionId': '3aaa55a1-3f5a-627f-a8a7-a83aea2341234',
+                    'totalPayments': {'nmrAmount': 34.73, 'usdAmount': 33.8},
+                    'username': 'exampleuser',
+                    'validationLogloss': 0.69123
+                  },
+                ]
         """
         msg = "getting leaderboard for tournament {} round {}"
         self.logger.info(msg.format(tournament, round_num))
@@ -216,11 +271,33 @@ class NumerAPI(object):
         return leaderboard
 
     def get_staking_leaderboard(self, round_num=0, tournament=1):
-        """ retrieves the leaderboard of the staking competition for the given
-        round
+        """Retrieves the leaderboard of the staking competition for the given
+        round.
 
-        round_num: The round you are interested in, defaults to current round.
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            round_num (int, optional): The round you are interested in,
+                defaults to current round.
+            tournament (int, optional): ID of the tournament, defaults to 1
+
+        Returns:
+            dict: list of stakers with the following structure
+
+                [
+                  {
+                    'consistency': 83.33333333333334,
+                    # float or `None` if the round isn't resolved
+                    'liveLogloss': None,
+                    'stake': {
+                      'confidence': 0.17,
+                      'insertedAt': datetime.datetime(2017, 1, 22, 1, 47, 11),
+                      'soc': 1730.0,
+                      'txHash': '0x6015e0asdfas...dc37f1c501cd',
+                      'value': 11.0
+                      },
+                    'username': 'exampleuser',
+                    'validationLogloss': 0.69254},
+
+                ]
         """
         msg = "getting stakes for tournament {} round {}"
         self.logger.info(msg.format(tournament, round_num))
@@ -262,9 +339,24 @@ class NumerAPI(object):
         return stakes
 
     def get_competitions(self, tournament=1):
-        """ get information about tournament rounds
+        """Retrieves information about all competitions
 
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            tournament (int, optional): ID of the tournament, defaults to 1
+
+        Returns:
+            dict: list of rounds
+
+                [
+                 {'datasetId': '59a70840ca11173c8b2906ac',
+                  'number': 71,
+                  'openTime': datetime.datetime(2017, 8, 31, 0, 0),
+                  'resolveTime': datetime.datetime(2017, 9, 27, 21, 0),
+                  'resolvedGeneral': True,
+                  'resolvedStaking': True
+                 },
+                  ..
+                ]
         """
         self.logger.info("getting rounds...")
 
@@ -290,9 +382,13 @@ class NumerAPI(object):
         return rounds
 
     def get_current_round(self, tournament=1):
-        """get information about the current active round
+        """Get number of the current active round.
 
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            tournament (int): ID of the tournament (optional, defaults to 1)
+
+        Returns:
+            int: number of the current active round
         """
         # zero is an alias for the current round!
         query = '''
@@ -311,9 +407,13 @@ class NumerAPI(object):
         return round_num
 
     def get_submission_ids(self, tournament=1):
-        """get dict with username->submission_id mapping
+        """Get dict with username->submission_id mapping.
 
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            tournament (int): ID of the tournament (optional, defaults to 1)
+
+        Returns:
+            dict: username->submission_id mapping, string->string
         """
         query = """
             query($tournament: Int!) {
@@ -335,7 +435,28 @@ class NumerAPI(object):
         return mapping
 
     def get_user(self):
-        """get all information about you! """
+        """Get all information about you!
+
+        Returns:
+            dict: with user information
+
+                {'apiTokens': [
+                        {'name': 'tokenname',
+                         'public_id': 'BLABLA',
+                         'scopes': ['upload_submission', 'stake', ..]
+                         }, ..],
+                 'assignedEthAddress': '0x0000000000000000000000000001',
+                 'availableNmr': Decimal('99.01'),
+                 'availableUsd': Decimal('9.47'),
+                 'banned': False,
+                 'email': 'username@example.com',
+                 'id': '1234-ABC..',
+                 'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
+                 'mfaEnabled': False,
+                 'status': 'VERIFIED',
+                 'username': 'cool username'
+                 }
+        """
         query = """
           query {
             user {
@@ -365,7 +486,22 @@ class NumerAPI(object):
         return data
 
     def get_payments(self):
-        """all your payments"""
+        """Get all your payments.
+
+        Returns:
+            list of dicts: payments
+
+                [{usdAmount': Decimal('9.44'),
+                 'nmrAmount': Decimal('0.00'),
+                 'round':
+                    {'number': 99,
+                     'openTime': datetime.datetime(2017, 12, 2, 18, 0),
+                     'resolveTime': datetime.datetime(2018, 1, 1, 18, 0),
+                     'resolvedGeneral': True,
+                     'resolvedStaking': True},
+                  'tournament': 'staking'
+                  }, .. ]
+        """
         query = """
           query {
             user {
@@ -396,7 +532,39 @@ class NumerAPI(object):
         return payments
 
     def get_transactions(self):
-        """all deposits and withdrawals"""
+        """Get all your deposits and withdrawals.
+
+        Returns:
+            dict: list of NMR and USD transactions
+
+                {'nmrDeposits': [
+                    {'from': '0x54479..9ec897a',
+                     'posted': True,
+                     'status': 'confirmed',
+                     'to': '0x0000000000000000000001',
+                     'txHash': '0x52..e2056ab',
+                     'value': Decimal('9.0')},
+                     .. ],
+                 'nmrWithdrawals': [
+                    {'from': '0x0000000000000000..002',
+                     'posted': True,
+                     'status': 'confirmed',
+                     'to': '0x00000000000..001',
+                     'txHash': '0x1278..266c',
+                     'value': Decimal('2.0')},
+                     .. ],
+                 'usdWithdrawals': [
+                    {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430, tzinfo=tzutc()),
+                     'ethAmount': '0.295780674909307710',
+                     'from': '0x11.....',
+                     'posted': True,
+                     'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035, tzinfo=tzutc()),
+                     'status': 'confirmed',
+                     'to': '0x81.....',
+                     'txHash': '0x3c....',
+                     'usdAmount': Decimal('10.07')},
+                     ..]}
+        """
         query = """
           query {
             user {
@@ -443,7 +611,23 @@ class NumerAPI(object):
         return txs
 
     def get_stakes(self):
-        """all your stakes"""
+        """Get all your stakes.
+
+        Returns:
+            list of dicts: stakes
+
+                [{'confidence': Decimal('0.12'),
+                  'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000, tzinfo=tzutc()),
+                  'roundNumber': 90,
+                  'soc': Decimal('4.60'),
+                  'staker': '0x0000000000000000000000000000000000003f9e',
+                  'status': 'confirmed',
+                  'tournamentId': 1,
+                  'txHash': '0x1cbb985629552a0f57b98a1e30a5e7f101a992121db318cef02e02aaf0e91c95',
+                  'value': Decimal('3.00')},
+                 ..
+                 ]
+        """
         query = """
           query {
             user {
@@ -472,11 +656,19 @@ class NumerAPI(object):
         return stakes
 
     def submission_status(self, submission_id=None):
-        """display submission status of the last submission associated with
-        the account
+        """submission status of the last submission associated with the account.
 
-        submission_id: submission of interest, defaults to the last submission
-            done with the account
+        Args:
+            submission_id (str): submission of interest, defaults to the last
+                submission done with the account
+
+        Returns:
+            dict: submission status
+
+                {'concordance': {'pending': False, 'value': True},
+                 'consistency': 91.66666666666666,
+                 'originality': {'pending': False, 'value': True},
+                 'validation_logloss': 0.691733023121}
         """
         if submission_id is None:
             submission_id = self.submission_id
@@ -507,10 +699,14 @@ class NumerAPI(object):
         return status
 
     def upload_predictions(self, file_path, tournament=1):
-        """uploads predictions from file
+        """Upload predictions from file.
 
-        file_path: CSV file with predictions that will get uploaded
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            file_path (str): CSV file with predictions that will get uploaded
+            tournament (int): ID of the tournament (optional, defaults to 1)
+
+        Returns:
+            str: submission_id
         """
         self.logger.info("uploading prediction...")
 
@@ -547,11 +743,23 @@ class NumerAPI(object):
         return self.submission_id
 
     def stake(self, confidence, value, tournament=1):
-        """ participate in the staking competition
+        """Participate in the staking competition.
 
-        confidence: your confidence (C) value
-        value: amount of NMR you are willing to stake
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            confidence (float or str): your confidence (C) value
+            value (float or str): amount of NMR you are willing to stake
+            tournament (int): ID of the tournament (optional, defaults to 1)
+
+        Returns:
+            dict: stake information
+
+                {'stake':
+                    {'from': None,
+                     'insertedAt': None,
+                     'status': None,
+                     'txHash': '0x76519...2341ca0',
+                     'value': '10'}
+                }
         """
 
         query = '''
@@ -588,10 +796,14 @@ class NumerAPI(object):
         return stake
 
     def check_new_round(self, hours=24, tournament=1):
-        """ checks wether a new round has started within the last `hours`
+        """Check if a new round has started within the last `hours`.
 
-        hours: timeframe to consider (optional, defaults to 24)
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            hours (int, optional): timeframe to consider, defaults to 24
+            tournament (int): ID of the tournament (optional, defaults to 1)
+
+        Returns:
+            bool: indicater if a new round has started
         """
         query = '''
             query($tournament: Int!) {
@@ -612,11 +824,14 @@ class NumerAPI(object):
         return is_new_round
 
     def check_submission_successful(self, submission_id=None):
-        """Check if the last submission passes concordance and
-        consistency tests
+        """Check if the last submission passes submission criteria.
 
-        submission_id: submission of interest, defaults to the last submission
-            done with the account
+        Args:
+            submission_id (str, optional): submission of interest, defaults to
+                the last submission done with the account
+
+        Return:
+            bool: indicater if the submission is successful
         """
         status = self.submission_status(submission_id)
         # need to cast to bool to not return None in some cases.
