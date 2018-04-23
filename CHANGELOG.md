@@ -2,6 +2,9 @@
 Notable changes to this project.
 
 
+## [dev] - unreleased
+- publish README as long_description on pypi
+
 ## [0.9.1] - 2018-04-22
 - add tournamentId to `get_stakes`
 - fixed `stake` after API change on Numerai's side
