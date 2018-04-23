@@ -402,7 +402,6 @@ class NumerAPI(object):
             user {
               nmrDeposits {
                 from
-                id
                 posted
                 status
                 to
@@ -411,7 +410,6 @@ class NumerAPI(object):
               }
               nmrWithdrawals {
                 from
-                id
                 posted
                 status
                 to

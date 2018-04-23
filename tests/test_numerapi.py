@@ -158,7 +158,6 @@ def test_get_stakes(api):
 def test_get_transactions(api):
     api.token = ("", "")
     nmr = {"from": "-",
-           "id": "-",
            "posted": "2018-01-01 11:11:11",
            "status": "-",
            "to": "-",
