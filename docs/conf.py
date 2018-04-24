@@ -22,10 +22,33 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 from recommonmark.parser import CommonMarkParser
+import os
 
 source_parsers = {
     '.md': CommonMarkParser,
 }
+
+# -- Hack for ReadTheDocs -----------------------------------------------------
+# This hack is necessary since RTD does not issue `sphinx-apidoc` before
+# running sphinx-build -b html . _build/html`. See Issue:
+# https://github.com/rtfd/readthedocs.org/issues/1139
+# DON'T FORGET: Check the box "Install your project inside a virtualenv using
+# setup.py install" in the RTD Advanced Settings.
+
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+if on_rtd:
+    import inspect
+    from sphinx import apidoc
+
+    __location__ = os.path.join(os.getcwd(), os.path.dirname(
+        inspect.getfile(inspect.currentframe())))
+
+    output_dir = os.path.join(__location__, "../docs/api")
+    module_dir = os.path.join(__location__, "../numerapi")
+    cmd_line_template = "sphinx-apidoc -f -o {outputdir} {moduledir}"
+    cmd_line = cmd_line_template.format(outputdir=output_dir,
+                                        moduledir=module_dir)
+    apidoc.main(cmd_line.split(" "))
 
 
 # -- General configuration ------------------------------------------------
