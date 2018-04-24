@@ -80,10 +80,15 @@ class NumerAPI(object):
     def get_dataset_url(self, tournament=1):
         """Fetch url of the current dataset.
 
-        tournament: ID of the tournament (optional, defaults to 1)
+        Args:
+            tournament (int, optional): ID of the tournament, defaults to 1
 
         Returns:
             str: url of the current dataset
+
+        Example:
+            >>> NumerAPI().get_dataset_url()
+            https://numerai-datasets.s3.amazonaws.com/t1/104/numerai_datasets.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYNVLTPMU6QILOHA%2F20180424%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20180424T084911Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=83863db44689c9907da6d3c8ac28160cd5e2d17aa90f12c7eee6811810e4b8d3
         """
         query = """
             query($tournament: Int!) {
@@ -95,7 +100,7 @@ class NumerAPI(object):
 
     def download_current_dataset(self, dest_path=".", dest_filename=None,
                                  unzip=True, tournament=1):
-        """Download dataset for current active round.
+        """Download dataset for the current active round.
 
         Args:
             dest_path (str, optional): destination folder, defaults to `.`
@@ -104,8 +109,13 @@ class NumerAPI(object):
             unzip (bool, optional): indication of whether the training data
                 should be unzipped, defaults to `True`
             tournament (int, optional): ID of the tournament, defaults to 1
+
         Returns:
             str: Path to the downloaded dataset
+
+        Example:
+            >>> NumerAPI().download_current_dataset()
+            ./numerai_dataset_104.zip
         """
         # set up download path
         if dest_filename is None:
@@ -153,7 +163,8 @@ class NumerAPI(object):
         This function allows to build your own queries and fetch results from
         Numerai's GraphQL API. Checkout
         https://medium.com/numerai/getting-started-with-numerais-new-tournament-api-77396e895e72
-        for an introduction.
+        for an introduction and https://api-tournament.numer.ai/ for the
+        documentation.
 
         Args:
             query (str): your query
@@ -169,6 +180,14 @@ class NumerAPI(object):
                 this could be a wrongly formatted query or a problem at
                 Numerai's end. Have a look at the error messages, in most cases
                 the problem is obvious.
+
+        Example:
+            >>> query = '''query($tournament: Int!)
+                           {rounds(tournament: $tournament number: 0)
+                            {number}}'''
+            >>> args = {'tournament': 1}
+            >>> NumerAPI().raw_query(query, args)
+            {'data': {'rounds': [{'number': 104}]}}
         """
         body = {'query': query,
                 'variables': variables}
@@ -198,27 +217,48 @@ class NumerAPI(object):
                 defaults to current round.
             tournament (int, optional): ID of the tournament, defaults to 1
 
-        round_num: The round you are interested in, defaults to current round.
         Returns:
-            dict: list of participants with the following structure
+            list of dicts: list of participants
 
-                [
-                  {
-                    'concordance': {'pending': False, 'value': True},
-                    'consistency': 75.0,
-                    # float or `None` if the round isn't resolved
-                    'liveLogloss': 0.61234,
-                    'originality': {'pending': False, 'value': True},
-                    # dict if there is a payment, `None` otherwise
-                    'paymentGeneral': {'nmrAmount': 20.52, 'usdAmount': 1.8},
-                    # dict if there is a payment, `None` otherwise
-                    'paymentStaking': {'nmrAmount': 20.52, 'usdAmount': 1.8},
-                    'submissionId': '3aaa55a1-3f5a-627f-a8a7-a83aea2341234',
-                    'totalPayments': {'nmrAmount': 34.73, 'usdAmount': 33.8},
-                    'username': 'exampleuser',
-                    'validationLogloss': 0.69123
-                  },
-                ]
+            For each user in the list, there is a dict with the following
+            content:
+
+                * concordance (`dict`)
+                 * pending (`bool`)
+                 * value (`bool`)
+                * originality (`dict`)
+                 * pending (`bool`)
+                 * value (`bool`)
+                * consistency (`float`)
+                * liveLogloss (`float` or `None`)
+                * validationLogloss (`float`)
+                * paymentGeneral (`dict` or `None`)
+                 * nmrAmount (`decimal.Decimal`)
+                 * usdAmount (`decimal.Decimal`)
+                * paymentStaking (`dict` or `None`)
+                 * nmrAmount (`decimal.Decimal`)
+                 * usdAmount (`decimal.Decimal`)
+                * submissionId (`str`)
+                * totalPayments (`dict`)
+                 * nmrAmount (`decimal.Decimal`)
+                 * usdAmount (`decimal.Decimal`)
+                * username (`str`)
+
+        Example:
+            >>> NumerAPI().get_leaderboard(99)
+            [{'concordance': {'pending': False, 'value': True},
+              'consistency': 83.33333333333334,
+              'liveLogloss': 0.6941153941722517,
+              'originality': {'pending': False, 'value': True},
+              'paymentGeneral': None,
+              'paymentStaking': None,
+              'submissionId': '4459d3df-0a4b-4996-ad44-41abb7c45336',
+              'totalPayments': {'nmrAmount': Decimal('163.05'),
+                                'usdAmount': Decimal('40.75')},
+              'username': 'ci_wp',
+              'validationLogloss': 0.692269984475575},
+             ...
+            ]
         """
         msg = "getting leaderboard for tournament {} round {}"
         self.logger.info(msg.format(tournament, round_num))
@@ -280,24 +320,34 @@ class NumerAPI(object):
             tournament (int, optional): ID of the tournament, defaults to 1
 
         Returns:
-            dict: list of stakers with the following structure
+            list: list of stakers (`dict`)
 
-                [
-                  {
-                    'consistency': 83.33333333333334,
-                    # float or `None` if the round isn't resolved
-                    'liveLogloss': None,
-                    'stake': {
-                      'confidence': 0.17,
-                      'insertedAt': datetime.datetime(2017, 1, 22, 1, 47, 11),
-                      'soc': 1730.0,
-                      'txHash': '0x6015e0asdfas...dc37f1c501cd',
-                      'value': 11.0
-                      },
-                    'username': 'exampleuser',
-                    'validationLogloss': 0.69254},
+            Each stake in the list as the the following structure:
 
-                ]
+                * username (`str`)
+                * consistency (`float`)
+                * liveLogloss (`float` or `None`)
+                * validationLogloss (`float`)
+                * stake (`dict`)
+                 * confidence (`decimal.Decimal`)
+                 * insertedAt (`datetime`)
+                 * soc (`decimal.Decimal`)
+                 * txHash (`str`)
+                 * value (`decimal.Decimal`)
+
+        Example:
+            >>> NumerAPI().get_staking_leaderboard(99)
+            [{'consistency': 83.33333333333334,
+              'liveLogloss': 0.6941153941722517,
+              'stake': {'confidence': Decimal('0.055'),
+               'insertedAt': datetime.datetime(2018, 3, 18, 0, 20, 31, 724728, tzinfo=tzutc()),
+               'soc': Decimal('18.18'),
+               'txHash': '0xf1460c7fe08e7920d3e61492501337db5c89bff22af9fd88b9ff1ad604939f61',
+               'value': Decimal('1.00')},
+              'username': 'ci_wp',
+              'validationLogloss': 0.692269984475575},
+              ..
+            ]
         """
         msg = "getting stakes for tournament {} round {}"
         self.logger.info(msg.format(tournament, round_num))
@@ -345,18 +395,29 @@ class NumerAPI(object):
             tournament (int, optional): ID of the tournament, defaults to 1
 
         Returns:
-            dict: list of rounds
+            list of dicts: list of rounds
 
-                [
-                 {'datasetId': '59a70840ca11173c8b2906ac',
-                  'number': 71,
-                  'openTime': datetime.datetime(2017, 8, 31, 0, 0),
-                  'resolveTime': datetime.datetime(2017, 9, 27, 21, 0),
-                  'resolvedGeneral': True,
-                  'resolvedStaking': True
-                 },
-                  ..
-                ]
+            Each round's dict contains the following items:
+
+                * datasetId (`str`)
+                * number (`int`)
+                * openTime (`datetime`)
+                * resolveTime (`datetime`)
+                * resolvedGeneral (`bool`)
+                * resolvedStaking (`bool`)
+
+        Example:
+            >>> NumerAPI().get_competitions()
+            [
+             {'datasetId': '59a70840ca11173c8b2906ac',
+              'number': 71,
+              'openTime': datetime.datetime(2017, 8, 31, 0, 0),
+              'resolveTime': datetime.datetime(2017, 9, 27, 21, 0),
+              'resolvedGeneral': True,
+              'resolvedStaking': True
+             },
+              ..
+            ]
         """
         self.logger.info("getting rounds...")
 
@@ -389,6 +450,10 @@ class NumerAPI(object):
 
         Returns:
             int: number of the current active round
+
+        Example:
+            >>> NumerAPI().get_current_round()
+            104
         """
         # zero is an alias for the current round!
         query = '''
@@ -414,6 +479,13 @@ class NumerAPI(object):
 
         Returns:
             dict: username->submission_id mapping, string->string
+
+        Example:
+            >>> NumerAPI().get_submission_ids()
+            {'1337ai': '93c46857-fed9-4594-981e-82db2b358daf',
+             '1x0r': '108c7601-822c-4910-835d-241da93e2e24',
+             ...
+             }
         """
         query = """
             query($tournament: Int!) {
@@ -438,24 +510,42 @@ class NumerAPI(object):
         """Get all information about you!
 
         Returns:
-            dict: with user information
+            dict: user information including the following fields:
 
-                {'apiTokens': [
-                        {'name': 'tokenname',
-                         'public_id': 'BLABLA',
-                         'scopes': ['upload_submission', 'stake', ..]
-                         }, ..],
-                 'assignedEthAddress': '0x0000000000000000000000000001',
-                 'availableNmr': Decimal('99.01'),
-                 'availableUsd': Decimal('9.47'),
-                 'banned': False,
-                 'email': 'username@example.com',
-                 'id': '1234-ABC..',
-                 'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
-                 'mfaEnabled': False,
-                 'status': 'VERIFIED',
-                 'username': 'cool username'
-                 }
+                * assignedEthAddress (`str`)
+                * availableNmr (`decimal.Decimal`)
+                * availableUsd (`decimal.Decimal`)
+                * banned (`bool`)
+                * email (`str`)
+                * id (`str`)
+                * insertedAt (`datetime`)
+                * mfaEnabled (`bool`)
+                * status (`str`)
+                * username (`str`)
+                * apiTokens (`list`) each with the following fields:
+                 * name (`str`)
+                 * public_id (`str`)
+                 * scopes (`list of str`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.get_user()
+            {'apiTokens': [
+                    {'name': 'tokenname',
+                     'public_id': 'BLABLA',
+                     'scopes': ['upload_submission', 'stake', ..]
+                     }, ..],
+             'assignedEthAddress': '0x0000000000000000000000000001',
+             'availableNmr': Decimal('99.01'),
+             'availableUsd': Decimal('9.47'),
+             'banned': False,
+             'email': 'username@example.com',
+             'id': '1234-ABC..',
+             'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
+             'mfaEnabled': False,
+             'status': 'VERIFIED',
+             'username': 'cool username'
+             }
         """
         query = """
           query {
@@ -491,17 +581,32 @@ class NumerAPI(object):
         Returns:
             list of dicts: payments
 
-                [{usdAmount': Decimal('9.44'),
-                 'nmrAmount': Decimal('0.00'),
-                 'round':
-                    {'number': 99,
-                     'openTime': datetime.datetime(2017, 12, 2, 18, 0),
-                     'resolveTime': datetime.datetime(2018, 1, 1, 18, 0),
-                     'resolvedGeneral': True,
-                     'resolvedStaking': True},
-                  'tournament': 'staking'
-                  }, .. ]
-        """
+            For each payout in the list, a dict contains the following items:
+
+                * nmrAmount (`decimal.Decimal`)
+                * usdAmount (`decimal.Decimal`)
+                * tournament (`str`)
+                * round (`dict`)
+                 * number (`int`)
+                 * openTime (`datetime`)
+                 * resolveTime (`datetime`)
+                 * resolvedGeneral (`bool`)
+                 * resolvedStaking (`bool`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.get_payments()
+            [{'nmrAmount': Decimal('0.00'),
+              'round': {'number': 84,
+               'openTime': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc()),
+               'resolveTime': datetime.datetime(2018, 1, 1, 18, 0, tzinfo=tzutc()),
+               'resolvedGeneral': True,
+               'resolvedStaking': True},
+              'tournament': 'staking',
+              'usdAmount': Decimal('17.44')},
+              ...
+             ]
+    """
         query = """
           query {
             user {
@@ -535,35 +640,65 @@ class NumerAPI(object):
         """Get all your deposits and withdrawals.
 
         Returns:
-            dict: list of NMR and USD transactions
+            dict: lists of your NMR and USD transactions
 
-                {'nmrDeposits': [
-                    {'from': '0x54479..9ec897a',
-                     'posted': True,
-                     'status': 'confirmed',
-                     'to': '0x0000000000000000000001',
-                     'txHash': '0x52..e2056ab',
-                     'value': Decimal('9.0')},
-                     .. ],
-                 'nmrWithdrawals': [
-                    {'from': '0x0000000000000000..002',
-                     'posted': True,
-                     'status': 'confirmed',
-                     'to': '0x00000000000..001',
-                     'txHash': '0x1278..266c',
-                     'value': Decimal('2.0')},
-                     .. ],
-                 'usdWithdrawals': [
-                    {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430, tzinfo=tzutc()),
-                     'ethAmount': '0.295780674909307710',
-                     'from': '0x11.....',
-                     'posted': True,
-                     'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035, tzinfo=tzutc()),
-                     'status': 'confirmed',
-                     'to': '0x81.....',
-                     'txHash': '0x3c....',
-                     'usdAmount': Decimal('10.07')},
-                     ..]}
+            The returned dict has the following structure:
+
+                * nmrDeposits (`list`) contains items with fields:
+                 * from (`str`)
+                 * posted (`bool`)
+                 * status (`str`)
+                 * to (`str`)
+                 * txHash (`str`)
+                 * value (`decimal.Decimal`)
+                * nmrWithdrawals"` (`list`) contains items with fields:
+                 * from"` (`str`)
+                 * posted"` (`bool`)
+                 * status"` (`str`)
+                 * to"` (`str`)
+                 * txHash"` (`str`)
+                 * value"` (`decimal.Decimal`)
+                * usdWithdrawals"` (`list`) contains items with fields:
+                 * confirmTime"` (`datetime` or `None`)
+                 * ethAmount"` (`str`)
+                 * from"` (`str`)
+                 * posted"` (`bool`)
+                 * sendTime"` (`datetime`)
+                 * status"` (`str`)
+                 * to (`str`)
+                 * txHash (`str`)
+                 * usdAmount (`decimal.Decimal`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.get_transactions()
+            {'nmrDeposits': [
+                {'from': '0x54479..9ec897a',
+                 'posted': True,
+                 'status': 'confirmed',
+                 'to': '0x0000000000000000000001',
+                 'txHash': '0x52..e2056ab',
+                 'value': Decimal('9.0')},
+                 .. ],
+             'nmrWithdrawals': [
+                {'from': '0x0000000000000000..002',
+                 'posted': True,
+                 'status': 'confirmed',
+                 'to': '0x00000000000..001',
+                 'txHash': '0x1278..266c',
+                 'value': Decimal('2.0')},
+                 .. ],
+             'usdWithdrawals': [
+                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430, tzinfo=tzutc()),
+                 'ethAmount': '0.295780674909307710',
+                 'from': '0x11.....',
+                 'posted': True,
+                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035, tzinfo=tzutc()),
+                 'status': 'confirmed',
+                 'to': '0x81.....',
+                 'txHash': '0x3c....',
+                 'usdAmount': Decimal('10.07')},
+                 ..]}
         """
         query = """
           query {
@@ -616,17 +751,33 @@ class NumerAPI(object):
         Returns:
             list of dicts: stakes
 
-                [{'confidence': Decimal('0.12'),
-                  'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000, tzinfo=tzutc()),
-                  'roundNumber': 90,
-                  'soc': Decimal('4.60'),
-                  'staker': '0x0000000000000000000000000000000000003f9e',
-                  'status': 'confirmed',
-                  'tournamentId': 1,
-                  'txHash': '0x1cbb985629552a0f57b98a1e30a5e7f101a992121db318cef02e02aaf0e91c95',
-                  'value': Decimal('3.00')},
-                 ..
-                 ]
+            Each stake is a dict with the following fields:
+
+                * confidence (`decimal.Decimal`)
+                * roundNumber (`int`)
+                * tournamentId (`int`)
+                * soc (`decimal.Decimal`)
+                * insertedAt (`datetime`)
+                * staker (`str`): NMR adress used for staking
+                * status (`str`)
+                * txHash (`str`)
+                * value (`decimal.Decimal`)
+
+        Example:
+
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.get_stakes()
+            [{'confidence': Decimal('0.053'),
+              'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000, tzinfo=tzutc()),
+              'roundNumber': 74,
+              'soc': Decimal('56.60'),
+              'staker': '0x0000000000000000000000000000000000003f9e',
+              'status': 'confirmed',
+              'tournamentId': 1,
+              'txHash': '0x1cbb985629552a0f57b98a1e30a5e7f101a992121db318cef02e02aaf0e91c95',
+              'value': Decimal('3.00')},
+              ..
+             ]
         """
         query = """
           query {
@@ -663,12 +814,25 @@ class NumerAPI(object):
                 submission done with the account
 
         Returns:
-            dict: submission status
+            dict: submission status with the following content:
 
-                {'concordance': {'pending': False, 'value': True},
-                 'consistency': 91.66666666666666,
-                 'originality': {'pending': False, 'value': True},
-                 'validation_logloss': 0.691733023121}
+                * concordance (`dict`):
+                 * pending (`bool`)
+                 * value (`bool`): whether the submission is concordant
+                * originality (`dict`)
+                 * pending (`bool`)
+                 * value (`bool`): whether the submission is original
+                * consistency (`float`): consistency of the submission
+                * validation_logloss (`float`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.upload_predictions()
+            >>> api.submission_status()
+            {'concordance': {'pending': False, 'value': True},
+             'consistency': 91.66666666666666,
+             'originality': {'pending': False, 'value': True},
+             'validation_logloss': 0.691733023121}
         """
         if submission_id is None:
             submission_id = self.submission_id
@@ -707,6 +871,11 @@ class NumerAPI(object):
 
         Returns:
             str: submission_id
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.upload_predictions()
+            '93c46857-fed9-4594-981e-82db2b358daf'
         """
         self.logger.info("uploading prediction...")
 
@@ -751,15 +920,24 @@ class NumerAPI(object):
             tournament (int): ID of the tournament (optional, defaults to 1)
 
         Returns:
-            dict: stake information
+            dict: stake information with the following content:
 
-                {'stake':
-                    {'from': None,
-                     'insertedAt': None,
-                     'status': None,
-                     'txHash': '0x76519...2341ca0',
-                     'value': '10'}
-                }
+              * insertedAt (`datetime`)
+              * status (`str`)
+              * txHash (`str`)
+              * value (`decimal.Decimal`)
+              * from (`str`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.stake(0.1, 10)
+            {'stake':
+              {'from': None,
+               'insertedAt': None,
+               'status': None,
+               'txHash': '0x76519...2341ca0',
+               'value': '10'}
+             }
         """
 
         query = '''
@@ -803,7 +981,11 @@ class NumerAPI(object):
             tournament (int): ID of the tournament (optional, defaults to 1)
 
         Returns:
-            bool: indicater if a new round has started
+            bool: True if a new round has started, False otherwise.
+
+        Example:
+            >>> NumerAPI().check_new_round()
+            False
         """
         query = '''
             query($tournament: Int!) {
@@ -831,7 +1013,13 @@ class NumerAPI(object):
                 the last submission done with the account
 
         Return:
-            bool: indicater if the submission is successful
+            bool: True if the submission passed all checks, False otherwise.
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.upload_predictions("predictions.csv")
+            >>> api.check_submission_successful()
+            True
         """
         status = self.submission_status(submission_id)
         # need to cast to bool to not return None in some cases.
