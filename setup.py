@@ -27,18 +27,19 @@ classifiers = [
     "Topic :: Scientific/Engineering"]
 
 
-setup(
-    name="numerapi",
-    version=numerapi_version,
-    maintainer="uuazed",
-    maintainer_email="uuazed@gmail.com",
-    description="Automatically download and upload data for the Numerai machine learning competition",
-    long_description=convert_md_to_rst('README.md'),
-    url='https://github.com/uuazed/numerapi',
-    platforms="OS Independent",
-    classifiers=classifiers,
-    license='MIT License',
-    package_data={'numerai': ['LICENSE', 'README.md']},
-    packages=find_packages(exclude=['tests']),
-    install_requires=["requests", "pytz", "python-dateutil", "tqdm"]
-)
+if __name__ == "__main__":
+    setup(
+        name="numerapi",
+        version=numerapi_version,
+        maintainer="uuazed",
+        maintainer_email="uuazed@gmail.com",
+        description="Automatically download and upload data for the Numerai machine learning competition",
+        long_description=convert_md_to_rst('README.md'),
+        url='https://github.com/uuazed/numerapi',
+        platforms="OS Independent",
+        classifiers=classifiers,
+        license='MIT License',
+        package_data={'numerai': ['LICENSE', 'README.md']},
+        packages=find_packages(exclude=['tests']),
+        install_requires=["requests", "pytz", "python-dateutil", "tqdm"]
+        )
