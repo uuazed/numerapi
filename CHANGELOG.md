@@ -7,6 +7,7 @@ Notable changes to this project.
 - fixed `get_transactions` after API change on Numerai's side
 - added proper docstrings to all public methods, using Google Style as
   described at http://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
+- added documentation on readthedocs: http://numerapi.readthedocs.io
 
 ## [0.9.1] - 2018-04-22
 - add tournamentId to `get_stakes`
