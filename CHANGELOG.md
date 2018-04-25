@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [0.10.0] - 2018-04-25
+## [1.0.0] - 2018-04-25
 - publish README as long_description on pypi
 - fixed `get_transactions` after API change on Numerai's side
 - added proper docstrings to all public methods, using Google Style as
