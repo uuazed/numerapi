@@ -21,12 +21,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from recommonmark.parser import CommonMarkParser
 import os
-
-source_parsers = {
-    '.md': CommonMarkParser,
-}
 
 # -- Hack for ReadTheDocs -----------------------------------------------------
 # This hack is necessary since RTD does not issue `sphinx-apidoc` before
@@ -65,7 +60,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.todo',
               'sphinx.ext.coverage',
               'sphinx.ext.viewcode',
-              'sphinx.ext.napoleon']
+              'sphinx.ext.napoleon',
+              'm2r']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

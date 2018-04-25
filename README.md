@@ -16,254 +16,40 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 `pip install --upgrade numerapi`
 
 # Usage
-See `example.py`.  You can run it as `./example.py`
 
-Some actions (like uploading predictions or staking) requires a token to verify
+Some actions (like uploading predictions or staking) require a token to verify
 that it is really you interacting with Numerai's API. These tokens consists of
 a `public_id` and `secret_key`. Both can be obtained by login in to Numer.ai and
 going to Account -> Custom API Keys.
 
-# Documentation
-## Layout
-Parameters and return values are given with Python types. Dictionary keys are
-given in quotes; other names to the left of colons are for reference
-convenience only. In particular, `list`s of `dict`s have names for the `dict`s;
-these names will not show up in the actual data, only the actual `dict` data
-itself.
 
-## `download_current_dataset`
-### Parameters
-* `dest_path` (`str`, optional, default: `.`): destination folder for the
-  dataset
-* `dest_filename` (`str`, optional, default: `numerai_dataset_<round number>.zip`)
-* `unzip` (`bool`, optional, default: `True`): indication of whether the
-  training data should be unzipped
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `path` (`string`): location of the downloaded dataset
+    # some API calls do not require logging in
+    napi = numerapi.NumerAPI(verbosity="info")
+    # download current dataset
+    napi.download_current_dataset(unzip=True)
+    # get competitions
+    all_competitions = napi.get_competitions()
+    # get leaderboard for the current round
+    leaderboard = napi.get_leaderboard()
+    # leaderboard for a historic round
+    leaderboard_67 = napi.get_leaderboard(round_num=67)
+    # check if a new round has started
+    if napi.check_new_round():
+        print("new round has started wihtin the last 24hours!")
+    else:
+        print("no new round within the last 24 hours")
 
-## `get_dataset_url`
-Fetch url of the current dataset.
-### Parameters
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `url` (`str`): url of the current dataset
+    # provide api tokens
+    example_public_id = "somepublicid"
+    example_secret_key = "somesecretkey"
+    napi = NumerAPI(example_public_id, example_secret_key)
 
-## `get_leaderboard`
-retrieves the leaderboard for the given round and tournament
-### Parameters
-* `round_num` (`int`, optional, defaults to current round): The round you are interested in.
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `participants` (`list`): information about all competitors
-  * `participants` (`dict`)
-    * `"concordance"` (`dict`)
-      * `"pending"` (`bool`)
-      * `"value"` (`bool`)
-    * `"originality"` (`dict`)
-      * `"pending"` (`bool`)
-      * `"value"` (`bool`)
-    * `"consistency"` (`float`)
-    * `"liveLogloss"` (`float` or `None`)
-    * `"validationLogloss"` (`float`)
-    * `"paymentGeneral"` (`dict` or `None`)
-      * `"nmrAmount"` (`decimal.Decimal`)
-      * `"usdAmount"` (`decimal.Decimal`)
-    * `"paymentStaking"` (`dict` or `None`)
-      * `"nmrAmount"` (`decimal.Decimal`)
-      * `"usdAmount"` (`decimal.Decimal`)
-    * `"submissionId"` (`str`)
-    * `"totalPayments"` (`dict`)
-      * `"nmrAmount"` (`decimal.Decimal`)
-      * `"usdAmount"` (`decimal.Decimal`)
-    * `"username"` (`str`)
+    # upload predictions
+    submission_id = napi.upload_predictions("mypredictions.csv")
+    # check submission status
+    napi.submission_status()
 
-## `get_staking_leaderboard`
-retrieves the leaderboard of the staking competition for the given round
-### Parameters
-* `round_num` (`int`, optional, defaults to current round): The round you are interested in.
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `stakes` (`list`): information about all competitors
-  * `participants` (`dict`)
-    * `"username"` (`str`)
-    * `"consistency"` (`float`)
-    * `"liveLogloss"` (`float` or `None`)
-    * `"validationLogloss"` (`float`)
-    * `"stake"` (`dict`)
-      * `"confidence"` (`decimal.Decimal`)
-      * `"insertedAt"` (`datetime`)
-      * `"soc"` (`decimal.Decimal`)
-      * `"txHash"` (`str`)
-      * `"value"` (`decimal.Decimal`)
+# API Reference
 
-## `get_competitions`
-### Parameters
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `all_competitions` (`list`): information about all competitions
-  * `competition` (`dict`)
-    * `"datasetId"` (`str`)
-    * `"number"` (`int`)
-    * `"openTime"` (`datetime`)
-    * `"resolveTime"` (`datetime`)
-    * `"resolvedGeneral"` (`bool`)
-    * `"resolvedStaking"` (`bool`)
-
-## `get_current_round`
-### Parameters
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `number` (`int`): number of the current round
-
-## `get_submission_ids`
-get dict with username->submission_id mapping
-### Parameters
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `submission_ids` (`dict`)
-  * `"username"` (`str`)
-  * `"submissionId"` (`str`): ID of submission
-
-## `submission_status`
-submission status of the given submission_id or the last submission done
-within the same session.
-### Parameters
-* `submission_id` (`str`, optional, default: `None`)
-### Return Values
-* `status` (`dict`)
-  * `"concordance"` (`dict`):
-    * `"pending"` (`bool`)
-    * `"value"` (`bool`): whether the submission is concordant
-  * `"originality"` (`dict`)
-    * `"pending"` (`bool`)
-    * `"value"` (`bool`): whether the submission is original
-  * `"consistency"` (`float`): consistency of the submission
-  * `"validation_logloss"` (`float`): amount of logloss for the submission
-
-## `upload_predictions`
-### Parameters
-* `file_path` (`str`): path to CSV of predictions (e.g. `"path/to/file/prediction.csv"`)
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `submission_id`: ID of submission
-
-## `get_user`
-### Return Values
-* `user` (`dict`)
-  * `"apiTokens"` (`list`)
-    * `token` (`dict`)
-      * `"name"` (`str`)
-      * `"public_id"` (`str`)
-      * `"scopes"` (`list`)
-        * `scope` (`str`)
-  * `"assignedEthAddress"` (`str`)
-  * `"availableNmr"` (`decimal.Decimal`)
-  * `"availableUsd"` (`decimal.Decimal`)
-  * `"banned"` (`bool`)
-  * `"email"` (`str`)
-  * `"id"` (`str`)
-  * `"insertedAt"` (`datetime`)
-  * `"mfaEnabled"` (`bool`)
-  * `"status"` (`str`)
-  * `"username"` (`str`)
-
-## `get_payments`
-### Return Values
-* `payments` (`list`)
-  * `payment` (`dict`)
-    * `"nmrAmount"` (`decimal.Decimal`)
-    * `"usdAmount"` (`decimal.Decimal`)
-    * `"tournament"` (`str`)
-    * `"round"` (`dict`)
-      * `"number"` (`int`)
-      * `"openTime"` (`datetime`)
-      * `"resolveTime"` (`datetime`)
-      * `"resolvedGeneral"` (`bool`)
-      * `"resolvedStaking"` (`bool`)
-
-## `get_transactions`
-### Return Values
-* `transactions` (`dict`)
-  * `"nmrDeposits"` (`list`)
-    * `nmrDeposit` (`dict`)
-      * `"from"` (`str`)
-      * `"posted"` (`bool`)
-      * `"status"` (`str`)
-      * `"to"` (`str`)
-      * `"txHash"` (`str`)
-      * `"value"` (`decimal.Decimal`)
-  * `"nmrWithdrawals"` (`list`)
-    * `nmrWithdrawal` (`dict`)
-      * `"from"` (`str`)
-      * `"posted"` (`bool`)
-      * `"status"` (`str`)
-      * `"to"` (`str`)
-      * `"txHash"` (`str`)
-      * `"value"` (`decimal.Decimal`)
-  * `"usdWithdrawals"` (`list`)
-    * `usdWithdrawal` (`dict`)
-      * `"confirmTime"` (`datetime` or `None`)
-      * `"ethAmount"` (`str`)
-      * `"from"` (`str`)
-      * `"posted"` (`bool`)
-      * `"sendTime"` (`datetime`)
-      * `"status"` (`str`)
-      * `"to"` (`str`)
-      * `"txHash"` (`str`)
-      * `"usdAmount"` (`decimal.Decimal`)
-
-## `stake`
-participate in the staking competition
-### Parameters
-* `confidence` (`float`)
-* `value` (`float`): the amount of NMR you want to stake
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Values
-* `stake` (`dict`)
-  * `"insertedAt"` (`datetime`)
-  * `"status"` (`str`)
-  * `"txHash"` (`str`)
-  * `"value"` (`decimal.Decimal`)
-  * `"from"` (`str`)
-
-## `get_stakes`
-### Return Values
-* `stakes` (`list`)
-  * `stake` (`dict`)
-    * `"confidence"` (`decimal.Decimal`)
-    * `"roundNumber"` (`int`)
-    * `"tournamentId"` (`int`)
-    * `"soc"` (`decimal.Decimal`)
-    * `"insertedAt"` (`datetime`)
-    * `"staker"` (`str`): NMR adress used for staking
-    * `"status"` (`str`)
-    * `"txHash"` (`str`)
-    * `"value"` (`decimal.Decimal`)
-
-## `raw_query`
-This function allows to build your own queries and fetch results from
-Numerai's GraphQL API. Checkout
-https://medium.com/numerai/getting-started-with-numerais-new-tournament-api-77396e895e72
-for an introduction.
-### Parameters
-* `query` (`str`)
-* `variables` (`dict`, optional)
-* `authorization` (`bool`, optional, default: `False`): indicates if a token is required
-### Return Values
-* `data` (`dict`)
-
-## `check_new_round`
-Checks if a new round has started recently.
-### Parameters
-* `hour` (`int`, optional, default: 24): timeframe to consider
-* `tournament` (`int`, optional, default: 1) tournament number
-### Return Value
-* `is_new_round` (`bool`)
-
-## `check_submission_successful`
-Check if the last submission passes concordance and consistency tests
-### Parameters
-* `submission_id` (`str`, optional, default: `None`)
-### Return Value
-* `success` (`bool`)
+Checkout the [detailed API docs](http://numerapi.readthedocs.io/en/latest/api/numerapi.html#module-numerapi.numerapi)
+to learn about all available methods, parameters and returned values.
