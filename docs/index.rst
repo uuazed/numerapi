@@ -1,9 +1,13 @@
 .. mdinclude:: ../README.md
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Contents
+--------
 
+.. toctree::
+    :maxdepth: 2
+
+    changelog
+    license
 
 Indices and tables
 ==================
