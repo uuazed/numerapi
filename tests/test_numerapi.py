@@ -15,18 +15,26 @@ def api_fixture():
 
 
 def test_NumerAPI():
-    # passing only one of public_id and secret_key is not enough
-    api = numerapi.NumerAPI(public_id="foo", secret_key=None)
-    assert api.token is None
-    api = numerapi.NumerAPI(public_id=None, secret_key="bar")
-    assert api.token is None
-    # passing both works
-    api = numerapi.NumerAPI(public_id="foo", secret_key="bar")
-    assert api.token == ("foo", "bar")
-
     # invalid log level should raise
     with pytest.raises(AttributeError):
         numerapi.NumerAPI(verbosity="FOO")
+
+
+def test__login(api):
+    # passing only one of public_id and secret_key is not enough
+    api._login(public_id="foo", secret_key=None)
+    assert api.token is None
+    api._login(public_id=None, secret_key="bar")
+    assert api.token is None
+    # passing both works
+    api._login(public_id="foo", secret_key="bar")
+    assert api.token == ("foo", "bar")
+
+    # using env variables
+    os.environ["NUMERAI_SECRET_KEY"] = "key"
+    os.environ["NUMERAI_PUBLIC_ID"] = "id"
+    api._login()
+    assert api.token == ("id", "key")
 
 
 def test_get_competitions(api):
@@ -73,7 +81,8 @@ def test_stake(api):
         # us if the remaining code works
         api.stake(3, 2)
     # error should warn about not beeing logged in.
-    assert "API keys required for this action" in str(err.value)
+    assert "API keys required for this action" in str(err.value) or \
+           "Your session is invalid or has expired." in str(err.value)
 
 
 @pytest.mark.parametrize("fun", ["get_user", "get_stakes", "get_transactions",
@@ -84,7 +93,8 @@ def test_unauthorized_requests(api, fun):
         # us if the remaining code works
         getattr(api, fun)()
     # error should warn about not beeing logged in.
-    assert "API keys required for this action" in str(err.value)
+    assert "API keys required for this action" in str(err.value) or \
+           "Your session is invalid or has expired." in str(err.value)
 
 
 def test_get_staking_leaderboard(api):
