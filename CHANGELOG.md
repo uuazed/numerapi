@@ -1,6 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - unreleased
+- added numerapi command line interface
+- allow passing public ID and secret key via environment variables
+
+
 ## [1.0.1] - 2018-05-17
 - added `stakeResolution` information to get_leaderboard
 - added badge for read the docs to README

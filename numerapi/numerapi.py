@@ -51,6 +51,18 @@ class NumerAPI(object):
         log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
         logging.basicConfig(format=log_format, level=numeric_log_level)
 
+        self._login(public_id, secret_key)
+
+        self.submission_id = None
+        self.show_progress_bars = show_progress_bars
+
+    def _login(self, public_id=None, secret_key=None):
+        # check env variables if not set
+        if not public_id:
+            public_id = os.getenv("NUMERAI_PUBLIC_ID")
+        if not secret_key:
+            secret_key = os.getenv("NUMERAI_SECRET_KEY")
+
         if public_id and secret_key:
             self.token = (public_id, secret_key)
         elif not public_id and not secret_key:
@@ -59,9 +71,6 @@ class NumerAPI(object):
             self.logger.warning(
                 "You need to supply both a public id and a secret key.")
             self.token = None
-
-        self.submission_id = None
-        self.show_progress_bars = show_progress_bars
 
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
