@@ -32,7 +32,7 @@ def download_dataset(tournament, unzip):
               help='The ID of the tournament, defaults to 1')
 def dataset_url(tournament):
     """Fetch url of the current dataset."""
-    click.echo(prettfiy(napi.get_dataset_url(tournament=tournament)))
+    click.echo(prettify(napi.get_dataset_url(tournament=tournament)))
 
 
 @cli.command()
@@ -42,7 +42,7 @@ def dataset_url(tournament):
               help='The round you are interested in, defaults to current round')
 def leaderboard(round_num=0, tournament=1):
     """Retrieves the leaderboard for the given round."""
-    click.echo(prettfiy(napi.get_leaderboard(tournament=tournament,
+    click.echo(prettify(napi.get_leaderboard(tournament=tournament,
                                              round_num=round_num)))
 
 
@@ -53,7 +53,7 @@ def leaderboard(round_num=0, tournament=1):
               help='The round you are interested in, defaults to current round')
 def staking_leaderboard(round_num=0, tournament=1):
     """Retrieves the staking competition leaderboard for the given round."""
-    click.echo(prettfiy(napi.get_staking_leaderboard(tournament=tournament,
+    click.echo(prettify(napi.get_staking_leaderboard(tournament=tournament,
                                                      round_num=round_num)))
 
 
@@ -89,6 +89,44 @@ def submission_ids(tournament=1):
 def check_new_round(hours=24, tournament=1):
     """Check if a new round has started within the last `hours`."""
     click.echo(int(napi.check_new_round(hours=hours, tournament=tournament)))
+
+
+@cli.command()
+def user():
+    """Get all information about you!"""
+    click.echo(prettify(napi.get_user()))
+
+
+@cli.command()
+def payments():
+    """List all your payments"""
+    click.echo(prettify(napi.get_payments()))
+
+
+@cli.command()
+def transactions():
+    """List all your deposits and withdrawals."""
+    click.echo(prettify(napi.get_transactions()))
+
+
+@cli.command()
+def stakes():
+    """List all your stakes."""
+    click.echo(prettify(napi.get_stakes()))
+
+
+@cli.command()
+@click.argument("submission_id")
+def submission_status(submission_id):
+    """checks the submission status"""
+    click.echo(prettify(napi.submission_status(submission_id)))
+
+
+@cli.command()
+@click.argument("submission_id")
+def submission_successful(submission_id):
+    """Check if the last submission passes submission criteria."""
+    click.echo(int(napi.check_submission_successful(submission_id)))
 
 
 @cli.command()

@@ -769,7 +769,7 @@ class NumerAPI(object):
         return txs
 
     def get_stakes(self):
-        """Get all your stakes.
+        """List all your stakes.
 
         Returns:
             list of dicts: stakes
