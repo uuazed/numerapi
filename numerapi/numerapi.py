@@ -243,6 +243,10 @@ class NumerAPI(object):
                  * nmrAmount (`decimal.Decimal`)
                  * usdAmount (`decimal.Decimal`)
                 * username (`str`)
+                * stakeResolution (`dict`)
+                 * destroyed (`bool`)
+                 * paid (`decimal.Decimal`)
+                 * successful ('bool')
 
         Example:
             >>> NumerAPI().get_leaderboard(99)
@@ -255,6 +259,9 @@ class NumerAPI(object):
               'submissionId': '4459d3df-0a4b-4996-ad44-41abb7c45336',
               'totalPayments': {'nmrAmount': Decimal('163.05'),
                                 'usdAmount': Decimal('40.75')},
+              'stakeResolution': {'destroyed': False,
+                                  'paid': Decimal('19.86'),
+                                  'successful': True},
               'username': 'ci_wp',
               'validationLogloss': 0.692269984475575},
              ...
@@ -293,6 +300,11 @@ class NumerAPI(object):
                     nmrAmount
                     usdAmount
                   }
+                  stakeResolution {
+                    destroyed
+                    paid
+                    successful
+                  }
                 }
               }
             }
@@ -308,6 +320,8 @@ class NumerAPI(object):
             for p in ["totalPayments", "paymentGeneral", "paymentStaking"]:
                 utils.replace(item[p], "nmrAmount", utils.parse_float_string)
                 utils.replace(item[p], "usdAmount", utils.parse_float_string)
+            utils.replace(item['stakeResolution'], "paid",
+                          utils.parse_float_string)
         return leaderboard
 
     def get_staking_leaderboard(self, round_num=0, tournament=1):

@@ -1,6 +1,8 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- added `stakeResolution` information to get_leaderboard
 
 ## [1.0.0] - 2018-04-25
 - publish README as long_description on pypi
