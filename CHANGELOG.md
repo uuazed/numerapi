@@ -1,8 +1,9 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.0.1] - 2018-05-17
 - added `stakeResolution` information to get_leaderboard
+- added badge for read the docs to README
 
 ## [1.0.0] - 2018-04-25
 - publish README as long_description on pypi
