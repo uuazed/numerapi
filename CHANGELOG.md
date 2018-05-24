@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] - unreleased
+## [1.1.0] - 2018-05-24
 - added numerapi command line interface
 - allow passing public ID and secret key via environment variables
 
