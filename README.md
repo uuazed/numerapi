@@ -18,11 +18,19 @@ If you encounter a problem or have suggestions, feel free to open an issue.
 
 # Usage
 
+Numerapi can be used as a regular, importable Python module or from the command
+line.
+
 Some actions (like uploading predictions or staking) require a token to verify
 that it is really you interacting with Numerai's API. These tokens consists of
 a `public_id` and `secret_key`. Both can be obtained by login in to Numer.ai and
-going to Account -> Custom API Keys.
+going to Account -> Custom API Keys. Tokens can be passed to the Python module
+as parameters or you can be set via environment variables (`NUMERAI_PUBLIC_ID`
+and `NUMERAI_SECRET_KEY`).
 
+## Python module
+
+Usage example:
 
     # some API calls do not require logging in
     napi = numerapi.NumerAPI(verbosity="info")
@@ -49,6 +57,48 @@ going to Account -> Custom API Keys.
     submission_id = napi.upload_predictions("mypredictions.csv")
     # check submission status
     napi.submission_status()
+
+## Command line interface
+
+To get started with the cli interface, let's take a look at the help page:
+
+    $ numerapi --help
+    Usage: numerapi [OPTIONS] COMMAND [ARGS]...
+
+      Wrapper around the Numerai API
+
+    Options:
+      --help  Show this message and exit.
+
+    Commands:
+      check_new_round        Check if a new round has started within the...
+      competitions           Retrieves information about all competitions
+      current_round          Get number of the current active round.
+      dataset_url            Fetch url of the current dataset.
+      download_dataset       Download dataset for the current active...
+      leaderboard            Retrieves the leaderboard for the given...
+      payments               List all your payments
+      stake                  Participate in the staking competition.
+      stakes                 List all your stakes.
+      staking_leaderboard    Retrieves the staking competition leaderboard...
+      submission_ids         Get dict with username->submission_id...
+      submission_status      checks the submission status
+      submission_successful  Check if the last submission passes...
+      submit                 Upload predictions from file.
+      transactions           List all your deposits and withdrawals.
+      user                   Get all information about you!
+
+Each command has it's own help page, for example:
+
+    $ numerapi submit --help
+    Usage: numerapi submit [OPTIONS] PATH
+
+      Upload predictions from file.
+
+    Options:
+      --tournament INTEGER  The ID of the tournament, defaults to 1
+      --help                Show this message and exit.
+
 
 # API Reference
 

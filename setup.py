@@ -41,7 +41,8 @@ if __name__ == "__main__":
         license='MIT License',
         package_data={'numerai': ['LICENSE', 'README.md']},
         packages=find_packages(exclude=['tests']),
-        install_requires=["requests", "pytz", "python-dateutil", "tqdm"],
+        install_requires=["requests", "pytz", "python-dateutil",
+                          "tqdm", "click"],
         entry_points={
           'console_scripts': [
               'numerapi = numerapi.cli:cli'
