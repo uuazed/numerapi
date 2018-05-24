@@ -130,6 +130,25 @@ def submission_successful(submission_id):
 
 
 @cli.command()
+@click.argument("confidence")
+@click.argument("value")
+@click.option('--tournament', default=1,
+              help='The ID of the tournament, defaults to 1')
+def stake(confidence, value, tournament):
+    """Participate in the staking competition."""
+    click.echo(napi.stake(confidence, value, tournament))
+
+
+@cli.command()
+@click.option('--tournament', default=1,
+              help='The ID of the tournament, defaults to 1')
+@click.argument('path', type=click.Path(exists=True))
+def submit(path, tournament):
+    """Upload predictions from file."""
+    click.echo(napi.upload_predictions(path, tournament))
+
+
+@cli.command()
 def version():
     print(numerapi.__version__)
 

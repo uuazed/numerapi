@@ -900,7 +900,7 @@ class NumerAPI(object):
             >>> api.upload_predictions()
             '93c46857-fed9-4594-981e-82db2b358daf'
         """
-        self.logger.info("uploading prediction...")
+        self.logger.info("uploading predictions...")
 
         auth_query = '''
             query($filename: String!
