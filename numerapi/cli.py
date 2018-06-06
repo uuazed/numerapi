@@ -116,6 +116,26 @@ def stakes():
 
 
 @cli.command()
+def tournaments():
+    """Get all active tournaments."""
+    click.echo(prettify(napi.get_tournaments()))
+
+
+@cli.command()
+@click.argument("number", type=int)
+def tournament_number2name(number):
+    """Translate tournament number to tournament name."""
+    click.echo(prettify(napi.tournament_number2name(number)))
+
+
+@cli.command()
+@click.argument("name", type=str)
+def tournament_name2number(name):
+    """Translate tournament name to tournament number."""
+    click.echo(prettify(napi.tournament_name2number(name)))
+
+
+@cli.command()
 @click.argument("submission_id")
 def submission_status(submission_id):
     """checks the submission status"""
@@ -150,6 +170,7 @@ def submit(path, tournament):
 
 @cli.command()
 def version():
+    """Installed numerapi version."""
     print(numerapi.__version__)
 
 

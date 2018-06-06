@@ -494,6 +494,48 @@ class NumerAPI(object):
         round_num = data["number"]
         return round_num
 
+    def get_tournaments(self):
+        """Get all active tournaments
+
+        Returns:
+            list of dicts: list of tournaments
+
+            Each tournaments' dict contains the following items:
+
+                * id (`str`)
+                * name (`str`)
+                * tournament (`int`)
+
+        Example:
+            >>> NumerAPI().get_tournaments()
+            [ { 'id': '2ecf30f4-4b4f-42e9-8e72-cc5bd61c2733',
+                'name': 'alpha',
+                'tournament': 1},
+              { 'id': '6ff44cca-263d-40bd-b029-a1ab8f42798f',
+                'name': 'bravo',
+                'tournament': 2},
+              { 'id': 'ebf0d62b-0f60-4550-bcec-c737b168c65d',
+                'name': 'charlie',
+                'tournament': 3},
+              { 'id': '5fac6ece-2726-4b66-9790-95866b3a77fc',
+                'name': 'delta',
+                'tournament': 4},
+              { 'id': 'f993b7db-83ce-4efd-ae26-10900d422e72',
+                'name': 'echo',
+                'tournament': 5}]
+        """
+        query = """
+            query {
+              tournaments {
+                id
+                name
+                tournament
+            }
+        }
+        """
+        data = self.raw_query(query)['data']['tournaments']
+        return data
+
     def get_submission_ids(self, tournament=1):
         """Get dict with username->submission_id mapping.
 
@@ -1049,3 +1091,41 @@ class NumerAPI(object):
         success = bool(status['consistency'] >= 58 and
                        status["concordance"]["value"])
         return success
+
+    def tournament_number2name(self, number):
+        """Translate tournament number to tournament name.
+
+        Args:
+            number (int): tournament number to translate
+
+        Returns:
+            name (str): name of the tournament or `None` if unknown.
+
+        Examples:
+            >>> NumerAPI().tournament_int2name(4)
+            'delta'
+            >>> NumerAPI().tournament_int2name(99)
+            None
+        """
+        tournaments = self.get_tournaments()
+        d = {t['tournament']: t['name'] for t in tournaments}
+        return d.get(number, None)
+
+    def tournament_name2number(self, name):
+        """Translate tournament name to tournament number.
+
+        Args:
+            name (str): tournament name to translate
+
+        Returns:
+            number (int): number of the tournament or `None` if unknown.
+
+        Examples:
+            >>> NumerAPI().tournament_name2int('delta')
+            4
+            >>> NumerAPI().tournament_name2int('foo')
+            None
+        """
+        tournaments = self.get_tournaments()
+        d = {t['name']: t['tournament'] for t in tournaments}
+        return d.get(name, None)

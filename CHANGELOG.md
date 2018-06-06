@@ -1,6 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- added `get_tournaments`
+- added `tournament_name2number` and `tournament_number2name` to translate
+  between tournament numbers and names
+
 ## [1.1.0] - 2018-05-24
 - added numerapi command line interface
 - allow passing public ID and secret key via environment variables
