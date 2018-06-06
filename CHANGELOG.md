@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.1.1] - 2018-06-06
 - added `get_tournaments`
 - added `tournament_name2number` and `tournament_number2name` to translate
   between tournament numbers and names
