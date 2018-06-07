@@ -1102,9 +1102,9 @@ class NumerAPI(object):
             name (str): name of the tournament or `None` if unknown.
 
         Examples:
-            >>> NumerAPI().tournament_int2name(4)
+            >>> NumerAPI().tournament_number2name(4)
             'delta'
-            >>> NumerAPI().tournament_int2name(99)
+            >>> NumerAPI().tournament_number2name(99)
             None
         """
         tournaments = self.get_tournaments()
@@ -1121,9 +1121,9 @@ class NumerAPI(object):
             number (int): number of the tournament or `None` if unknown.
 
         Examples:
-            >>> NumerAPI().tournament_name2int('delta')
+            >>> NumerAPI().tournament_name2number('delta')
             4
-            >>> NumerAPI().tournament_name2int('foo')
+            >>> NumerAPI().tournament_name2number('foo')
             None
         """
         tournaments = self.get_tournaments()
