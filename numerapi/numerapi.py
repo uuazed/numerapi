@@ -641,13 +641,41 @@ class NumerAPI(object):
                           utils.parse_datetime_string)
         return data
 
+    def get_submission_filename(self, username, tournament, round_num=None):
+        """Get filename of the submission of the given user, tournament & round
+
+        Args:
+            username (str): name of the user
+            tournament (int): ID of the tournament (optional, defaults to 1)
+            round_num (int): round number (optional, defaults to current active round)
+
+        Returns:
+            str: filename of the submission
+
+        Raises:
+            ValueError: if there is no submission for the given user,
+                        tournament & round_num combination
+
+        Example:
+            >>> NumerAPI().get_submission_filename("slyfox", 3, 111)
+            'example_predictions_target_jordan-XAEvA7EmwiP6.csv'
+
+        """
+        data = self.get_user_activities(username, tournament)
+        if round_num is None:
+            round_num = self.get_current_round()
+        data = [item for item in data if item['roundNumber'] == round_num]
+        if len(data) == 0:
+            raise ValueError(
+                'No submission found for the given user, tournament & round')
+        return data[0]['submission']['filename']
 
     def get_rankings(self, limit=50, offset=0):
         """Get the overall ranking
 
         Args:
             limit (int): number of items to return (optional, defaults to 50)
-            limit (int): number of items to skip (optional, defaults to 0)
+            offset (int): number of items to skip (optional, defaults to 0)
 
         Returns:
             list of dicts: list of ranking items

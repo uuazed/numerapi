@@ -92,12 +92,24 @@ def rankings(limit=20, offset=0):
 
 
 @cli.command()
-@click.argument("username", help='name of the user')
+@click.argument("username")
 @click.option('--tournament', default=1,
               help='The ID of the tournament, defaults to 1')
 def user_activities(username, tournament=1):
     """Get user activities (works for all users!)"""
     click.echo(prettify(napi.get_user_activities(username, tournament)))
+
+
+@cli.command()
+@click.argument("username")
+@click.option('--tournament', default=1,
+              help='The ID of the tournament, defaults to 1')
+@click.option('--round_num', help='The round number')
+def submission_filename(username, round_num=None, tournament=1):
+    """Get filename of the submission of the given user, tournament & round"""
+    click.echo(prettify(
+        napi.get_submission_filename(username, tournament, round_num)))
+
 
 
 @cli.command()

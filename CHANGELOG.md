@@ -5,6 +5,8 @@ Notable changes to this project.
 - added `get_rankings`, which gives access to numer'ai's global leaderboard
 - added `get_user_activities`, that allows to see each user's submission and
   staking activity
+- added `get_submission_filename` to get the submission filename for any user,
+  tournament & round number combination
 
 ## [1.1.1] - 2018-06-06
 - added `get_tournaments`
