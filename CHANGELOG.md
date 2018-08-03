@@ -9,6 +9,7 @@ Notable changes to this project.
   tournament & round number combination
 - added `prizePoolNmr`, `prizePoolUsd` and number of `participants` to the
   `get_competitions` endpoint
+- ensure functionality of command line interface is in sync
 
 ## [1.1.1] - 2018-06-06
 - added `get_tournaments`

@@ -82,6 +82,7 @@ To get started with the cli interface, let's take a look at the help page:
       stake                   Participate in the staking competition.
       stakes                  List all your stakes.
       staking_leaderboard     Retrieves the staking competition leaderboard...
+      submission_filename     Get filename of the submission of the given...
       submission_ids          Get dict with username->submission_id...
       submission_status       checks the submission status
       submission_successful   Check if the last submission passes...
@@ -91,6 +92,7 @@ To get started with the cli interface, let's take a look at the help page:
       tournaments             Get all active tournaments.
       transactions            List all your deposits and withdrawals.
       user                    Get all information about you!
+      user_activities         Get user activities (works for all users!)
       version                 Installed numerapi version.
 
 Each command has it's own help page, for example:
