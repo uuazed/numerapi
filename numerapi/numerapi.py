@@ -536,6 +536,61 @@ class NumerAPI(object):
         data = self.raw_query(query)['data']['tournaments']
         return data
 
+    def get_rankings(self, limit=50, offset=0):
+        """Get the overall ranking
+
+        Args:
+            limit (int): number of items to return (optional, defaults to 50)
+            limit (int): number of items to skip (optional, defaults to 0)
+
+        Returns:
+            list of dicts: list of ranking items
+
+            Each dict contains the following items:
+
+                * id (`str`)
+                * username (`str`)
+                * nmrBurned (`decimal.Decimal`)
+                * nmrPaid (`decimal.Decimal`)
+                * nmrStaked (`decimal.Decimal`)
+                * rep (`int`)
+                * stakeCount (`int`)
+                * usdEarned (`decimal.Decimal`)
+
+        Example:
+            >>> numerapi.NumerAPI().get_rankings(1)
+                [{'username': 'glasperlenspiel',
+                  'usdEarned': Decimal('16347.12'),
+                  'stakeCount': 41,
+                  'rep': 14,
+                  'nmrStaked': Decimal('250.000000000000000000'),
+                  'nmrPaid': Decimal('16061.37'),
+                  'nmrBurned': Decimal('295.400000000000000000'),
+                  'id': 'bbee4f0e-f238-4d8a-8f1b-5eb384cdcbfc'}]
+        """
+        query = '''
+            query($limit: Int!
+                  $offset: Int!) {
+              rankings(limit: $limit
+                       offset: $offset) {
+                username
+                id
+                nmrBurned
+                nmrPaid
+                nmrStaked
+                rep
+                stakeCount
+                usdEarned
+              }
+            }
+        '''
+        arguments = {'limit': limit, 'offset': offset}
+        data = self.raw_query(query, arguments)['data']['rankings']
+        for item in data:
+            for p in ["nmrBurned", "nmrPaid", "nmrStaked", "usdEarned"]:
+                utils.replace(item, p, utils.parse_float_string)
+        return data
+
     def get_submission_ids(self, tournament=1):
         """Get dict with username->submission_id mapping.
 
