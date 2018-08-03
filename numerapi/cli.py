@@ -85,10 +85,19 @@ def submission_ids(tournament=1):
 @click.option('--limit', default=20,
               help='Number of items to return, defaults to 20')
 @click.option('--offset', default=0,
-            help='Number of items to skip, defaults to 0')
+              help='Number of items to skip, defaults to 0')
 def rankings(limit=20, offset=0):
     """Get the overall rankings."""
     click.echo(prettify(napi.get_rankings(limit=limit, offset=offset)))
+
+
+@cli.command()
+@click.argument("username", help='name of the user')
+@click.option('--tournament', default=1,
+              help='The ID of the tournament, defaults to 1')
+def user_activities(username, tournament=1):
+    """Get user activities (works for all users!)"""
+    click.echo(prettify(napi.get_user_activities(username, tournament)))
 
 
 @cli.command()

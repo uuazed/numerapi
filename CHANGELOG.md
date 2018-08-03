@@ -2,7 +2,9 @@
 Notable changes to this project.
 
 ## [dev]
-- added `get_rankings`
+- added `get_rankings`, which gives access to numer'ai's global leaderboard
+- added `get_user_activities`, that allows to see each user's submission and
+  staking activity
 
 ## [1.1.1] - 2018-06-06
 - added `get_tournaments`

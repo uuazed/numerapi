@@ -536,6 +536,112 @@ class NumerAPI(object):
         data = self.raw_query(query)['data']['tournaments']
         return data
 
+    def get_user_activities(self, username, tournament=1):
+        """Get user activities (works for all users!).
+
+        Args:
+            username (str): name of the user
+            tournament (int): ID of the tournament (optional, defaults to 1)
+
+        Returns:
+            list: list of user activities (`dict`)
+
+            Each stake in the list as the the following structure:
+
+                * resolved (`bool`)
+                * roundNumber (`int`)
+                * tournament (`int`)
+                * submission (`dict`)
+                 * concordance (`bool`)
+                 * consistency (`float`)
+                 * date (`datetime`)
+                 * filename (`str`)
+                 * liveLogloss (`float`)
+                 * originality (`bool`)
+                 * validationLogloss (`float`)
+                * stake (`dict`)
+                 * confidence (`decimal.Decimal`)
+                 * date (`datetime`)
+                 * nmrEarned (`decimal.Decimal`)
+                 * staked (`bool`)
+                 * usdEarned (`decimal.Decimal`)
+
+        Example:
+            >>> NumerAPI().get_user_activities("slyfox", 5)
+            [{'tournament': 5,
+              'submission': {'validationLogloss': 0.6928141372700635,
+               'originality': True,
+               'liveLogloss': None,
+               'filename': 'example_predictions_target_charles-0GQy9X8QJxWQ.csv',
+               'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
+               'consistency': 83.33333333333334,
+               'concordance': True},
+              'stake': {'value': Decimal('0.10'),
+               'usdEarned': None,
+               'staked': True,
+               'nmrEarned': None,
+               'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845, tzinfo=tzutc()),
+               'confidence': Decimal('0.100000000000000000')},
+              'roundNumber': 116,
+              'resolved': False},
+             {'tournament': 5,
+              'submission': {'validationLogloss': 0.6928141372700635,
+
+               ...
+
+               ]
+
+        """
+        query = '''
+            query($tournament: Int!
+                  $username: String!) {
+              userActivities(tournament: $tournament
+                     username: $username) {
+                resolved
+                roundNumber
+                tournament
+                submission {
+                    concordance
+                    consistency
+                    date
+                    filename
+                    liveLogloss
+                    originality
+                    validationLogloss
+                }
+                stake {
+                    confidence
+                    date
+                    nmrEarned
+                    staked
+                    usdEarned
+                    value
+                }
+              }
+            }
+        '''
+        arguments = {'tournament': tournament, 'username': username}
+        data = self.raw_query(query, arguments)['data']['userActivities']
+        # filter rounds with no activity
+        data = [item for item in data
+                if item['submission']['date'] is not None]
+        for item in data:
+            # remove stakes with all values set to None
+            if item['stake']['date'] is None:
+                del item['stake']
+            # parse
+            else:
+                utils.replace(item['stake'], "date",
+                              utils.parse_datetime_string)
+                for col in ['confidence', 'value', 'nmrEarned', 'usdEarned']:
+                    utils.replace(item['stake'], col, utils.parse_float_string)
+        # parse
+        for item in data:
+            utils.replace(item['submission'], "date",
+                          utils.parse_datetime_string)
+        return data
+
+
     def get_rankings(self, limit=50, offset=0):
         """Get the overall ranking
 
@@ -559,14 +665,14 @@ class NumerAPI(object):
 
         Example:
             >>> numerapi.NumerAPI().get_rankings(1)
-                [{'username': 'glasperlenspiel',
-                  'usdEarned': Decimal('16347.12'),
-                  'stakeCount': 41,
-                  'rep': 14,
-                  'nmrStaked': Decimal('250.000000000000000000'),
-                  'nmrPaid': Decimal('16061.37'),
-                  'nmrBurned': Decimal('295.400000000000000000'),
-                  'id': 'bbee4f0e-f238-4d8a-8f1b-5eb384cdcbfc'}]
+            [{'username': 'glasperlenspiel',
+              'usdEarned': Decimal('16347.12'),
+              'stakeCount': 41,
+              'rep': 14,
+              'nmrStaked': Decimal('250.000000000000000000'),
+              'nmrPaid': Decimal('16061.37'),
+              'nmrBurned': Decimal('295.400000000000000000'),
+              'id': 'bbee4f0e-f238-4d8a-8f1b-5eb384cdcbfc'}]
         """
         query = '''
             query($limit: Int!
