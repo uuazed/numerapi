@@ -426,6 +426,9 @@ class NumerAPI(object):
                 * number (`int`)
                 * openTime (`datetime`)
                 * resolveTime (`datetime`)
+                * participants (`int`): number of participants
+                * prizePoolNmr (`decimal.Decimal`)
+                * prizePoolUsd (`decimal.Decimal`)
                 * resolvedGeneral (`bool`)
                 * resolvedStaking (`bool`)
 
@@ -436,6 +439,9 @@ class NumerAPI(object):
               'number': 71,
               'openTime': datetime.datetime(2017, 8, 31, 0, 0),
               'resolveTime': datetime.datetime(2017, 9, 27, 21, 0),
+              'participants': 1287,
+              'prizePoolNmr': Decimal('0.00'),
+              'prizePoolUsd': Decimal('6000.00'),
               'resolvedGeneral': True,
               'resolvedStaking': True
              },
@@ -453,6 +459,9 @@ class NumerAPI(object):
                 openTime
                 resolvedGeneral
                 resolvedStaking
+                participants
+                prizePoolNmr
+                prizePoolUsd
               }
             }
         '''
@@ -463,6 +472,8 @@ class NumerAPI(object):
         for r in rounds:
             utils.replace(r, "openTime", utils.parse_datetime_string)
             utils.replace(r, "resolveTime", utils.parse_datetime_string)
+            utils.replace(r, "prizePoolNmr", utils.parse_float_string)
+            utils.replace(r, "prizePoolUsd", utils.parse_float_string)
         return rounds
 
     def get_current_round(self, tournament=1):

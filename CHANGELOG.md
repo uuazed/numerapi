@@ -7,6 +7,8 @@ Notable changes to this project.
   staking activity
 - added `get_submission_filename` to get the submission filename for any user,
   tournament & round number combination
+- added `prizePoolNmr`, `prizePoolUsd` and number of `participants` to the
+  `get_competitions` endpoint
 
 ## [1.1.1] - 2018-06-06
 - added `get_tournaments`
