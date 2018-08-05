@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.2.1] - 2018-08-05
 - removed `filename` from `get_user_activities`, no longer supported.
 - rename `get_submission_filename` to `get_submission_filenames`
 - `get_submission_filenames` now only works for the authorized user. It allows
