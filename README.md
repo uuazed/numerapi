@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/uuazed/numerapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uuazed/numerapi)
 [![PyPI](https://img.shields.io/pypi/v/numerapi.svg)](https://pypi.python.org/pypi/numerapi)
 [![Docs](https://readthedocs.org/projects/numerapi/badge/?version=stable)](http://numerapi.readthedocs.io/en/stable/?badge=stable)
+[![Requirements Status](https://requires.io/github/uuazed/numerapi/requirements.svg?branch=master)](https://requires.io/github/uuazed/numerapi/requirements/?branch=master)
 
 # Numerai Python API
 Automatically download and upload data for the Numerai machine learning
