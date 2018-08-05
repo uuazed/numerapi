@@ -101,15 +101,14 @@ def user_activities(username, tournament=1):
 
 
 @cli.command()
-@click.argument("username")
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
-@click.option('--round_num', help='The round number')
-def submission_filename(username, round_num=None, tournament=1):
-    """Get filename of the submission of the given user, tournament & round"""
+@click.option('--tournament', type=int,
+              help='filter by ID of the tournament, defaults to None')
+@click.option('--round_num', type=int,
+              help='filter by round number, defaults to None')
+def submission_filenames(round_num=None, tournament=None):
+    """Get filenames of your submissions"""
     click.echo(prettify(
-        napi.get_submission_filename(username, tournament, round_num)))
-
+        napi.get_submission_filenames(tournament, round_num)))
 
 
 @cli.command()

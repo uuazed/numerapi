@@ -1,6 +1,13 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- removed `filename` from `get_user_activities`, no longer supported.
+- rename `get_submission_filename` to `get_submission_filenames`
+- `get_submission_filenames` now only works for the authorized user. It allows
+  to get ones submission filenames, optionally filtered by round_num and
+  tournament.
+
 ## [1.2.0] - 2018-08-03
 - added `get_rankings`, which gives access to numer'ai's global leaderboard
 - added `get_user_activities`, that allows to see each user's submission and

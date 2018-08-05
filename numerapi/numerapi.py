@@ -566,7 +566,6 @@ class NumerAPI(object):
                  * concordance (`bool`)
                  * consistency (`float`)
                  * date (`datetime`)
-                 * filename (`str`)
                  * liveLogloss (`float`)
                  * originality (`bool`)
                  * validationLogloss (`float`)
@@ -583,7 +582,6 @@ class NumerAPI(object):
               'submission': {'validationLogloss': 0.6928141372700635,
                'originality': True,
                'liveLogloss': None,
-               'filename': 'example_predictions_target_charles-0GQy9X8QJxWQ.csv',
                'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
                'consistency': 83.33333333333334,
                'concordance': True},
@@ -615,7 +613,6 @@ class NumerAPI(object):
                     concordance
                     consistency
                     date
-                    filename
                     liveLogloss
                     originality
                     validationLogloss
@@ -652,34 +649,56 @@ class NumerAPI(object):
                           utils.parse_datetime_string)
         return data
 
-    def get_submission_filename(self, username, tournament, round_num=None):
-        """Get filename of the submission of the given user, tournament & round
+    def get_submission_filenames(self, tournament=None, round_num=None):
+        """Get filenames of the submission of the user.
 
         Args:
-            username (str): name of the user
-            tournament (int): ID of the tournament (optional, defaults to 1)
-            round_num (int): round number (optional, defaults to current active round)
+            tournament (int): optionally filter by ID of the tournament
+            round_num (int): optionally filter round number
 
         Returns:
-            str: filename of the submission
+            list: list of user filenames (`dict`)
 
-        Raises:
-            ValueError: if there is no submission for the given user,
-                        tournament & round_num combination
+            Each filenames in the list as the the following structure:
+
+                * filename (`str`)
+                * round_num (`int`)
+                * tournament (`int`)
 
         Example:
-            >>> NumerAPI().get_submission_filename("slyfox", 3, 111)
-            'example_predictions_target_jordan-XAEvA7EmwiP6.csv'
+            >>> NumerAPI().get_submission_filenames(3, 111)
+            [{'filename': 'model57-dMpHpYMPIUAF.csv',
+              'round_num': 111,
+              'tournament': 3}]
 
         """
-        data = self.get_user_activities(username, tournament)
-        if round_num is None:
-            round_num = self.get_current_round()
-        data = [item for item in data if item['roundNumber'] == round_num]
-        if len(data) == 0:
-            raise ValueError(
-                'No submission found for the given user, tournament & round')
-        return data[0]['submission']['filename']
+        query = '''
+          query {
+            user {
+              submissions {
+                filename
+                selected
+                round {
+                   tournament
+                   number
+                }
+              }
+            }
+          }
+        '''
+        data = self.raw_query(query, authorization=True)['data']['user']
+
+        filenames = [{"round_num": item['round']['number'],
+                      "tournament": item['round']['tournament'],
+                      "filename": item['filename']}
+                     for item in data['submissions'] if item['selected']]
+
+        if round_num is not None:
+            filenames = [f for f in filenames if f['round_num'] == round_num]
+        if tournament is not None:
+            filenames = [f for f in filenames if f['tournament'] == tournament]
+        filenames.sort(key=lambda f: (f['round_num'], f['tournament']))
+        return filenames
 
     def get_rankings(self, limit=50, offset=0):
         """Get the overall ranking
