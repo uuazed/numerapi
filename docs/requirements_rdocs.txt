@@ -1,4 +1,4 @@
-sphinx==1.6.7
+sphinx
 sphinxcontrib-napoleon
 sphinx_rtd_theme
 m2r
