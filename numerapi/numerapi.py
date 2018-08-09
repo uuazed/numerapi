@@ -7,6 +7,7 @@ import zipfile
 import os
 import logging
 import datetime
+import decimal
 
 # Third Party
 import requests
@@ -410,6 +411,69 @@ class NumerAPI(object):
             utils.replace(s["stake"], "soc", utils.parse_float_string)
             utils.replace(s["stake"], "value", utils.parse_float_string)
         return stakes
+
+    def get_nmr_prize_pool(self, round_num=0, tournament=1):
+        """Get NMR prize pool for the given round and tournament.
+
+        Args:
+            round_num (int, optional): The round you are interested in,
+                defaults to current round.
+            tournament (int, optional): ID of the tournament, defaults to 1
+
+        Returns:
+            decimal.Decimal: prize pool in NMR
+
+        Raises:
+            Value Error: in case of invalid round number
+        """
+        tournaments = self.get_competitions(tournament)
+        tournaments.sort(key=lambda t: t['number'])
+        if round_num == 0:
+            t = tournaments[-1]
+        else:
+            tournaments = [t for t in tournaments if t['number'] == round_num]
+            if len(tournaments) == 0:
+                raise ValueError("invalid round number")
+            t = tournaments[0]
+        return t['prizePoolNmr']
+
+    def get_staking_cutoff(self, round_num=0, tournament=1):
+        """Compute staking cutoff for the given round and tournament.
+
+        Args:
+            round_num (int, optional): The round you are interested in,
+                defaults to current round.
+            tournament (int, optional): ID of the tournament, defaults to 1
+
+        Returns:
+            decimal.Decimal: cutoff probability
+
+        Raises:
+            ValueError: in case of missing prize pool information
+        """
+        stakes = [item['stake'] for item
+                  in self.get_staking_leaderboard(
+                      tournament=tournament, round_num=round_num)]
+        stakes.sort(
+            key=lambda stake: (stake['confidence'], stake['insertedAt']),
+            reverse=True)
+        prize_pool = self.get_nmr_prize_pool(round_num, tournament)
+        if prize_pool == 0:
+            raise ValueError("prize pool = 0 in that round")
+        cumsum = 0
+        for stake in stakes:
+            confidence = stake['confidence']
+            cumsum += stake['value']
+            payout = cumsum * (1- confidence) / confidence
+            if payout <= prize_pool:
+                cutoff = confidence
+                cutoff_cumsum = cumsum
+            else:
+                break
+        # lower cutoff even if there are no stakes at that confidence
+        while cutoff_cumsum * (1- cutoff) / cutoff <= prize_pool:
+            cutoff -= decimal.Decimal('0.001')
+        return cutoff
 
     def get_competitions(self, tournament=1):
         """Retrieves information about all competitions

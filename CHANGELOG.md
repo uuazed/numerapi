@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- added `get_staking_cutoff` to compute staking cutoff for a given round and tournament.
+- added `get_nmr_prize_pool` to get the NMR prize pool for a given round and tournament.
+
 ## [1.2.1] - 2018-08-05
 - removed `filename` from `get_user_activities`, no longer supported.
 - rename `get_submission_filename` to `get_submission_filenames`
