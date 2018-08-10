@@ -621,7 +621,7 @@ class NumerAPI(object):
         Returns:
             list: list of user activities (`dict`)
 
-            Each stake in the list as the the following structure:
+            Each activity in the list as the the following structure:
 
                 * resolved (`bool`)
                 * roundNumber (`int`)
