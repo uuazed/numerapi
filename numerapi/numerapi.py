@@ -639,6 +639,7 @@ class NumerAPI(object):
                  * nmrEarned (`decimal.Decimal`)
                  * staked (`bool`)
                  * usdEarned (`decimal.Decimal`)
+                 * burned (`bool`)
 
         Example:
             >>> NumerAPI().get_user_activities("slyfox", 5)
@@ -655,6 +656,7 @@ class NumerAPI(object):
                'nmrEarned': None,
                'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845, tzinfo=tzutc()),
                'confidence': Decimal('0.100000000000000000')},
+               'burned': False
               'roundNumber': 116,
               'resolved': False},
              {'tournament': 5,
@@ -688,6 +690,7 @@ class NumerAPI(object):
                     staked
                     usdEarned
                     value
+                    burned
                 }
               }
             }

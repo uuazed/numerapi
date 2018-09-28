@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - unreleased
+- added `burned` to `get_user_activities`
+
 ## [1.3.0] - 2018-08-09
 - added `get_staking_cutoff` to compute staking cutoff for a given round and tournament.
 - added `get_nmr_prize_pool` to get the NMR prize pool for a given round and tournament.
