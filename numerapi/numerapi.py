@@ -346,7 +346,7 @@ class NumerAPI(object):
         Returns:
             list: list of stakers (`dict`)
 
-            Each stake in the list as the the following structure:
+            Each stake in the list as the following structure:
 
                 * username (`str`)
                 * consistency (`float`)
@@ -403,7 +403,7 @@ class NumerAPI(object):
         stakes = result['leaderboard']
         # filter those with actual stakes
         stakes = [item for item in stakes if item["stake"]["soc"] is not None]
-        # convert strings to pyton objects
+        # convert strings to python objects
         for s in stakes:
             utils.replace(s["stake"], "insertedAt",
                           utils.parse_datetime_string)
@@ -621,7 +621,7 @@ class NumerAPI(object):
         Returns:
             list: list of user activities (`dict`)
 
-            Each activity in the list as the the following structure:
+            Each activity in the list as the following structure:
 
                 * resolved (`bool`)
                 * roundNumber (`int`)
@@ -726,7 +726,7 @@ class NumerAPI(object):
         Returns:
             list: list of user filenames (`dict`)
 
-            Each filenames in the list as the the following structure:
+            Each filenames in the list as the following structure:
 
                 * filename (`str`)
                 * round_num (`int`)
