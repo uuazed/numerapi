@@ -55,7 +55,7 @@ Usage example:
     napi = NumerAPI(example_public_id, example_secret_key)
 
     # upload predictions
-    submission_id = napi.upload_predictions("mypredictions.csv")
+    submission_id = napi.upload_predictions("preds.csv", tournament=1)
     # check submission status
     napi.submission_status()
 
