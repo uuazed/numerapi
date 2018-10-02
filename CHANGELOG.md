@@ -4,6 +4,7 @@ Notable changes to this project.
 ## [dev] - unreleased
 - added `burned` to `get_user_activities`
 - docs: fixed typos + improved example
+- `validation_logloss` -> `validationLogloss`, to follow numerai's docs
 
 ## [1.3.0] - 2018-08-09
 - added `get_staking_cutoff` to compute staking cutoff for a given round and tournament.

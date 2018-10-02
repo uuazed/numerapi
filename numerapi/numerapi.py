@@ -1174,7 +1174,7 @@ class NumerAPI(object):
                  * pending (`bool`)
                  * value (`bool`): whether the submission is original
                 * consistency (`float`): consistency of the submission
-                * validation_logloss (`float`)
+                * validationLogloss (`float`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
@@ -1183,7 +1183,7 @@ class NumerAPI(object):
             {'concordance': {'pending': False, 'value': True},
              'consistency': 91.66666666666666,
              'originality': {'pending': False, 'value': True},
-             'validation_logloss': 0.691733023121}
+             'validationLogloss': 0.691733023121}
         """
         if submission_id is None:
             submission_id = self.submission_id
@@ -1204,7 +1204,7 @@ class NumerAPI(object):
                   value
                 }
                 consistency
-                validation_logloss
+                validationLogloss
               }
             }
             '''
