@@ -214,23 +214,20 @@ def test_check_new_round(api):
 
 
 @responses.activate
-@pytest.mark.parametrize('''originality_pending, originality_value,
-    concordance_pending, concordance_value, consistency, expected''', [
+@pytest.mark.parametrize('''concordance_pending, concordance_value,
+                            consistency, expected''', [
     (True, None, False, True, 80, True),
     (False, False, False, True, 80, True),
     (False, True, True, None, 80, False),
     (False, True, False, False, 80, False),
     (False, True, False, True, 50, False),
     (False, True, False, True, 58, True)])
-def test_check_submission_successful(api, originality_pending,
-                                     originality_value, concordance_pending,
+def test_check_submission_successful(api, concordance_pending,
                                      concordance_value, consistency,
                                      expected):
     api.token = ("", "")
     data = {"data": {"submissions": [
-      {"originality":
-          {"pending": originality_pending, "value": originality_value},
-       "concordance":
+      {"concordance":
           {"pending": concordance_pending, "value": concordance_value},
        "consistency": consistency
        }

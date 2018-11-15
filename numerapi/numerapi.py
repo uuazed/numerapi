@@ -236,9 +236,6 @@ class NumerAPI(object):
                 * concordance (`dict`)
                  * pending (`bool`)
                  * value (`bool`)
-                * originality (`dict`)
-                 * pending (`bool`)
-                 * value (`bool`)
                 * consistency (`float`)
                 * liveLogloss (`float` or `None`)
                 * validationLogloss (`float`)
@@ -263,7 +260,6 @@ class NumerAPI(object):
             [{'concordance': {'pending': False, 'value': True},
               'consistency': 83.33333333333334,
               'liveLogloss': 0.6941153941722517,
-              'originality': {'pending': False, 'value': True},
               'paymentGeneral': None,
               'paymentStaking': None,
               'submissionId': '4459d3df-0a4b-4996-ad44-41abb7c45336',
@@ -287,10 +283,6 @@ class NumerAPI(object):
                 leaderboard {
                   consistency
                   concordance {
-                    pending
-                    value
-                  }
-                  originality {
                     pending
                     value
                   }
@@ -631,7 +623,6 @@ class NumerAPI(object):
                  * consistency (`float`)
                  * date (`datetime`)
                  * liveLogloss (`float`)
-                 * originality (`bool`)
                  * validationLogloss (`float`)
                 * stake (`dict`)
                  * confidence (`decimal.Decimal`)
@@ -645,7 +636,6 @@ class NumerAPI(object):
             >>> NumerAPI().get_user_activities("slyfox", 5)
             [{'tournament': 5,
               'submission': {'validationLogloss': 0.6928141372700635,
-               'originality': True,
                'liveLogloss': None,
                'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
                'consistency': 83.33333333333334,
@@ -680,7 +670,6 @@ class NumerAPI(object):
                     consistency
                     date
                     liveLogloss
-                    originality
                     validationLogloss
                 }
                 stake {
@@ -1170,9 +1159,6 @@ class NumerAPI(object):
                 * concordance (`dict`):
                  * pending (`bool`)
                  * value (`bool`): whether the submission is concordant
-                * originality (`dict`)
-                 * pending (`bool`)
-                 * value (`bool`): whether the submission is original
                 * consistency (`float`): consistency of the submission
                 * validationLogloss (`float`)
 
@@ -1182,7 +1168,6 @@ class NumerAPI(object):
             >>> api.submission_status()
             {'concordance': {'pending': False, 'value': True},
              'consistency': 91.66666666666666,
-             'originality': {'pending': False, 'value': True},
              'validationLogloss': 0.691733023121}
         """
         if submission_id is None:
@@ -1195,11 +1180,7 @@ class NumerAPI(object):
         query = '''
             query($submission_id: String!) {
               submissions(id: $submission_id) {
-                originality {
-                  pending
-                  value
-                }
-                concordance {
+                oncordance {
                   pending
                   value
                 }
