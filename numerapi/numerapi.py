@@ -1180,7 +1180,7 @@ class NumerAPI(object):
         query = '''
             query($submission_id: String!) {
               submissions(id: $submission_id) {
-                oncordance {
+                concordance {
                   pending
                   value
                 }
