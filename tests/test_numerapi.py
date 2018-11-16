@@ -216,12 +216,11 @@ def test_check_new_round(api):
 @responses.activate
 @pytest.mark.parametrize('''concordance_pending, concordance_value,
                             consistency, expected''', [
-    (True, None, False, True, 80, True),
-    (False, False, False, True, 80, True),
-    (False, True, True, None, 80, False),
-    (False, True, False, False, 80, False),
-    (False, True, False, True, 50, False),
-    (False, True, False, True, 58, True)])
+    (False, True, 80, True),
+    (True, None, 80, False),
+    (False, False, 80, False),
+    (False, True, 50, False),
+    (False, True, 58, True)])
 def test_check_submission_successful(api, concordance_pending,
                                      concordance_value, consistency,
                                      expected):
