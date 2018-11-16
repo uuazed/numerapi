@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] - unreleased
+## [1.4.0] - 2018-11-16
 - added `burned` to `get_user_activities`
 - docs: fixed typos + improved example
 - `validation_logloss` -> `validationLogloss`, to follow numerai's docs
