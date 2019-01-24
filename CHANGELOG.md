@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- pin minimum version of tqdm to (hopefully) prevent an exception (#12)
+
 ## [1.4.0] - 2018-11-16
 - added `burned` to `get_user_activities`
 - docs: fixed typos + improved example
