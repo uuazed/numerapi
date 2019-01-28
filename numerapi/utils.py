@@ -68,7 +68,6 @@ def post_with_err_handling(url, body, headers, timeout=10):
     try:
         r = requests.post(url, json=body, headers=headers, timeout=timeout)
         r.raise_for_status()
-        return r.json()
     except requests.exceptions.HTTPError as e:
         logger.error("Http Error: {}".format(e))
     except requests.exceptions.ConnectionError as e:
@@ -77,5 +76,12 @@ def post_with_err_handling(url, body, headers, timeout=10):
         logger.error("Timeout Error: {}".format(e))
     except requests.exceptions.RequestException as e:
         logger.error("Oops, something went wrong: {}".format(e))
+
+    try:
+        return r.json()
+    except UnboundLocalError as e:
+        # `r` isn't available, probably because the try/except above failed
+        pass
     except json.decoder.JSONDecodeError as e:
         logger.error("Did not receive a valid JSON: {}".format(e))
+        return {}
