@@ -8,6 +8,13 @@ import logging
 import json
 
 
+# work-around needed for Python2
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
+
+
 logger = logging.getLogger(__name__)
 
 
