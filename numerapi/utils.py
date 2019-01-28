@@ -4,6 +4,11 @@ import tqdm
 import os
 import errno
 import decimal
+import logging
+import json
+
+
+logger = logging.getLogger(__name__)
 
 
 def parse_datetime_string(s):
@@ -50,3 +55,20 @@ def ensure_directory_exists(path):
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
+
+
+def post_with_err_handling(url, body, headers, timeout=10):
+    try:
+        r = requests.post(url, json=body, headers=headers, timeout=timeout)
+        r.raise_for_status()
+        return r.json()
+    except requests.exceptions.HTTPError as e:
+        logger.error("Http Error: {}".format(e))
+    except requests.exceptions.ConnectionError as e:
+        logger.error("Error Connecting: {}".format(e))
+    except requests.exceptions.Timeout as e:
+        logger.error("Timeout Error: {}".format(e))
+    except requests.exceptions.RequestException as e:
+        logger.error("Oops, something went wrong: {}".format(e))
+    except json.decoder.JSONDecodeError as e:
+        logger.error("Did not receive a valid JSON: {}".format(e))

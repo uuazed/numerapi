@@ -3,6 +3,7 @@ import datetime
 import os
 from dateutil.tz import tzutc
 import responses
+import requests
 import decimal
 from numerapi import utils
 
@@ -53,3 +54,25 @@ def test_ensure_directory_exists(tmpdir):
     # doing it again with the same (existing) path
     utils.ensure_directory_exists(path)
     assert os.path.exists(path)
+
+
+@responses.activate
+def test_post_with_err_handling(caplog):
+    # unreachable
+    responses.add(responses.POST, "https://someurl1", status=404)
+    utils.post_with_err_handling("https://someurl1", None, None)
+    assert 'Http Error' in caplog.text
+    caplog.clear()
+
+    # invalid resonse type
+    responses.add(responses.POST, "https://someurl2")
+    utils.post_with_err_handling("https://someurl2", None, None)
+    assert 'Did not receive a valid JSON' in caplog.text
+    caplog.clear()
+
+    # timeout
+    responses.add(responses.POST, "https://someurl3",
+                  body=requests.exceptions.Timeout())
+    utils.post_with_err_handling("https://someurl3", None, None)
+    assert 'Timeout Error' in caplog.text
+    caplog.clear()
