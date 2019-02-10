@@ -445,29 +445,22 @@ class NumerAPI(object):
         Raises:
             ValueError: in case of missing prize pool information
         """
-        stakes = [item['stake'] for item
-                  in self.get_staking_leaderboard(
-                      tournament=tournament, round_num=round_num)]
-        stakes.sort(
-            key=lambda stake: (stake['confidence'], stake['insertedAt']),
-            reverse=True)
-        prize_pool = self.get_nmr_prize_pool(round_num, tournament)
-        if prize_pool == 0:
-            raise ValueError("prize pool = 0 in that round")
-        cumsum = 0
-        for stake in stakes:
-            confidence = stake['confidence']
-            cumsum += stake['value']
-            payout = cumsum * (1- confidence) / confidence
-            if payout <= prize_pool:
-                cutoff = confidence
-                cutoff_cumsum = cumsum
-            else:
-                break
-        # lower cutoff even if there are no stakes at that confidence
-        while cutoff_cumsum * (1- cutoff) / cutoff <= prize_pool:
-            cutoff -= decimal.Decimal('0.001')
-        return cutoff
+        query = '''
+            query($number: Int!
+                  $tournament: Int!) {
+              rounds(number: $number
+                     tournament: $tournament) {
+                selection {
+                  outcome
+                  pCutoff
+                }
+              }
+            }
+        '''
+        arguments = {'number': round_num, 'tournament': tournament}
+        result = self.raw_query(query, arguments)
+        result = result['data']['rounds'][0]['selection']
+        return utils.parse_float_string(result['pCutoff'])
 
     def get_competitions(self, tournament=1):
         """Retrieves information about all competitions

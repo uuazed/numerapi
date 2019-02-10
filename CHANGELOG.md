@@ -1,6 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+
+## [dev]
+- `get_staking_cutoff` now gets the cutoff values via the api, instead of
+   doing it's own computation
+
 ## [1.4.1]
 - handle connection errors more gracefully (#11)
 - pin minimum version of tqdm to (hopefully) prevent an exception (#12)
