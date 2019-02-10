@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.4.1]
 - handle connection errors more gracefully (#11)
 - pin minimum version of tqdm to (hopefully) prevent an exception (#12)
 - travis: test against Python 3.7
