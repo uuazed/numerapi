@@ -42,7 +42,7 @@ if __name__ == "__main__":
         package_data={'numerai': ['LICENSE', 'README.md']},
         packages=find_packages(exclude=['tests']),
         install_requires=["requests", "pytz", "python-dateutil",
-                          "tqdm>=4.29.1", "click"],
+                          "tqdm>=4.29.1", "click>=7.0"],
         entry_points={
           'console_scripts': [
               'numerapi = numerapi.cli:cli'

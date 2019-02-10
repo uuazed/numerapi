@@ -5,6 +5,7 @@ Notable changes to this project.
 ## [dev]
 - `get_staking_cutoff` now gets the cutoff values via the api, instead of
    doing it's own computation
+- compatibility with `click` version >= 7.0
 
 ## [1.4.1]
 - handle connection errors more gracefully (#11)
