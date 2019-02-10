@@ -12,7 +12,7 @@ def convert_md_to_rst(path):
     return convert_file(path, 'rst')
 
 
-numerapi_version = 'dev'
+numerapi_version = '1.4.2'
 
 
 classifiers = [

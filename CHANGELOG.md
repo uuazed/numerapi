@@ -2,12 +2,12 @@
 Notable changes to this project.
 
 
-## [dev]
+## [1.4.2] - 2019-02-10
 - `get_staking_cutoff` now gets the cutoff values via the api, instead of
    doing it's own computation
 - compatibility with `click` version >= 7.0
 
-## [1.4.1]
+## [1.4.1] - 2019-02-10
 - handle connection errors more gracefully (#11)
 - pin minimum version of tqdm to (hopefully) prevent an exception (#12)
 - travis: test against Python 3.7
