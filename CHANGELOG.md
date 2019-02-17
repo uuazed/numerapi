@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- increase default timeout to 20s
+- better error handling
 
 ## [1.4.2] - 2019-02-10
 - `get_staking_cutoff` now gets the cutoff values via the api, instead of
