@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [1.4.3] - 2019-02-17
 - increase default timeout to 20s
 - better error handling
 
