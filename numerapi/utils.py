@@ -64,7 +64,7 @@ def ensure_directory_exists(path):
             raise
 
 
-def post_with_err_handling(url, body, headers, timeout=20):
+def post_with_err_handling(url, body, headers, timeout=None):
     try:
         r = requests.post(url, json=body, headers=headers, timeout=timeout)
         r.raise_for_status()

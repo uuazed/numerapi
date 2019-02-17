@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [1.4.4] - 2019-02-17
+- remove timeout completely to fix upload issues
+
 ## [1.4.3] - 2019-02-17
 - increase default timeout to 20s
 - better error handling
