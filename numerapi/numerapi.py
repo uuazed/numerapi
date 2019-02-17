@@ -214,7 +214,7 @@ class NumerAPI(object):
         result = utils.post_with_err_handling(
             API_TOURNAMENT_URL, body, headers)
 
-        if "errors" in result:
+        if result and "errors" in result:
             err = self._handle_call_error(result['errors'])
             # fail!
             raise ValueError(err)
