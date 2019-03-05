@@ -556,8 +556,13 @@ class NumerAPI(object):
         round_num = data["number"]
         return round_num
 
-    def get_tournaments(self):
-        """Get all active tournaments
+    def get_tournaments(self, only_active=True):
+        """Get all tournaments
+
+        Args:
+            only_active (bool): Flag to indicate of only active tournaments
+                                should be returned or all of them. Defaults
+                                to True.
 
         Returns:
             list of dicts: list of tournaments
@@ -567,24 +572,26 @@ class NumerAPI(object):
                 * id (`str`)
                 * name (`str`)
                 * tournament (`int`)
+                * active (`bool`)
 
         Example:
             >>> NumerAPI().get_tournaments()
             [ { 'id': '2ecf30f4-4b4f-42e9-8e72-cc5bd61c2733',
                 'name': 'alpha',
-                'tournament': 1},
+                'tournament': 1,
+                'active': True},
               { 'id': '6ff44cca-263d-40bd-b029-a1ab8f42798f',
                 'name': 'bravo',
-                'tournament': 2},
+                'tournament': 2,
+                'active': True},
               { 'id': 'ebf0d62b-0f60-4550-bcec-c737b168c65d',
                 'name': 'charlie',
-                'tournament': 3},
+                'tournament': 3
+                'active': False},
               { 'id': '5fac6ece-2726-4b66-9790-95866b3a77fc',
                 'name': 'delta',
-                'tournament': 4},
-              { 'id': 'f993b7db-83ce-4efd-ae26-10900d422e72',
-                'name': 'echo',
-                'tournament': 5}]
+                'tournament': 4,
+                'active': True}]
         """
         query = """
             query {
@@ -592,10 +599,13 @@ class NumerAPI(object):
                 id
                 name
                 tournament
+                active
             }
         }
         """
         data = self.raw_query(query)['data']['tournaments']
+        if only_active:
+            data = [d for d in data if d['active']]
         return data
 
     def get_user_activities(self, username, tournament=1):

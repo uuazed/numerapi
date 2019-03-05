@@ -156,9 +156,10 @@ def stakes():
 
 
 @cli.command()
-def tournaments():
-    """Get all active tournaments."""
-    click.echo(prettify(napi.get_tournaments()))
+@click.option('--only_active/--all', default=True)
+def tournaments(only_active):
+    """Get all tournaments."""
+    click.echo(prettify(napi.get_tournaments(only_active)))
 
 
 @cli.command()

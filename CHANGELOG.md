@@ -1,6 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+## [1.4.5] - 2019-03-05
+- `get_tournaments` now allows to filter for active tournaments only
+-  CLI: `tournaments` gained `active_only` / `all` flags to get all or only
+   the acttive tournaments
+
 ## [1.4.4] - 2019-02-17
 - remove timeout completely to fix upload issues
 
