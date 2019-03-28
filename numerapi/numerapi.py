@@ -248,9 +248,6 @@ class NumerAPI(object):
                  * nmrAmount (`decimal.Decimal`)
                  * usdAmount (`decimal.Decimal`)
                 * submissionId (`str`)
-                * totalPayments (`dict`)
-                 * nmrAmount (`decimal.Decimal`)
-                 * usdAmount (`decimal.Decimal`)
                 * username (`str`)
                 * stakeResolution (`dict`)
                  * destroyed (`bool`)
@@ -265,8 +262,6 @@ class NumerAPI(object):
               'paymentGeneral': None,
               'paymentStaking': None,
               'submissionId': '4459d3df-0a4b-4996-ad44-41abb7c45336',
-              'totalPayments': {'nmrAmount': Decimal('163.05'),
-                                'usdAmount': Decimal('40.75')},
               'stakeResolution': {'destroyed': False,
                                   'paid': Decimal('19.86'),
                                   'successful': True},
@@ -300,10 +295,6 @@ class NumerAPI(object):
                     nmrAmount
                     usdAmount
                   }
-                  totalPayments {
-                    nmrAmount
-                    usdAmount
-                  }
                   stakeResolution {
                     destroyed
                     paid
@@ -321,7 +312,7 @@ class NumerAPI(object):
         leaderboard = result['leaderboard']
         # parse to correct data types
         for item in leaderboard:
-            for p in ["totalPayments", "paymentGeneral", "paymentStaking"]:
+            for p in ["paymentGeneral", "paymentStaking"]:
                 utils.replace(item[p], "nmrAmount", utils.parse_float_string)
                 utils.replace(item[p], "usdAmount", utils.parse_float_string)
             utils.replace(item['stakeResolution'], "paid",
