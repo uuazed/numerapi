@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - remove total payments from leaderboard query (#13)
+- fix `get_staking_leaderboard`
 
 ## [1.4.5] - 2019-03-05
 - `get_tournaments` now allows to filter for active tournaments only

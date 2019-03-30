@@ -387,7 +387,7 @@ class NumerAPI(object):
             return None
         stakes = result['leaderboard']
         # filter those with actual stakes
-        stakes = [item for item in stakes if item["stake"]["soc"] is not None]
+        stakes = [item for item in stakes if item["stake"] is not None]
         # convert strings to python objects
         for s in stakes:
             utils.replace(s["stake"], "insertedAt",
