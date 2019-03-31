@@ -177,7 +177,7 @@ def test_submit(mocked):
     assert result.exit_code == 0
 
 
-def test_submit():
+def test_version():
     result = CliRunner().invoke(cli.version)
     # just testing if calling works fine
     assert result.exit_code == 0
