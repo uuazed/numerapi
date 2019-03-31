@@ -170,9 +170,11 @@ def test_stake(mocked, login):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.submit')
-def test_submit(mocked):
-    result = CliRunner().invoke(cli.submit, ['--tournament', 1])
+@patch('numerapi.NumerAPI.upload_predictions')
+def test_submit(mocked, login, tmpdir):
+    path = tmpdir.join("somefilepath")
+    path.write("content")
+    result = CliRunner().invoke(cli.submit, str(path))
     # just testing if calling works fine
     assert result.exit_code == 0
 
