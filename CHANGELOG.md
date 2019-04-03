@@ -5,6 +5,7 @@ Notable changes to this project.
 - tests: start testing the cli interface
 - cli: fix `version` on Python2.7
 - added 'liveAuroc' and `validationAuroc` to `get_leaderboard`
+- added 'liveAuroc' and `validationAuroc` to `get_staking_leaderboard`
 
 ## [1.4.6] - 2019-03-30
 - remove total payments from leaderboard query (#13)

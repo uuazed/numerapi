@@ -342,7 +342,9 @@ class NumerAPI(object):
                 * username (`str`)
                 * consistency (`float`)
                 * liveLogloss (`float` or `None`)
+                * liveAuroc (`float` or `None`)
                 * validationLogloss (`float`)
+                * validationAuroc (`float` or `None`)
                 * stake (`dict`)
                  * confidence (`decimal.Decimal`)
                  * insertedAt (`datetime`)
@@ -354,6 +356,7 @@ class NumerAPI(object):
             >>> NumerAPI().get_staking_leaderboard(99)
             [{'consistency': 83.33333333333334,
               'liveLogloss': 0.6941153941722517,
+              'liveAuroc': 0.5241153941722517,
               'stake': {'confidence': Decimal('0.055'),
                'insertedAt': datetime.datetime(2018, 3, 18, 0, 20, 31, 724728, tzinfo=tzutc()),
                'soc': Decimal('18.18'),
@@ -361,6 +364,7 @@ class NumerAPI(object):
                'value': Decimal('1.00')},
               'username': 'ci_wp',
               'validationLogloss': 0.692269984475575},
+              'validationAuroc': 0.512269984475575},
               ..
             ]
         """
@@ -374,8 +378,10 @@ class NumerAPI(object):
                 leaderboard {
                   consistency
                   liveLogloss
+                  liveAuroc
                   username
                   validationLogloss
+                  validationAuroc
                   stake {
                     insertedAt
                     soc
