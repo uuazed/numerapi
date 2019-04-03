@@ -970,7 +970,7 @@ class NumerAPI(object):
               'usdAmount': Decimal('17.44')},
               ...
              ]
-    """
+        """
         query = """
           query {
             user {
@@ -1192,7 +1192,8 @@ class NumerAPI(object):
             >>> api.submission_status()
             {'concordance': {'pending': False, 'value': True},
              'consistency': 91.66666666666666,
-             'validationLogloss': 0.691733023121}
+             'validationLogloss': 0.691733023121,
+             'validationAuroc': 0.52}
         """
         if submission_id is None:
             submission_id = self.submission_id
@@ -1210,6 +1211,7 @@ class NumerAPI(object):
                 }
                 consistency
                 validationLogloss
+                validationAuroc
               }
             }
             '''

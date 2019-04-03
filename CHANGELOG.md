@@ -7,7 +7,8 @@ Notable changes to this project.
 - added 'liveAuroc' and `validationAuroc` to `get_leaderboard`
 - added 'liveAuroc' and `validationAuroc` to `get_staking_leaderboard`
 - added 'liveAuroc' and `validationAuroc` to `get_user_activities`
-- added `ruleset` to `get_competitions`
+- added `validationAuroc` to `get_user_activities`
+- added `ruleset` to `submission_status`
 - added `phoneNumber` and `country` to `get_user`
 
 ## [1.4.6] - 2019-03-30
