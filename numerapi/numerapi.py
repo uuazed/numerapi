@@ -240,7 +240,9 @@ class NumerAPI(object):
                  * value (`bool`)
                 * consistency (`float`)
                 * liveLogloss (`float` or `None`)
+                * liveAuroc (`float` or `None`)
                 * validationLogloss (`float`)
+                * validationAuroc (`float` or `None`)
                 * paymentGeneral (`dict` or `None`)
                  * nmrAmount (`decimal.Decimal`)
                  * usdAmount (`decimal.Decimal`)
@@ -259,6 +261,7 @@ class NumerAPI(object):
             [{'concordance': {'pending': False, 'value': True},
               'consistency': 83.33333333333334,
               'liveLogloss': 0.6941153941722517,
+              'liveAuroc': 0.5368847103148798,
               'paymentGeneral': None,
               'paymentStaking': None,
               'submissionId': '4459d3df-0a4b-4996-ad44-41abb7c45336',
@@ -267,6 +270,7 @@ class NumerAPI(object):
                                   'successful': True},
               'username': 'ci_wp',
               'validationLogloss': 0.692269984475575},
+              'validationAuroc': 0.6368847103148798,
              ...
             ]
         """
@@ -284,9 +288,11 @@ class NumerAPI(object):
                     value
                   }
                   liveLogloss
+                  liveAuroc
                   submissionId
                   username
                   validationLogloss
+                  validationAuroc
                   paymentGeneral {
                     nmrAmount
                     usdAmount
