@@ -215,20 +215,16 @@ def test_check_new_round(api):
 
 @responses.activate
 @pytest.mark.parametrize('''concordance_pending, concordance_value,
-                            consistency, expected''', [
-    (False, True, 80, True),
-    (True, None, 80, False),
-    (False, False, 80, False),
-    (False, True, 50, False),
-    (False, True, 58, True)])
+                            expected''', [
+    (False, True, True),
+    (True, None, False),
+    (False, False, False)])
 def test_check_submission_successful(api, concordance_pending,
-                                     concordance_value, consistency,
-                                     expected):
+                                     concordance_value, expected):
     api.token = ("", "")
     data = {"data": {"submissions": [
       {"concordance":
-          {"pending": concordance_pending, "value": concordance_value},
-       "consistency": consistency
+          {"pending": concordance_pending, "value": concordance_value}
        }
     ]}}
     responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,

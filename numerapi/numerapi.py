@@ -1185,6 +1185,7 @@ class NumerAPI(object):
                  * value (`bool`): whether the submission is concordant
                 * consistency (`float`): consistency of the submission
                 * validationLogloss (`float`)
+                * validationAuroc (`float`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
@@ -1381,8 +1382,7 @@ class NumerAPI(object):
         """
         status = self.submission_status(submission_id)
         # need to cast to bool to not return None in some cases.
-        success = bool(status['consistency'] >= 58 and
-                       status["concordance"]["value"])
+        success = bool(status["concordance"]["value"])
         return success
 
     def tournament_number2name(self, number):
