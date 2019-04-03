@@ -634,7 +634,9 @@ class NumerAPI(object):
                  * consistency (`float`)
                  * date (`datetime`)
                  * liveLogloss (`float`)
+                 * liveAuroc (`float`)
                  * validationLogloss (`float`)
+                 * validationAuroc (`float`)
                 * stake (`dict`)
                  * confidence (`decimal.Decimal`)
                  * date (`datetime`)
@@ -646,8 +648,11 @@ class NumerAPI(object):
         Example:
             >>> NumerAPI().get_user_activities("slyfox", 5)
             [{'tournament': 5,
-              'submission': {'validationLogloss': 0.6928141372700635,
+              'submission': {
+               'validationLogloss': 0.6928141372700635,
+               'validationAuroc': 0.52,
                'liveLogloss': None,
+               'liveAuroc': None,
                'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
                'consistency': 83.33333333333334,
                'concordance': True},
@@ -681,7 +686,9 @@ class NumerAPI(object):
                     consistency
                     date
                     liveLogloss
+                    liveAuroc
                     validationLogloss
+                    validationAuroc
                 }
                 stake {
                     confidence
