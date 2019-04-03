@@ -880,6 +880,8 @@ class NumerAPI(object):
                 * mfaEnabled (`bool`)
                 * status (`str`)
                 * username (`str`)
+                * country (`str)
+                * phoneNumber (`str`)
                 * apiTokens (`list`) each with the following fields:
                  * name (`str`)
                  * public_id (`str`)
@@ -898,6 +900,8 @@ class NumerAPI(object):
              'availableUsd': Decimal('9.47'),
              'banned': False,
              'email': 'username@example.com',
+             'phoneNumber': '0123456',
+             'country': 'US',
              'id': '1234-ABC..',
              'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
              'mfaEnabled': False,
@@ -917,6 +921,8 @@ class NumerAPI(object):
               id
               mfaEnabled
               status
+              country
+              phoneNumber
               insertedAt
               apiTokens {
                 name
