@@ -1,12 +1,12 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.5.0] - 2019-04-03
 - tests: start testing the cli interface
-- cli: fix `version` on Python2.7
-- added 'liveAuroc' and `validationAuroc` to `get_leaderboard`
-- added 'liveAuroc' and `validationAuroc` to `get_staking_leaderboard`
-- added 'liveAuroc' and `validationAuroc` to `get_user_activities`
+- cli: fix `version` command on Python2.7
+- added `liveAuroc` and `validationAuroc` to `get_leaderboard`
+- added `liveAuroc` and `validationAuroc` to `get_staking_leaderboard`
+- added `liveAuroc` and `validationAuroc` to `get_user_activities`
 - added `validationAuroc` to `submission_status`
 - added `ruleset` to `get_competitions`
 - added `phoneNumber` and `country` to `get_user`
