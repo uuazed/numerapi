@@ -485,6 +485,7 @@ class NumerAPI(object):
                 * prizePoolUsd (`decimal.Decimal`)
                 * resolvedGeneral (`bool`)
                 * resolvedStaking (`bool`)
+                * ruleset (`string`)
 
         Example:
             >>> NumerAPI().get_competitions()
@@ -497,7 +498,8 @@ class NumerAPI(object):
               'prizePoolNmr': Decimal('0.00'),
               'prizePoolUsd': Decimal('6000.00'),
               'resolvedGeneral': True,
-              'resolvedStaking': True
+              'resolvedStaking': True,
+              'ruleset': 'p_auction'
              },
               ..
             ]
@@ -516,6 +518,7 @@ class NumerAPI(object):
                 participants
                 prizePoolNmr
                 prizePoolUsd
+                ruleset
               }
             }
         '''
