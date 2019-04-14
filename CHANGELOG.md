@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## 
+- fix `get_staking_cutoff` for rounds >= 154
+
 ## [1.5.0] - 2019-04-03
 - tests: start testing the cli interface
 - cli: fix `version` command on Python2.7

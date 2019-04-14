@@ -456,6 +456,7 @@ class NumerAPI(object):
                 selection {
                   outcome
                   pCutoff
+                  bCutoff
                 }
               }
             }
@@ -463,7 +464,8 @@ class NumerAPI(object):
         arguments = {'number': round_num, 'tournament': tournament}
         result = self.raw_query(query, arguments)
         result = result['data']['rounds'][0]['selection']
-        return utils.parse_float_string(result['pCutoff'])
+        key = 'bCutoff' if round_num >= 154 else 'pCutoff'
+        return utils.parse_float_string(result[key])
 
     def get_competitions(self, tournament=1):
         """Retrieves information about all competitions
