@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## 
+## [1.5.1s] - 2019-04-14
 - fix `get_staking_cutoff` for rounds >= 154
 
 ## [1.5.0] - 2019-04-03
