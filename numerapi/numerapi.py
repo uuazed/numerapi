@@ -255,6 +255,9 @@ class NumerAPI(object):
                  * destroyed (`bool`)
                  * paid (`decimal.Decimal`)
                  * successful ('bool')
+                * return (`dict`)
+                 * nmrAmount (`decimal.Decimal`)
+                 * status (`str`)
 
         Example:
             >>> NumerAPI().get_leaderboard(99)
@@ -268,6 +271,8 @@ class NumerAPI(object):
               'stakeResolution': {'destroyed': False,
                                   'paid': Decimal('19.86'),
                                   'successful': True},
+              'return': {'nmrAmount': Decimal('0.3'),
+                         'status': ''}
               'username': 'ci_wp',
               'validationLogloss': 0.692269984475575},
               'validationAuroc': 0.6368847103148798,
@@ -305,6 +310,10 @@ class NumerAPI(object):
                     destroyed
                     paid
                     successful
+                  }
+                  return {
+                    nmrAmount
+                    status
                   }
                 }
               }
