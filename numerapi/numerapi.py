@@ -335,6 +335,8 @@ class NumerAPI(object):
                 utils.replace(item[p], "usdAmount", utils.parse_float_string)
             utils.replace(item['stakeResolution'], "paid",
                           utils.parse_float_string)
+            utils.replace(item['return'], "nmrAmount",
+                          utils.parse_float_string)
         return leaderboard
 
     def get_staking_leaderboard(self, round_num=0, tournament=1):
