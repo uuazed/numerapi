@@ -12,7 +12,7 @@ def convert_md_to_rst(path):
     return convert_file(path, 'rst')
 
 
-numerapi_version = '1.5.2'
+numerapi_version = 'dev'
 
 
 classifiers = [
@@ -34,7 +34,8 @@ if __name__ == "__main__":
         maintainer="uuazed",
         maintainer_email="uuazed@gmail.com",
         description="Automatically download and upload data for the Numerai machine learning competition",
-        long_description=convert_md_to_rst('README.md'),
+        long_description='README.md',
+        long_description_content_type='text/markdown',
         url='https://github.com/uuazed/numerapi',
         platforms="OS Independent",
         classifiers=classifiers,
