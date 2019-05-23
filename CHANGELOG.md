@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [1.5.3] - 2019-05-23
+- fix setup.py to make it work with the latest twine version
+
 ## [1.5.2] - 2019-05-22
 - add NMR returned information to `get_leaderboard` - useful for partial burns
 
