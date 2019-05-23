@@ -2,14 +2,8 @@ from setuptools import setup
 from setuptools import find_packages
 
 
-def convert_md_to_rst(path):
-    try:
-        from pypandoc import convert_file
-    except ImportError:
-        print("warning: pypandoc module not found, could not convert Markdown to RST")
-        return open(path, 'r').read()
-
-    return convert_file(path, 'rst')
+def load(path):
+    return open(path, 'r').read()
 
 
 numerapi_version = 'dev'
@@ -34,7 +28,7 @@ if __name__ == "__main__":
         maintainer="uuazed",
         maintainer_email="uuazed@gmail.com",
         description="Automatically download and upload data for the Numerai machine learning competition",
-        long_description='README.md',
+        long_description=load('README.md'),
         long_description_content_type='text/markdown',
         url='https://github.com/uuazed/numerapi',
         platforms="OS Independent",
