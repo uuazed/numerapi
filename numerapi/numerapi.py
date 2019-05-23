@@ -218,7 +218,6 @@ class NumerAPI(object):
             err = self._handle_call_error(result['errors'])
             # fail!
             raise ValueError(err)
-
         return result
 
     def get_leaderboard(self, round_num=0, tournament=1):
@@ -320,11 +319,15 @@ class NumerAPI(object):
             }
         '''
         arguments = {'number': round_num, 'tournament': tournament}
-        result = self.raw_query(query, arguments)['data']['rounds'][0]
-        # happens for non-existent tournament IDs
-        if result is None:
-            return None
-        leaderboard = result['leaderboard']
+        result = self.raw_query(query, arguments)['data']['rounds']
+
+        if len(result) == 0:
+            msg = "no entries for round number {} & tournament ".format(
+                round_num, tournament)
+            self.logger.warning(msg)
+            raise ValueError
+
+        leaderboard = result[0]['leaderboard']
         # parse to correct data types
         for item in leaderboard:
             for p in ["paymentGeneral", "paymentStaking"]:
