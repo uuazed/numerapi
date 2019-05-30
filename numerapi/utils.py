@@ -5,7 +5,6 @@ import os
 import errno
 import decimal
 import logging
-import json
 
 
 # work-around needed for Python2

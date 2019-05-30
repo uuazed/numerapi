@@ -7,7 +7,6 @@ import zipfile
 import os
 import logging
 import datetime
-import decimal
 
 # Third Party
 import requests
