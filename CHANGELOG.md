@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] - unreleased
+## [1.5.4] - 2019-05-30
 - return new `reputation` as announced by numerai on 2019-05-29 in `get_rankings`
 
 ## [1.5.3] - 2019-05-23
