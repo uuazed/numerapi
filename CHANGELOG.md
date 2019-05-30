@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - unreleased
+- return new `reputation` as announced by numerai on 2019-05-29 in `get_rankings`
+
 ## [1.5.3] - 2019-05-23
 - fix setup.py to make it work with the latest twine version
 

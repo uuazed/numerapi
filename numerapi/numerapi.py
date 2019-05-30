@@ -802,46 +802,40 @@ class NumerAPI(object):
 
             Each dict contains the following items:
 
-                * id (`str`)
                 * username (`str`)
                 * nmrBurned (`decimal.Decimal`)
-                * nmrPaid (`decimal.Decimal`)
+                * nmrEarned (`decimal.Decimal`)
                 * nmrStaked (`decimal.Decimal`)
-                * rep (`int`)
-                * stakeCount (`int`)
+                * reputation (`float`)
                 * usdEarned (`decimal.Decimal`)
 
         Example:
             >>> numerapi.NumerAPI().get_rankings(1)
             [{'username': 'glasperlenspiel',
               'usdEarned': Decimal('16347.12'),
-              'stakeCount': 41,
-              'rep': 14,
+              'reputation': 0.5121,
               'nmrStaked': Decimal('250.000000000000000000'),
-              'nmrPaid': Decimal('16061.37'),
-              'nmrBurned': Decimal('295.400000000000000000'),
-              'id': 'bbee4f0e-f238-4d8a-8f1b-5eb384cdcbfc'}]
+              'nmrEarned': Decimal('16061.37'),
+              'nmrBurned': Decimal('295.400000000000000000')]
         """
         query = '''
             query($limit: Int!
                   $offset: Int!) {
-              rankings(limit: $limit
-                       offset: $offset) {
+              globalLeaderboard(limit: $limit
+                                offset: $offset) {
                 username
-                id
                 nmrBurned
-                nmrPaid
+                nmrEarned
                 nmrStaked
-                rep
-                stakeCount
+                reputation
                 usdEarned
               }
             }
         '''
         arguments = {'limit': limit, 'offset': offset}
-        data = self.raw_query(query, arguments)['data']['rankings']
+        data = self.raw_query(query, arguments)['data']['globalLeaderboard']
         for item in data:
-            for p in ["nmrBurned", "nmrPaid", "nmrStaked", "usdEarned"]:
+            for p in ["nmrBurned", "nmrEarned", "nmrStaked", "usdEarned"]:
                 utils.replace(item, p, utils.parse_float_string)
         return data
 
