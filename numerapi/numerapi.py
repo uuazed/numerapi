@@ -952,9 +952,9 @@ class NumerAPI(object):
         """Get all your payments.
 
         Returns:
-            list of dicts: payments
+            dict of lists: payments & reputationPayments
 
-            For each payout in the list, a dict contains the following items:
+            For each `payment`, a dict contains the following items:
 
                 * nmrAmount (`decimal.Decimal`)
                 * usdAmount (`decimal.Decimal`)
@@ -966,23 +966,39 @@ class NumerAPI(object):
                  * resolvedGeneral (`bool`)
                  * resolvedStaking (`bool`)
 
+            For each `reputationPayment`, a dict containts the following items:
+
+                 * nmrAmount (`decimal.Decimal`)
+                 * insertedAt (`datetime`)
+
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> api.get_payments()
-            [{'nmrAmount': Decimal('0.00'),
-              'round': {'number': 84,
-               'openTime': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc()),
-               'resolveTime': datetime.datetime(2018, 1, 1, 18, 0, tzinfo=tzutc()),
-               'resolvedGeneral': True,
-               'resolvedStaking': True},
-              'tournament': 'staking',
-              'usdAmount': Decimal('17.44')},
-              ...
-             ]
+            {'payments': [
+                {'nmrAmount': Decimal('0.00'),
+                 'round': {'number': 84,
+                 'openTime': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc()),
+                 'resolveTime': datetime.datetime(2018, 1, 1, 18, 0, tzinfo=tzutc()),
+                 'resolvedGeneral': True,
+                 'resolvedStaking': True},
+                 'tournament': 'staking',
+                 'usdAmount': Decimal('17.44')},
+                 ...
+                ]
+             'reputationPayments': [
+               {'nmrAmount': Decimal('0.1'),
+                'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
+                ...
+                ]
+            }
         """
         query = """
           query {
             user {
+              reputationPayments {
+                insertedAt
+                nmrAmount
+              }
               payments {
                 nmrAmount
                 round {
@@ -999,14 +1015,17 @@ class NumerAPI(object):
           }
         """
         data = self.raw_query(query, authorization=True)['data']
-        payments = data['user']['payments']
+        payments = data['user']
         # convert strings to python objects
-        for p in payments:
+        for p in payments['payments']:
             utils.replace(p['round'], "openTime", utils.parse_datetime_string)
             utils.replace(p['round'], "resolveTime",
                           utils.parse_datetime_string)
             utils.replace(p, "usdAmount", utils.parse_float_string)
             utils.replace(p, "nmrAmount", utils.parse_float_string)
+        for p in payments['reputationPayments']:
+            utils.replace(p, "nmrAmount", utils.parse_float_string)
+            utils.replace(p, "insertedAt", utils.parse_datetime_string)
         return payments
 
     def get_transactions(self):

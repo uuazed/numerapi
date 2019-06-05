@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - unreleased
+- include `reputationPayments` in `get_payments`
+
 ## [1.5.4] - 2019-05-30
 - return new `reputation` as announced by numerai on 2019-05-29 in `get_rankings`
 
