@@ -1043,6 +1043,7 @@ class NumerAPI(object):
                  * to (`str`)
                  * txHash (`str`)
                  * value (`decimal.Decimal`)
+                 * insertedAt (`datetime`)
                 * nmrWithdrawals"` (`list`) contains items with fields:
                  * from"` (`str`)
                  * posted"` (`bool`)
@@ -1050,6 +1051,7 @@ class NumerAPI(object):
                  * to"` (`str`)
                  * txHash"` (`str`)
                  * value"` (`decimal.Decimal`)
+                  * insertedAt (`datetime`)
                 * usdWithdrawals"` (`list`) contains items with fields:
                  * confirmTime"` (`datetime` or `None`)
                  * ethAmount"` (`str`)
@@ -1070,7 +1072,8 @@ class NumerAPI(object):
                  'status': 'confirmed',
                  'to': '0x0000000000000000000001',
                  'txHash': '0x52..e2056ab',
-                 'value': Decimal('9.0')},
+                 'value': Decimal('9.0'),
+                 'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},
                  .. ],
              'nmrWithdrawals': [
                 {'from': '0x0000000000000000..002',
@@ -1078,7 +1081,8 @@ class NumerAPI(object):
                  'status': 'confirmed',
                  'to': '0x00000000000..001',
                  'txHash': '0x1278..266c',
-                 'value': Decimal('2.0')},
+                 'value': Decimal('2.0'),
+                 'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},},
                  .. ],
              'usdWithdrawals': [
                 {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430, tzinfo=tzutc()),
@@ -1102,6 +1106,7 @@ class NumerAPI(object):
                 to
                 txHash
                 value
+                insertedAt
               }
               nmrWithdrawals {
                 from
@@ -1110,6 +1115,7 @@ class NumerAPI(object):
                 to
                 txHash
                 value
+                insertedAt
               }
               usdWithdrawals {
                 ethAmount
@@ -1133,8 +1139,10 @@ class NumerAPI(object):
             utils.replace(t, "usdAmount", utils.parse_float_string)
         for t in txs["nmrWithdrawals"]:
             utils.replace(t, "value", utils.parse_float_string)
+            utils.replace(t, "insertedAt", utils.parse_datetime_string)
         for t in txs["nmrDeposits"]:
             utils.replace(t, "value", utils.parse_float_string)
+            utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
 
     def get_stakes(self):
