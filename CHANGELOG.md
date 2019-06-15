@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- update docstrings
+
 ## [1.5.5] - 2019-06-13
 - include `reputationPayments` in `get_payments`
 - add datetime information (`insertedAt`) to `get_transactions`

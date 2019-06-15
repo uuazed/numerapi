@@ -1310,7 +1310,7 @@ class NumerAPI(object):
         """Participate in the staking competition.
 
         Args:
-            confidence (float or str): your confidence (C) value
+            confidence (float or str): your estimate of your model's expected AUC score
             value (float or str): amount of NMR you are willing to stake
             tournament (int): ID of the tournament (optional, defaults to 1)
 
@@ -1325,7 +1325,7 @@ class NumerAPI(object):
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> api.stake(0.1, 10)
+            >>> api.stake(0.501, 10)
             {'stake':
               {'from': None,
                'insertedAt': None,
