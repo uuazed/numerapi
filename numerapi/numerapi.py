@@ -954,22 +954,22 @@ class NumerAPI(object):
         Returns:
             dict of lists: payments & reputationPayments
 
-            For each `payment`, a dict contains the following items:
-
-                * nmrAmount (`decimal.Decimal`)
-                * usdAmount (`decimal.Decimal`)
-                * tournament (`str`)
-                * round (`dict`)
-                 * number (`int`)
-                 * openTime (`datetime`)
-                 * resolveTime (`datetime`)
-                 * resolvedGeneral (`bool`)
-                 * resolvedStaking (`bool`)
-
-            For each `reputationPayment`, a dict containts the following items:
-
+            A dict containing the following items:
+               * payments (`list`)
+                 * nmrAmount (`decimal.Decimal`)
+                 * usdAmount (`decimal.Decimal`)
+                 * tournament (`str`)
+                 * round (`dict`)
+                   * number (`int`)
+                   * openTime (`datetime`)
+                   * resolveTime (`datetime`)
+                   * resolvedGeneral (`bool`)
+                   * resolvedStaking (`bool`)
+               * reputationPayment (`list`)
                  * nmrAmount (`decimal.Decimal`)
                  * insertedAt (`datetime`)
+               * phoneVerificationBonus (`decimal.Decimal`)
+
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
@@ -984,12 +984,18 @@ class NumerAPI(object):
                  'tournament': 'staking',
                  'usdAmount': Decimal('17.44')},
                  ...
-                ]
+                ],
              'reputationPayments': [
                {'nmrAmount': Decimal('0.1'),
                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
                 ...
-                ]
+                ],
+             'otherUsdIssuances': [
+                {'usdAmount': Decimal('0.1'),
+                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
+                 ...
+             ]
+             'phoneVerificationBonus': Decimal('1.1')
             }
         """
         query = """
@@ -999,8 +1005,15 @@ class NumerAPI(object):
                 insertedAt
                 nmrAmount
               }
+              otherUsdIssuances {
+                insertedAt
+                usdAmount
+              }
+              phoneVerificationBonus
               payments {
                 nmrAmount
+                usdAmount
+                tournament
                 round {
                   number
                   openTime
@@ -1008,8 +1021,6 @@ class NumerAPI(object):
                   resolvedGeneral
                   resolvedStaking
                 }
-                tournament
-                usdAmount
               }
             }
           }
@@ -1026,6 +1037,11 @@ class NumerAPI(object):
         for p in payments['reputationPayments']:
             utils.replace(p, "nmrAmount", utils.parse_float_string)
             utils.replace(p, "insertedAt", utils.parse_datetime_string)
+        for p in payments['otherUsdIssuances']:
+            utils.replace(p, "usdAmount", utils.parse_float_string)
+            utils.replace(p, "insertedAt", utils.parse_datetime_string)
+        utils.replace(payments, "phoneVerificationBonus",
+                      utils.parse_float_string)
         return payments
 
     def get_transactions(self):

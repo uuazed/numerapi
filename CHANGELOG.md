@@ -2,10 +2,11 @@
 Notable changes to this project.
 
 ## [dev]
-- update docstrings
+- update docstring
+- added `reputationPayments`,
 
 ## [1.5.5] - 2019-06-13
-- include `reputationPayments` in `get_payments`
+- include `otherUsdIssuances` and `phoneVerificationBonus` to `get_payments`
 - add datetime information (`insertedAt`) to `get_transactions`
 
 ## [1.5.4] - 2019-05-30
