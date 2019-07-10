@@ -38,7 +38,7 @@ def test__login(api):
 
 
 def test_get_competitions(api):
-    res = api.get_competitions()
+    res = api.get_competitions(tournament=1)
     assert isinstance(res, list)
     assert len(res) > 80
 
@@ -71,7 +71,7 @@ def test_raw_query(api):
 
 
 def test_get_leaderboard(api):
-    lb = api.get_leaderboard(67)
+    lb = api.get_leaderboard(67, tournament=1)
     assert len(lb) == 1425
 
 
@@ -98,7 +98,7 @@ def test_unauthorized_requests(api, fun):
 
 
 def test_get_staking_leaderboard(api):
-    stakes = api.get_staking_leaderboard(82)
+    stakes = api.get_staking_leaderboard(82, tournament=1)
     # 115 people staked that round
     assert len(stakes) == 115
 
