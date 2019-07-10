@@ -20,8 +20,8 @@ def cli():
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 @click.option('--unzip', is_flag=True, default=True,
               help='indication of whether the data should be unzipped')
 def download_dataset(tournament, unzip):
@@ -30,55 +30,55 @@ def download_dataset(tournament, unzip):
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 def dataset_url(tournament):
     """Fetch url of the current dataset."""
     click.echo(prettify(napi.get_dataset_url(tournament=tournament)))
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 @click.option('--round_num', default=0,
               help='The round you are interested in, defaults to current round')
-def leaderboard(round_num=0, tournament=1):
+def leaderboard(round_num=0, tournament=8):
     """Retrieves the leaderboard for the given round."""
     click.echo(prettify(napi.get_leaderboard(tournament=tournament,
                                              round_num=round_num)))
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 @click.option('--round_num', default=0,
               help='The round you are interested in, defaults to current round')
-def staking_leaderboard(round_num=0, tournament=1):
+def staking_leaderboard(round_num=0, tournament=8):
     """Retrieves the staking competition leaderboard for the given round."""
     click.echo(prettify(napi.get_staking_leaderboard(tournament=tournament,
                                                      round_num=round_num)))
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
-def competitions(tournament=1):
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
+def competitions(tournament=8):
     """Retrieves information about all competitions"""
     click.echo(prettify(napi.get_competitions(tournament=tournament)))
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
-def current_round(tournament=1):
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
+def current_round(tournament=8):
     """Get number of the current active round."""
     click.echo(napi.get_current_round(tournament=tournament))
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
-def submission_ids(tournament=1):
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
+def submission_ids(tournament=8):
     """Get dict with username->submission_id mapping."""
     click.echo(prettify(napi.get_submission_ids(tournament=tournament)))
 
@@ -95,9 +95,9 @@ def rankings(limit=20, offset=0):
 
 @cli.command()
 @click.argument("username")
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
-def user_activities(username, tournament=1):
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
+def user_activities(username, tournament=8):
     """Get user activities (works for all users!)"""
     click.echo(prettify(napi.get_user_activities(username, tournament)))
 
@@ -114,7 +114,7 @@ def submission_filenames(round_num=None, tournament=None):
 
 
 @cli.command()
-@click.option('--tournament', type=int, default=1,
+@click.option('--tournament', type=int, default=8,
               help='ID of the tournament, defaults to 1')
 @click.option('--round_num', type=int, default=0,
               help='round number, defaults to the current round')
@@ -124,11 +124,11 @@ def staking_cutoff(round_num, tournament):
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 @click.option('--hours', default=24,
               help='timeframe to consider, defaults to 24')
-def check_new_round(hours=24, tournament=1):
+def check_new_round(hours=24, tournament=8):
     """Check if a new round has started within the last `hours`."""
     click.echo(int(napi.check_new_round(hours=hours, tournament=tournament)))
 
@@ -195,16 +195,16 @@ def submission_successful(submission_id):
 @cli.command()
 @click.argument("confidence")
 @click.argument("value")
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 def stake(confidence, value, tournament):
     """Participate in the staking competition."""
     click.echo(napi.stake(confidence, value, tournament))
 
 
 @cli.command()
-@click.option('--tournament', default=1,
-              help='The ID of the tournament, defaults to 1')
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
 @click.argument('path', type=click.Path(exists=True))
 def submit(path, tournament):
     """Upload predictions from file."""

@@ -86,11 +86,11 @@ class NumerAPI(object):
 
         return True
 
-    def get_dataset_url(self, tournament=1):
+    def get_dataset_url(self, tournament=8):
         """Fetch url of the current dataset.
 
         Args:
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             str: url of the current dataset
@@ -108,7 +108,7 @@ class NumerAPI(object):
         return url
 
     def download_current_dataset(self, dest_path=".", dest_filename=None,
-                                 unzip=True, tournament=1):
+                                 unzip=True, tournament=8):
         """Download dataset for the current active round.
 
         Args:
@@ -117,7 +117,7 @@ class NumerAPI(object):
                 defaults to `numerai_dataset_<round number>.zip`
             unzip (bool, optional): indication of whether the training data
                 should be unzipped, defaults to `True`
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             str: Path to the downloaded dataset
@@ -219,13 +219,13 @@ class NumerAPI(object):
             raise ValueError(err)
         return result
 
-    def get_leaderboard(self, round_num=0, tournament=1):
+    def get_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard for the given round.
 
         Args:
             round_num (int, optional): The round you are interested in,
                 defaults to current round.
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             list of dicts: list of participants
@@ -338,14 +338,14 @@ class NumerAPI(object):
                           utils.parse_float_string)
         return leaderboard
 
-    def get_staking_leaderboard(self, round_num=0, tournament=1):
+    def get_staking_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard of the staking competition for the given
         round.
 
         Args:
             round_num (int, optional): The round you are interested in,
                 defaults to current round.
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             list: list of stakers (`dict`)
@@ -422,13 +422,13 @@ class NumerAPI(object):
             utils.replace(s["stake"], "value", utils.parse_float_string)
         return stakes
 
-    def get_nmr_prize_pool(self, round_num=0, tournament=1):
+    def get_nmr_prize_pool(self, round_num=0, tournament=8):
         """Get NMR prize pool for the given round and tournament.
 
         Args:
             round_num (int, optional): The round you are interested in,
                 defaults to current round.
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             decimal.Decimal: prize pool in NMR
@@ -447,13 +447,13 @@ class NumerAPI(object):
             t = tournaments[0]
         return t['prizePoolNmr']
 
-    def get_staking_cutoff(self, round_num=0, tournament=1):
+    def get_staking_cutoff(self, round_num=0, tournament=8):
         """Compute staking cutoff for the given round and tournament.
 
         Args:
             round_num (int, optional): The round you are interested in,
                 defaults to current round.
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             decimal.Decimal: cutoff probability
@@ -480,11 +480,11 @@ class NumerAPI(object):
         key = 'bCutoff' if round_num >= 154 or round_num == 0 else 'pCutoff'
         return utils.parse_float_string(result[key])
 
-    def get_competitions(self, tournament=1):
+    def get_competitions(self, tournament=8):
         """Retrieves information about all competitions
 
         Args:
-            tournament (int, optional): ID of the tournament, defaults to 1
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Returns:
             list of dicts: list of rounds
@@ -548,11 +548,11 @@ class NumerAPI(object):
             utils.replace(r, "prizePoolUsd", utils.parse_float_string)
         return rounds
 
-    def get_current_round(self, tournament=1):
+    def get_current_round(self, tournament=8):
         """Get number of the current active round.
 
         Args:
-            tournament (int): ID of the tournament (optional, defaults to 1)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             int: number of the current active round
@@ -629,12 +629,12 @@ class NumerAPI(object):
             data = [d for d in data if d['active']]
         return data
 
-    def get_user_activities(self, username, tournament=1):
+    def get_user_activities(self, username, tournament=8):
         """Get user activities (works for all users!).
 
         Args:
             username (str): name of the user
-            tournament (int): ID of the tournament (optional, defaults to 1)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             list: list of user activities (`dict`)
@@ -838,11 +838,11 @@ class NumerAPI(object):
                 utils.replace(item, p, utils.parse_float_string)
         return data
 
-    def get_submission_ids(self, tournament=1):
+    def get_submission_ids(self, tournament=8):
         """Get dict with username->submission_id mapping.
 
         Args:
-            tournament (int): ID of the tournament (optional, defaults to 1)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             dict: username->submission_id mapping, string->string
@@ -1273,12 +1273,12 @@ class NumerAPI(object):
         status = data['data']['submissions'][0]
         return status
 
-    def upload_predictions(self, file_path, tournament=1):
+    def upload_predictions(self, file_path, tournament=8):
         """Upload predictions from file.
 
         Args:
             file_path (str): CSV file with predictions that will get uploaded
-            tournament (int): ID of the tournament (optional, defaults to 1)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             str: submission_id
@@ -1322,13 +1322,13 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def stake(self, confidence, value, tournament=1):
+    def stake(self, confidence, value, tournament=8):
         """Participate in the staking competition.
 
         Args:
             confidence (float or str): your estimate of your model's expected AUC score
             value (float or str): amount of NMR you are willing to stake
-            tournament (int): ID of the tournament (optional, defaults to 1)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             dict: stake information with the following content:
@@ -1384,12 +1384,12 @@ class NumerAPI(object):
         utils.replace(stake, "insertedAt", utils.parse_datetime_string)
         return stake
 
-    def check_new_round(self, hours=24, tournament=1):
+    def check_new_round(self, hours=24, tournament=8):
         """Check if a new round has started within the last `hours`.
 
         Args:
             hours (int, optional): timeframe to consider, defaults to 24
-            tournament (int): ID of the tournament (optional, defaults to 1)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             bool: True if a new round has started, False otherwise.

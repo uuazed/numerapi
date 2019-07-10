@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- default to tournament 8 `katzuagi`
 - update docstring
 - added `reputationPayments`,
 
