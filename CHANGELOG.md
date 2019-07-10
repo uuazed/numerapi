@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.6.0] - 2019-07-10
 - default to tournament 8 `katzuagi`
 - update docstring
 - added `reputationPayments`,
