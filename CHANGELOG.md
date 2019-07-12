@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [] -
+## [1.6.1] - 2019-07-12
 - fix downloading dataset for tournaments > 1
 - add `validationCorrelation` and `liveCorrelation` to all relevant places
 - remove `validationAuroc` and `validationLogloss` from `submission_status`
