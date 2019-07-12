@@ -1257,8 +1257,6 @@ class NumerAPI(object):
                  * pending (`bool`)
                  * value (`bool`): whether the submission is concordant
                 * consistency (`float`): consistency of the submission
-                * validationLogloss (`float`)
-                * validationAuroc (`float`)
                 * validationCorrelation (`float`)
 
         Example:
@@ -1267,8 +1265,6 @@ class NumerAPI(object):
             >>> api.submission_status()
             {'concordance': {'pending': False, 'value': True},
              'consistency': 91.66666666666666,
-             'validationLogloss': 0.691733023121,
-             'validationAuroc': 0.52,
              'validationCorrelation': 0.53211}
         """
         if submission_id is None:
@@ -1286,8 +1282,6 @@ class NumerAPI(object):
                   value
                 }
                 consistency
-                validationLogloss
-                validationAuroc
                 validationCorrelation
               }
             }
