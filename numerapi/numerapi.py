@@ -242,8 +242,10 @@ class NumerAPI(object):
                 * consistency (`float`)
                 * liveLogloss (`float` or `None`)
                 * liveAuroc (`float` or `None`)
+                * liveCorrelation (`float` or `None`)
                 * validationLogloss (`float`)
                 * validationAuroc (`float` or `None`)
+                * validationCorrelation (`float` or `None`)
                 * paymentGeneral (`dict` or `None`)
                  * nmrAmount (`decimal.Decimal`)
                  * usdAmount (`decimal.Decimal`)
@@ -266,6 +268,7 @@ class NumerAPI(object):
               'consistency': 83.33333333333334,
               'liveLogloss': 0.6941153941722517,
               'liveAuroc': 0.5368847103148798,
+              'liveCorrelation': 0.536898,
               'paymentGeneral': None,
               'paymentStaking': None,
               'submissionId': '4459d3df-0a4b-4996-ad44-41abb7c45336',
@@ -277,6 +280,7 @@ class NumerAPI(object):
               'username': 'ci_wp',
               'validationLogloss': 0.692269984475575},
               'validationAuroc': 0.6368847103148798,
+              'validationCorrelation': 0.54342
              ...
             ]
         """
@@ -295,10 +299,12 @@ class NumerAPI(object):
                   }
                   liveLogloss
                   liveAuroc
+                  liveCorrelation
                   submissionId
                   username
                   validationLogloss
                   validationAuroc
+                  validationCorrelation
                   paymentGeneral {
                     nmrAmount
                     usdAmount
@@ -359,8 +365,10 @@ class NumerAPI(object):
                 * consistency (`float`)
                 * liveLogloss (`float` or `None`)
                 * liveAuroc (`float` or `None`)
+                * liveCorrelation  (`float` or `None`)
                 * validationLogloss (`float`)
                 * validationAuroc (`float` or `None`)
+                * validationCorrelation (`float` or `None`)
                 * stake (`dict`)
                  * confidence (`decimal.Decimal`)
                  * insertedAt (`datetime`)
@@ -373,6 +381,7 @@ class NumerAPI(object):
             [{'consistency': 83.33333333333334,
               'liveLogloss': 0.6941153941722517,
               'liveAuroc': 0.5241153941722517,
+              'liveCorrelation': 0.5241153941722517,
               'stake': {'confidence': Decimal('0.055'),
                'insertedAt': datetime.datetime(2018, 3, 18, 0, 20, 31, 724728, tzinfo=tzutc()),
                'soc': Decimal('18.18'),
@@ -381,6 +390,7 @@ class NumerAPI(object):
               'username': 'ci_wp',
               'validationLogloss': 0.692269984475575},
               'validationAuroc': 0.512269984475575},
+              'validationCorrelation': 0.512269984475575},
               ..
             ]
         """
@@ -395,9 +405,11 @@ class NumerAPI(object):
                   consistency
                   liveLogloss
                   liveAuroc
+                  liveCorrelation
                   username
                   validationLogloss
                   validationAuroc
+                  validationCorrelation
                   stake {
                     insertedAt
                     soc
@@ -653,8 +665,10 @@ class NumerAPI(object):
                  * date (`datetime`)
                  * liveLogloss (`float`)
                  * liveAuroc (`float`)
+                 * liveCorrelation (`float`)
                  * validationLogloss (`float`)
                  * validationAuroc (`float`)
+                 * validationCorrelation (`float`)
                 * stake (`dict`)
                  * confidence (`decimal.Decimal`)
                  * date (`datetime`)
@@ -669,8 +683,10 @@ class NumerAPI(object):
               'submission': {
                'validationLogloss': 0.6928141372700635,
                'validationAuroc': 0.52,
+               'validationCorrelation': 0.52,
                'liveLogloss': None,
                'liveAuroc': None,
+               'liveCorrelation': None,
                'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
                'consistency': 83.33333333333334,
                'concordance': True},
@@ -705,8 +721,10 @@ class NumerAPI(object):
                     date
                     liveLogloss
                     liveAuroc
+                    liveCorrelation
                     validationLogloss
                     validationAuroc
+                    validationCorrelation
                 }
                 stake {
                     confidence
@@ -1241,6 +1259,7 @@ class NumerAPI(object):
                 * consistency (`float`): consistency of the submission
                 * validationLogloss (`float`)
                 * validationAuroc (`float`)
+                * validationCorrelation (`float`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
@@ -1249,7 +1268,8 @@ class NumerAPI(object):
             {'concordance': {'pending': False, 'value': True},
              'consistency': 91.66666666666666,
              'validationLogloss': 0.691733023121,
-             'validationAuroc': 0.52}
+             'validationAuroc': 0.52,
+             'validationCorrelation': 0.53211}
         """
         if submission_id is None:
             submission_id = self.submission_id
@@ -1268,6 +1288,7 @@ class NumerAPI(object):
                 consistency
                 validationLogloss
                 validationAuroc
+                validationCorrelation
               }
             }
             '''
