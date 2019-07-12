@@ -128,7 +128,10 @@ class NumerAPI(object):
         """
         # set up download path
         if dest_filename is None:
-            round_number = self.get_current_round()
+            try:
+                round_number = self.get_current_round(tournament)
+            except ValueError:
+                round_number = "x"
             dest_filename = "numerai_dataset_{0}.zip".format(round_number)
         else:
             # ensure it ends with ".zip"
@@ -1375,7 +1378,7 @@ class NumerAPI(object):
         arguments = {'code': 'somecode',
                      'confidence': str(confidence),
                      'password': "somepassword",
-                     'round': self.get_current_round(),
+                     'round': self.get_current_round(tournament),
                      'value': str(value),
                      'tournament': tournament}
         result = self.raw_query(query, arguments, authorization=True)
