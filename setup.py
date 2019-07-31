@@ -6,7 +6,7 @@ def load(path):
     return open(path, 'r').read()
 
 
-numerapi_version = '1.6.2'
+numerapi_version = 'dev'
 
 
 classifiers = [
