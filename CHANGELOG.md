@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)
 
 ## [1.6.1] - 2019-07-12
