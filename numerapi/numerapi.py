@@ -911,7 +911,6 @@ class NumerAPI(object):
                 * status (`str`)
                 * username (`str`)
                 * country (`str)
-                * phoneNumber (`str`)
                 * apiTokens (`list`) each with the following fields:
                  * name (`str`)
                  * public_id (`str`)
@@ -930,7 +929,6 @@ class NumerAPI(object):
              'availableUsd': Decimal('9.47'),
              'banned': False,
              'email': 'username@example.com',
-             'phoneNumber': '0123456',
              'country': 'US',
              'id': '1234-ABC..',
              'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
@@ -952,7 +950,6 @@ class NumerAPI(object):
               mfaEnabled
               status
               country
-              phoneNumber
               insertedAt
               apiTokens {
                 name
@@ -989,7 +986,6 @@ class NumerAPI(object):
                * reputationPayment (`list`)
                  * nmrAmount (`decimal.Decimal`)
                  * insertedAt (`datetime`)
-               * phoneVerificationBonus (`decimal.Decimal`)
 
 
         Example:
@@ -1016,7 +1012,6 @@ class NumerAPI(object):
                  'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
                  ...
              ]
-             'phoneVerificationBonus': Decimal('1.1')
             }
         """
         query = """
@@ -1030,7 +1025,6 @@ class NumerAPI(object):
                 insertedAt
                 usdAmount
               }
-              phoneVerificationBonus
               payments {
                 nmrAmount
                 usdAmount
@@ -1061,8 +1055,6 @@ class NumerAPI(object):
         for p in payments['otherUsdIssuances']:
             utils.replace(p, "usdAmount", utils.parse_float_string)
             utils.replace(p, "insertedAt", utils.parse_datetime_string)
-        utils.replace(payments, "phoneVerificationBonus",
-                      utils.parse_float_string)
         return payments
 
     def get_transactions(self):
