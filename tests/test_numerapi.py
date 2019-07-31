@@ -64,7 +64,7 @@ def test_get_current_round(api):
 
 
 def test_raw_query(api):
-    query = "query {dataset(tournament:1)}"
+    query = "query {dataset(tournament:8)}"
     result = api.raw_query(query)
     assert isinstance(result, dict)
     assert "data" in result

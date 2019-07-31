@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- remove phone number and bonus fetching (#16)
+
 ## [1.6.1] - 2019-07-12
 - fix downloading dataset for tournaments > 1
 - add `validationCorrelation` and `liveCorrelation` to all relevant places
