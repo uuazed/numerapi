@@ -28,8 +28,10 @@ class NumerAPI(object):
     predictions, accessing user, submission and competitions information and
     much more.
     """
-
-    def __init__(self, public_id=None, secret_key=None, verbosity="INFO",
+    def __init__(self,
+                 public_id=None,
+                 secret_key=None,
+                 verbosity="INFO",
                  show_progress_bars=True):
         """
         initialize Numerai API wrapper for Python
@@ -107,8 +109,11 @@ class NumerAPI(object):
         url = self.raw_query(query, arguments)['data']['dataset']
         return url
 
-    def download_current_dataset(self, dest_path=".", dest_filename=None,
-                                 unzip=True, tournament=8):
+    def download_current_dataset(self,
+                                 dest_path=".",
+                                 dest_filename=None,
+                                 unzip=True,
+                                 tournament=8):
         """Download dataset for the current active round.
 
         Args:
@@ -201,10 +206,11 @@ class NumerAPI(object):
             >>> NumerAPI().raw_query(query, args)
             {'data': {'rounds': [{'number': 104}]}}
         """
-        body = {'query': query,
-                'variables': variables}
-        headers = {'Content-type': 'application/json',
-                   'Accept': 'application/json'}
+        body = {'query': query, 'variables': variables}
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
         if authorization:
             if self.token:
                 public_id, secret_key = self.token
@@ -213,8 +219,8 @@ class NumerAPI(object):
             else:
                 raise ValueError("API keys required for this action.")
 
-        result = utils.post_with_err_handling(
-            API_TOURNAMENT_URL, body, headers)
+        result = utils.post_with_err_handling(API_TOURNAMENT_URL, body,
+                                              headers)
 
         if result and "errors" in result:
             err = self._handle_call_error(result['errors'])
@@ -741,8 +747,9 @@ class NumerAPI(object):
         arguments = {'tournament': tournament, 'username': username}
         data = self.raw_query(query, arguments)['data']['userActivities']
         # filter rounds with no activity
-        data = [item for item in data
-                if item['submission']['date'] is not None]
+        data = [
+            item for item in data if item['submission']['date'] is not None
+        ]
         for item in data:
             # remove stakes with all values set to None
             if item['stake']['date'] is None:
@@ -798,10 +805,11 @@ class NumerAPI(object):
         '''
         data = self.raw_query(query, authorization=True)['data']['user']
 
-        filenames = [{"round_num": item['round']['number'],
-                      "tournament": item['round']['tournament'],
-                      "filename": item['filename']}
-                     for item in data['submissions'] if item['selected']]
+        filenames = [{
+            "round_num": item['round']['number'],
+            "tournament": item['round']['tournament'],
+            "filename": item['filename']
+        } for item in data['submissions'] if item['selected']]
 
         if round_num is not None:
             filenames = [f for f in filenames if f['round_num'] == round_num]
@@ -890,8 +898,10 @@ class NumerAPI(object):
         data = self.raw_query(query, arguments)['data']['rounds'][0]
         if data is None:
             return None
-        mapping = {item['username']: item['submissionId']
-                   for item in data['leaderboard']}
+        mapping = {
+            item['username']: item['submissionId']
+            for item in data['leaderboard']
+        }
         return mapping
 
     def get_user(self):
@@ -911,7 +921,6 @@ class NumerAPI(object):
                 * status (`str`)
                 * username (`str`)
                 * country (`str)
-                * phoneNumber (`str`)
                 * apiTokens (`list`) each with the following fields:
                  * name (`str`)
                  * public_id (`str`)
@@ -930,7 +939,6 @@ class NumerAPI(object):
              'availableUsd': Decimal('9.47'),
              'banned': False,
              'email': 'username@example.com',
-             'phoneNumber': '0123456',
              'country': 'US',
              'id': '1234-ABC..',
              'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
@@ -952,7 +960,6 @@ class NumerAPI(object):
               mfaEnabled
               status
               country
-              phoneNumber
               insertedAt
               apiTokens {
                 name
@@ -989,7 +996,6 @@ class NumerAPI(object):
                * reputationPayment (`list`)
                  * nmrAmount (`decimal.Decimal`)
                  * insertedAt (`datetime`)
-               * phoneVerificationBonus (`decimal.Decimal`)
 
 
         Example:
@@ -1016,7 +1022,6 @@ class NumerAPI(object):
                  'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
                  ...
              ]
-             'phoneVerificationBonus': Decimal('1.1')
             }
         """
         query = """
@@ -1030,7 +1035,6 @@ class NumerAPI(object):
                 insertedAt
                 usdAmount
               }
-              phoneVerificationBonus
               payments {
                 nmrAmount
                 usdAmount
@@ -1061,8 +1065,6 @@ class NumerAPI(object):
         for p in payments['otherUsdIssuances']:
             utils.replace(p, "usdAmount", utils.parse_float_string)
             utils.replace(p, "insertedAt", utils.parse_datetime_string)
-        utils.replace(payments, "phoneVerificationBonus",
-                      utils.parse_float_string)
         return payments
 
     def get_transactions(self):
@@ -1318,9 +1320,12 @@ class NumerAPI(object):
                 }
             }
             '''
-        arguments = {'filename': os.path.basename(file_path),
-                     'tournament': tournament}
-        submission_resp = self.raw_query(auth_query, arguments,
+        arguments = {
+            'filename': os.path.basename(file_path),
+            'tournament': tournament
+        }
+        submission_resp = self.raw_query(auth_query,
+                                         arguments,
                                          authorization=True)
         submission_auth = submission_resp['data']['submission_upload_auth']
         with open(file_path, 'rb') as fh:
@@ -1334,8 +1339,10 @@ class NumerAPI(object):
                 }
             }
             '''
-        arguments = {'filename': submission_auth['filename'],
-                     'tournament': tournament}
+        arguments = {
+            'filename': submission_auth['filename'],
+            'tournament': tournament
+        }
         create = self.raw_query(create_query, arguments, authorization=True)
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
@@ -1390,12 +1397,14 @@ class NumerAPI(object):
               }
         }
         '''
-        arguments = {'code': 'somecode',
-                     'confidence': str(confidence),
-                     'password': "somepassword",
-                     'round': self.get_current_round(tournament),
-                     'value': str(value),
-                     'tournament': tournament}
+        arguments = {
+            'code': 'somecode',
+            'confidence': str(confidence),
+            'password': "somepassword",
+            'round': self.get_current_round(tournament),
+            'value': str(value),
+            'tournament': tournament
+        }
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']
         utils.replace(stake, "value", utils.parse_float_string)
