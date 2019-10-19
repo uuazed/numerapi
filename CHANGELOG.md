@@ -3,6 +3,8 @@ Notable changes to this project.
 
 ## [dev]
 - add `v2_leaderboard`
+- add `stake_get` & `stake_set`
+- add `stake_increase`, `stake_decrease` & `stake_drain`
 
 ## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)

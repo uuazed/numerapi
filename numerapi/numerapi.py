@@ -1542,3 +1542,198 @@ class NumerAPI(object):
         for item in data:
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
+
+    def stake_set(self, nmr):
+        """Set stake to value by decreasing or increasing your current stake
+
+        Args:
+            nmr (float or str): amount of NMR you want to stake
+
+        Returns:
+            dict: stake information with the following content:
+
+              * insertedAt (`datetime`)
+              * status (`str`)
+              * txHash (`str`)
+              * value (`decimal.Decimal`)
+              * source (`str`)
+              * to (`str`)
+              * from (`str`)
+              * posted (`bool`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.stake_drain()
+            {'from': None,
+             'insertedAt': None,
+             'status': None,
+             'txHash': '0x76519...2341ca0',
+             'from': '',
+             'to': '',
+             'posted': True,
+             'value': '10'}
+        """
+        current = self.stake.get()
+        if not isinstance(nmr, decimal.Decimal):
+            nmr = decimal.Decimal(str(nmr))
+        if nmr == current:
+            self.logger.info("Stake already at desired value. Nothing to do.")
+            return None
+        elif nmr < current:
+            return self.stake_decrease(current - nmr)
+        else nmr > current:
+            return self.stake_increase(nmr - current)
+
+    def stake_get(self):
+        """Get your current stake amount."""
+        # FIXME
+        return 0
+
+    def stake_drain(self):
+        """Completely remove your stake.
+
+        Returns:
+            dict: stake information with the following content:
+
+              * insertedAt (`datetime`)
+              * status (`str`)
+              * txHash (`str`)
+              * value (`decimal.Decimal`)
+              * source (`str`)
+              * to (`str`)
+              * from (`str`)
+              * posted (`bool`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.stake_drain()
+            {'from': None,
+             'insertedAt': None,
+             'status': None,
+             'txHash': '0x76519...2341ca0',
+             'from': '',
+             'to': '',
+             'posted': True,
+             'value': '10'}
+        """
+        return self.stake_decrease(11000000)
+
+    def stake_decrease(self, nmr):
+        """Decrease your stake by `value` NMR.
+
+        Args:
+            nmr (float or str): amount of NMR you want to reduce
+
+        Returns:
+            dict: stake information with the following content:
+
+              * insertedAt (`datetime`)
+              * status (`str`)
+              * txHash (`str`)
+              * value (`decimal.Decimal`)
+              * source (`str`)
+              * to (`str`)
+              * from (`str`)
+              * posted (`bool`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.stake_decrease(10)
+            {'from': None,
+             'insertedAt': None,
+             'status': None,
+             'txHash': '0x76519...2341ca0',
+             'from': '',
+             'to': '',
+             'posted': True,
+             'value': '10'}
+        """
+        query = '''
+          mutation($code: String
+                   $password: String!
+                   $value: String!) {
+              v2ReleaseStakeRequest(code: $code
+                      password: $password
+                      value: $value) {
+                insertedAt
+                status
+                txHash
+                value
+                from
+                source
+                posted
+                to
+              }
+        }
+        '''
+        arguments = {'code': 'somecode',
+                     'password': "somepassword",
+                     'value': str(nmr)
+                     }
+        result = self.raw_query(query, arguments, authorization=True)
+        stake = result['data']
+        utils.replace(stake, "value", utils.parse_float_string)
+        utils.replace(stake, "insertedAt", utils.parse_datetime_string)
+        return stake
+
+    def stake_increase(self, nmr):
+        """Increase your stake by certain value.
+
+        Args:
+            nmr (float or str): amount of additional NMR you want to stake
+
+        Returns:
+            dict: stake information with the following content:
+
+              * insertedAt (`datetime`)
+              * status (`str`)
+              * txHash (`str`)
+              * value (`decimal.Decimal`)
+              * source (`str`)
+              * to (`str`)
+              * from (`str`)
+              * posted (`bool`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.stake_increase(10)
+            {'from': None,
+             'insertedAt': None,
+             'status': None,
+             'txHash': '0x76519...2341ca0',
+             'from': '',
+             'to': '',
+             'posted': True,
+             'value': '10'}
+        """
+
+        query = '''
+          mutation($code: String
+            $password: String!
+            $current: String!
+            $value: String!) {
+              v2Stake(code: $code
+                      password: $password
+                      currendStake: $current
+                      value: $value) {
+                insertedAt
+                status
+                txHash
+                value
+                from
+                source
+                posted
+                to
+              }
+        }
+        '''
+        arguments = {'code': 'somecode',
+                     'currentStake': str(self.stake_get()),
+                     'password': "somepassword",
+                     'value': str(nmr)
+                     }
+        result = self.raw_query(query, arguments, authorization=True)
+        stake = result['data']
+        utils.replace(stake, "value", utils.parse_float_string)
+        utils.replace(stake, "insertedAt", utils.parse_datetime_string)
+        return stake
