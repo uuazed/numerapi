@@ -1332,68 +1332,6 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def stake(self, confidence, value, tournament=8):
-        """Participate in the staking competition.
-
-        Args:
-            confidence (float or str): your estimate of your model's expected AUC score
-            value (float or str): amount of NMR you are willing to stake
-            tournament (int): ID of the tournament (optional, defaults to 8)
-
-        Returns:
-            dict: stake information with the following content:
-
-              * insertedAt (`datetime`)
-              * status (`str`)
-              * txHash (`str`)
-              * value (`decimal.Decimal`)
-              * from (`str`)
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> api.stake(0.501, 10)
-            {'stake':
-              {'from': None,
-               'insertedAt': None,
-               'status': None,
-               'txHash': '0x76519...2341ca0',
-               'value': '10'}
-             }
-        """
-
-        query = '''
-          mutation($code: String
-            $confidence: String!
-            $password: String
-            $round: Int!
-            $value: String!
-            $tournament: Int!) {
-              stake(code: $code
-                    confidence: $confidence
-                    password: $password
-                    round: $round
-                    value: $value
-                    tournament: $tournament) {
-                insertedAt
-                status
-                txHash
-                value
-                from
-              }
-        }
-        '''
-        arguments = {'code': 'somecode',
-                     'confidence': str(confidence),
-                     'password': "somepassword",
-                     'round': self.get_current_round(tournament),
-                     'value': str(value),
-                     'tournament': tournament}
-        result = self.raw_query(query, arguments, authorization=True)
-        stake = result['data']
-        utils.replace(stake, "value", utils.parse_float_string)
-        utils.replace(stake, "insertedAt", utils.parse_datetime_string)
-        return stake
-
     def check_new_round(self, hours=24, tournament=8):
         """Check if a new round has started within the last `hours`.
 

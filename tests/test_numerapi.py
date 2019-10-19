@@ -75,16 +75,6 @@ def test_get_leaderboard(api):
     assert len(lb) == 1425
 
 
-def test_stake(api):
-    with pytest.raises(ValueError) as err:
-        # while this won't work because we are not authorized, it still tells
-        # us if the remaining code works
-        api.stake(3, 2)
-    # error should warn about not beeing logged in.
-    assert "API keys required for this action" in str(err.value) or \
-           "Your session is invalid or has expired." in str(err.value)
-
-
 @pytest.mark.parametrize("fun", ["get_user", "get_stakes", "get_transactions",
                                  "get_payments"])
 def test_unauthorized_requests(api, fun):
