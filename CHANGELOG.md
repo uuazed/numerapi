@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- add `v2_leaderboard`
+
 ## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)
 

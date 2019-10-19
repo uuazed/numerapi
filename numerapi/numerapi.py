@@ -1484,3 +1484,61 @@ class NumerAPI(object):
         tournaments = self.get_tournaments()
         d = {t['name']: t['tournament'] for t in tournaments}
         return d.get(name, None)
+
+    #  ################# V2 #####################################
+
+    def v2_leaderboard(self, limit=50, offset=0):
+        """Get the current leaderboard
+
+        Args:
+            limit (int): number of items to return (optional, defaults to 50)
+            offset (int): number of items to skip (optional, defaults to 0)
+
+        Returns:
+            list of dicts: list of leaderboard entries
+
+            Each dict contains the following items:
+
+                * username (`str`)
+                * tier (`str`)
+                * reputation (`float`)
+                * rank (`int`)
+                * prevRank (`int`)
+                * nmrStaked (`decimal.Decimal`)
+                * bonusPerc (`float`)
+                * badges (`list of str`)
+
+        Example:
+            >>> numerapi.NumerAPI().v2_leaderboard(1)
+            [{'username': 'anton',
+              'tier': 'C',
+              'reputation': -0.00499721,
+              'rank': 143,
+              'prevRank': 116,
+              'nmrStaked': Decimal('12'),
+              'bonusPerc': 0.5,
+              'badges': ['submission-streak_1', 'burned_2']}]
+
+        """
+        query = '''
+            query($limit: Int!
+                  $offset: Int!) {
+              v2Leaderboard(limit: $limit
+                            offset: $offset) {
+                bonusPerc
+                nmrStaked
+                prevRank
+                rank
+                reputation
+                tier
+                username
+                badges
+              }
+            }
+        '''
+
+        arguments = {'limit': limit, 'offset': offset}
+        data = self.raw_query(query, arguments)['data']['v2Leaderboard']
+        for item in data:
+            utils.replace(item, "nmrStaked", utils.parse_float_string)
+        return data
