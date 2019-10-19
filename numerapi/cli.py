@@ -193,16 +193,6 @@ def submission_successful(submission_id):
 
 
 @cli.command()
-@click.argument("confidence")
-@click.argument("value")
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
-def stake(confidence, value, tournament):
-    """Participate in the staking competition."""
-    click.echo(napi.stake(confidence, value, tournament))
-
-
-@cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
 @click.argument('path', type=click.Path(exists=True))
