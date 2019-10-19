@@ -1675,3 +1675,47 @@ class NumerAPI(object):
         utils.replace(stake, "value", utils.parse_float_string)
         utils.replace(stake, "insertedAt", utils.parse_datetime_string)
         return stake
+
+    def v2_user_profile(self, username):
+        """Fetch the profile of a user.
+
+        Returns:
+            dict: user profile including the following fields:
+
+                * username (`str`)
+                * startDate (`datetime`)
+                * netEarnings (`float`)
+                * id (`string`)
+                * historicalNetUsdEarnings (`float`)
+                * historicalNetNmrEarnings (`float`)
+                * badges (`list of str`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.v2_user_profile("niam")
+            {'username': 'niam',
+             'startDate': datetime.datetime(2018, 6, 14, 22, 58, 2, 186221),
+             'netEarnings': None,
+             'id': '024c9bb9-77af-4b3f-91c7-63062fce2b80',
+             'historicalNetUsdEarnings': '3669.41',
+             'historicalNetNmrEarnings': '1094.247665827645663410',
+             'badges': ['burned_3', 'compute_0', 'submission-streak_1']}
+        """
+        query = """
+          query($username: String!) {
+            v2UserProfile(username: $username) {
+              badges
+              historicalNetNmrEarnings
+              historicalNetUsdEarnings
+              id
+              netEarnings
+              startDate
+              username
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v2UserProfile']
+        # convert strings to python objects
+        utils.replace(data, "startDate", utils.parse_datetime_string)
+        return data
