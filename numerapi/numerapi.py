@@ -1519,7 +1519,7 @@ class NumerAPI(object):
             return None
         elif nmr < current:
             return self.stake_decrease(current - nmr)
-        else nmr > current:
+        elif nmr > current:
             return self.stake_increase(nmr - current)
 
     def stake_get(self):
