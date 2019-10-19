@@ -6,8 +6,8 @@ Notable changes to this project.
 - add `stake_get` & `stake_set`
 - add `stake_increase`, `stake_decrease` & `stake_drain`
 - add `v2_user_profile`
+- add `daily_user_performances`
 - remove v1 staking
-
 
 ## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)

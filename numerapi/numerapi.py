@@ -1719,3 +1719,59 @@ class NumerAPI(object):
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
+
+    def daily_user_performances(self, username):
+        """Fetch daily performance of a user.
+
+        Returns:
+            list of dicts: list of daily user performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * tier (`str`)
+                * stakeValue (`float` or none)
+                * reputation (`float`)
+                * rank (`int`)
+                * leaderboardBonus (`float` or None)
+                * date (`datetime`)
+                * averageCorrelationPayout (`float` or None)
+                * averageCorrelation (`float`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.daily_user_performances("uuazed")
+            [{'tier': 'A',
+              'stakeValue': None,
+              'reputation': 0.0017099,
+              'rank': 32,
+              'leaderboardBonus': None,
+              'date': datetime.datetime(2019, 10, 16, 0, 0),
+              'averageCorrelationPayout': None,
+              'averageCorrelation': -0.000983637},
+              ...
+            ]
+        """
+        query = """
+          query($username: String!) {
+            v2UserProfile(username: $username) {
+              dailyUserPerformances {
+                averageCorrelation
+                averageCorrelationPayout
+                date
+                leaderboardBonus
+                rank
+                reputation
+                stakeValue
+                tier
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v2UserProfile']
+        performances = data['dailyUserPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
