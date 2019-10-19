@@ -1775,3 +1775,44 @@ class NumerAPI(object):
         for perf in performances:
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
+
+    def daily_submissions_performances(self, username):
+        """Fetch daily performance of a user's submissions.
+
+        Returns:
+            list of dicts: list of daily submission performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * date (`datetime`)
+                * expandingCorrelation (`float`)
+                * roundNumber (`int`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.daily_user_performances("uuazed")
+            [{'roundNumber': 181,
+              'expandingCorrelation': -0.011765912,
+              'date': datetime.datetime(2019, 10, 16, 0, 0),
+              ...
+            ]
+        """
+        query = """
+          query($username: String!) {
+            v2UserProfile(username: $username) {
+              dailySubmissionPerformances {
+                date
+                expandingCorrelation
+                roundNumber
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v2UserProfile']
+        performances = data['dailySubmissionPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
