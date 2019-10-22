@@ -86,13 +86,6 @@ def test_submission_filenames(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_staking_cutoff')
-def test_staking_cutoff(mocked):
-    result = CliRunner().invoke(cli.staking_cutoff, ['--tournament', 1])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.check_new_round')
 def test_check_new_round(mocked):
     result = CliRunner().invoke(cli.check_new_round, ['--tournament', 1])

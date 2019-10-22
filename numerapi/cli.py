@@ -114,16 +114,6 @@ def submission_filenames(round_num=None, tournament=None):
 
 
 @cli.command()
-@click.option('--tournament', type=int, default=8,
-              help='ID of the tournament, defaults to 1')
-@click.option('--round_num', type=int, default=0,
-              help='round number, defaults to the current round')
-def staking_cutoff(round_num, tournament):
-    """Compute staking cutoff for the given round and tournament."""
-    click.echo(prettify(napi.get_staking_cutoff(round_num, tournament)))
-
-
-@cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
 @click.option('--hours', default=24,

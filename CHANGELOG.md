@@ -9,6 +9,7 @@ Notable changes to this project.
 - add `daily_user_performances`
 - add `daily_submissions_performances`
 - remove v1 staking
+- remove `get_staking_cutoff` - no longer relevant
 
 ## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)

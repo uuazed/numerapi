@@ -462,39 +462,6 @@ class NumerAPI(object):
             t = tournaments[0]
         return t['prizePoolNmr']
 
-    def get_staking_cutoff(self, round_num=0, tournament=8):
-        """Compute staking cutoff for the given round and tournament.
-
-        Args:
-            round_num (int, optional): The round you are interested in,
-                defaults to current round.
-            tournament (int, optional): ID of the tournament, defaults to 8
-
-        Returns:
-            decimal.Decimal: cutoff probability
-
-        Raises:
-            ValueError: in case of missing prize pool information
-        """
-        query = '''
-            query($number: Int!
-                  $tournament: Int!) {
-              rounds(number: $number
-                     tournament: $tournament) {
-                selection {
-                  outcome
-                  pCutoff
-                  bCutoff
-                }
-              }
-            }
-        '''
-        arguments = {'number': round_num, 'tournament': tournament}
-        result = self.raw_query(query, arguments)
-        result = result['data']['rounds'][0]['selection']
-        key = 'bCutoff' if round_num >= 154 or round_num == 0 else 'pCutoff'
-        return utils.parse_float_string(result[key])
-
     def get_competitions(self, tournament=8):
         """Retrieves information about all competitions
 
