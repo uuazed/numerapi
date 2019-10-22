@@ -263,7 +263,7 @@ class NumerAPI(object):
                  * status (`str`)
 
         Example:
-            >>> NumerAPI().get_leaderboard(99)
+            >>> NumerAPI().get_v1_leaderboard(99)
             [{'concordance': {'pending': False, 'value': True},
               'consistency': 83.33333333333334,
               'liveLogloss': 0.6941153941722517,
@@ -1614,7 +1614,7 @@ class NumerAPI(object):
         return stake
 
     def stake_increase(self, nmr):
-        """Increase your stake by certain value.
+        """Increase your stake by `value` NMR.
 
         Args:
             nmr (float or str): amount of additional NMR you want to stake

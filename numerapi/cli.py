@@ -202,6 +202,33 @@ def submit(path, tournament):
 
 
 @cli.command()
+@click.argument("username")
+def stake_get(username):
+    """Get stake value of a user."""
+    click.echo(napi.stake_get(username))
+
+
+@cli.command()
+def stake_drain():
+    """Completely remove your stake."""
+    click.echo(napi.stake_drain())
+
+
+@cli.command()
+@click.argument("nmr")
+def stake_decrease(nmr):
+    """Decrease your stake by `value` NMR."""
+    click.echo(napi.stake_decrease(nmr))
+
+
+@cli.command()
+@click.argument("nmr")
+def stake_increase(nmr):
+    """Increase your stake by `value` NMR."""
+    click.echo(napi.stake_increase(nmr))
+
+
+@cli.command()
 def version():
     """Installed numerapi version."""
     print(numerapi.__version__)
