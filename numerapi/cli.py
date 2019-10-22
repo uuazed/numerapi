@@ -94,6 +94,16 @@ def rankings(limit=20, offset=0):
 
 
 @cli.command()
+@click.option('--limit', default=20,
+              help='Number of items to return, defaults to 20')
+@click.option('--offset', default=0,
+              help='Number of items to skip, defaults to 0')
+def leaderboard(limit=20, offset=0):
+    """Get the leaderboard."""
+    click.echo(prettify(napi.get_leaderboard(limit=limit, offset=offset)))
+
+
+@cli.command()
 @click.argument("username")
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')

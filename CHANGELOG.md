@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
-- add `v2_leaderboard`
+- add v2 version of `get_leaderboard`
 - add `stake_get` & `stake_set`
 - add `stake_increase`, `stake_decrease` & `stake_drain`
 - add `v2_user_profile`
@@ -10,7 +10,7 @@ Notable changes to this project.
 - add `daily_submissions_performances`
 - remove v1 staking
 - remove `get_staking_cutoff` - no longer relevant
-- `get_leaderboard` renamed to `get_v1_leaderboard`
+- old `get_leaderboard` renamed to `get_v1_leaderboard`
 
 ## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)

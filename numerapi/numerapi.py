@@ -1400,7 +1400,7 @@ class NumerAPI(object):
 
     #  ################# V2 #####################################
 
-    def v2_leaderboard(self, limit=50, offset=0):
+    def get_leaderboard(self, limit=50, offset=0):
         """Get the current leaderboard
 
         Args:
@@ -1422,7 +1422,7 @@ class NumerAPI(object):
                 * badges (`list of str`)
 
         Example:
-            >>> numerapi.NumerAPI().v2_leaderboard(1)
+            >>> numerapi.NumerAPI().get_leaderboard(1)
             [{'username': 'anton',
               'tier': 'C',
               'reputation': -0.00499721,
