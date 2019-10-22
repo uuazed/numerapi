@@ -140,6 +140,27 @@ def user():
 
 
 @cli.command()
+@click.argument("username")
+def profile(username):
+    """Fetch the public profile of a user."""
+    click.echo(prettify(napi.public_user_profile(username)))
+
+
+@cli.command()
+@click.argument("username")
+def daily_user_performances(username):
+    """Fetch daily performance of a user."""
+    click.echo(prettify(napi.daily_user_performances(username)))
+
+
+@cli.command()
+@click.argument("username")
+def daily_submissions_performances(username):
+    """Fetch daily performance of a user's submissions."""
+    click.echo(prettify(napi.daily_submissions_performances(username)))
+
+
+@cli.command()
 def payments():
     """List all your payments"""
     click.echo(prettify(napi.get_payments()))
