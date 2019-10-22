@@ -12,6 +12,7 @@ Notable changes to this project.
 - remove `get_staking_cutoff` - no longer relevant
 - old `get_leaderboard` renamed to `get_v1_leaderboard`
 - add v2-style staking to cli interface
+- update documentation
 
 ## [1.6.2] - 2019-07-31
 - remove phone number and bonus fetching (#16)

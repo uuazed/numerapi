@@ -39,13 +39,11 @@ Usage example:
     napi.download_current_dataset(unzip=True)
     # get competitions
     all_competitions = napi.get_competitions()
-    # get leaderboard for the current round
+    # get current leaderboard
     leaderboard = napi.get_leaderboard()
-    # leaderboard for a historic round
-    leaderboard_67 = napi.get_leaderboard(round_num=67)
     # check if a new round has started
     if napi.check_new_round():
-        print("new round has started wihtin the last 24hours!")
+        print("new round has started within the last 24hours!")
     else:
         print("no new round within the last 24 hours")
 
@@ -58,6 +56,8 @@ Usage example:
     submission_id = napi.upload_predictions("preds.csv", tournament=1)
     # check submission status
     napi.submission_status()
+    # increase your stake by 1.2 NMR
+    napi.stake_increase(1.2)
 
 ## Command line interface
 
@@ -72,29 +72,37 @@ To get started with the cli interface, let's take a look at the help page:
       --help  Show this message and exit.
 
     Commands:
-      check-new-round         Check if a new round has started within the...
-      competitions            Retrieves information about all competitions
-      current-round           Get number of the current active round.
-      dataset-url             Fetch url of the current dataset.
-      download-dataset        Download dataset for the current active...
-      leaderboard             Retrieves the leaderboard for the given...
-      payments                List all your payments
-      rankings                Get the overall rankings.
-      stake                   Participate in the staking competition.
-      stakes                  List all your stakes.
-      staking_leaderboard     Retrieves the staking competition leaderboard...
-      submission-filenames    Get filenames of your submissions
-      submission-ids          Get dict with username->submission_id...
-      submission-status       checks the submission status
-      submission-successful   Check if the last submission passes...
-      submit                  Upload predictions from file.
-      tournament-name2number  Translate tournament name to tournament...
-      tournament-number2name  Translate tournament number to tournament...
-      tournaments             Get all active tournaments.
-      transactions            List all your deposits and withdrawals.
-      user                    Get all information about you!
-      user-activities         Get user activities (works for all users!)
-      version                 Installed numerapi version.
+      check-new-round                 Check if a new round has started within...
+      competitions                    Retrieves information about all...
+      current-round                   Get number of the current active round.
+      daily-submissions-performances  Fetch daily performance of a user's...
+      daily-user-performances         Fetch daily performance of a user.
+      dataset-url                     Fetch url of the current dataset.
+      download-dataset                Download dataset for the current active...
+      leaderboard                     Get the leaderboard.
+      payments                        List all your payments
+      profile                         Fetch the public profile of a user.
+      rankings                        Get the overall rankings.
+      stake-decrease                  Decrease your stake by `value` NMR.
+      stake-drain                     Completely remove your stake.
+      stake-get                       Get stake value of a user.
+      stake-increase                  Increase your stake by `value` NMR.
+      stakes                          List all your stakes.
+      staking-leaderboard             Retrieves the staking competition...
+      submission-filenames            Get filenames of your submissions
+      submission-ids                  Get dict with username->submission_id...
+      submission-status               checks the submission status
+      submission-successful           Check if the last submission passes...
+      submit                          Upload predictions from file.
+      tournament-name2number          Translate tournament name to tournament...
+      tournament-number2name          Translate tournament number to tournament...
+      tournaments                     Get all tournaments.
+      transactions                    List all your deposits and withdrawals.
+      user                            Get all information about you!
+      user-activities                 Get user activities (works for all users!)
+      v1-leaderboard                  Retrieves the leaderboard for the given...
+      version                         Installed numerapi version.
+
 
 Each command has it's own help page, for example:
 
