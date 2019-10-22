@@ -70,8 +70,8 @@ def test_raw_query(api):
     assert "data" in result
 
 
-def test_get_leaderboard(api):
-    lb = api.get_leaderboard(67, tournament=1)
+def test_v1_get_leaderboard(api):
+    lb = api.get_v1_leaderboard(67, tournament=1)
     assert len(lb) == 1425
 
 
