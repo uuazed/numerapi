@@ -915,6 +915,9 @@ class NumerAPI(object):
                  * name (`str`)
                  * public_id (`str`)
                  * scopes (`list of str`)
+                * v2Stake
+                 * status (`str`)
+                 * txHash (`str`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
@@ -934,7 +937,8 @@ class NumerAPI(object):
              'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
              'mfaEnabled': False,
              'status': 'VERIFIED',
-             'username': 'cool username'
+             'username': 'cool username',
+             'v2Stake': None
              }
         """
         query = """
@@ -955,6 +959,10 @@ class NumerAPI(object):
                 name
                 public_id
                 scopes
+              }
+              v2Stake {
+                status
+                txHash
               }
             }
           }
@@ -1522,10 +1530,34 @@ class NumerAPI(object):
         elif nmr > current:
             return self.stake_increase(nmr - current)
 
-    def stake_get(self):
-        """Get your current stake amount."""
-        # FIXME
-        return 0
+    def stake_get(self, username):
+        """Get your current stake amount.
+
+        Args:
+            username (str)
+
+        Returns:
+            float: current stake
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.stake_get("uuazed")
+            1.1
+        """
+        query = """
+          query($username: String!) {
+            v2UserProfile(username: $username) {
+              dailyUserPerformances {
+                stakeValue
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v2UserProfile']
+        # be convention, the first is the latest one
+        stake = data['dailyUserPerformances'][0]['stakeValue']
+        return stake
 
     def stake_drain(self):
         """Completely remove your stake.
@@ -1676,6 +1708,9 @@ class NumerAPI(object):
     def v2_user_profile(self, username):
         """Fetch the profile of a user.
 
+        Args:
+            username (str)
+
         Returns:
             dict: user profile including the following fields:
 
@@ -1719,6 +1754,9 @@ class NumerAPI(object):
 
     def daily_user_performances(self, username):
         """Fetch daily performance of a user.
+
+        Args:
+            username (str)
 
         Returns:
             list of dicts: list of daily user performance entries
@@ -1775,6 +1813,9 @@ class NumerAPI(object):
 
     def daily_submissions_performances(self, username):
         """Fetch daily performance of a user's submissions.
+
+        Args:
+            username (str)
 
         Returns:
             list of dicts: list of daily submission performance entries
