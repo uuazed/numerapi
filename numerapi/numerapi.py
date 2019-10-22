@@ -1786,14 +1786,14 @@ class NumerAPI(object):
             content:
 
                 * date (`datetime`)
-                * expandingCorrelation (`float`)
+                * v (`float`)
                 * roundNumber (`int`)
 
         Example:
             >>> api = NumerAPI()
             >>> api.daily_user_performances("uuazed")
             [{'roundNumber': 181,
-              'expandingCorrelation': -0.011765912,
+              'correlation': -0.011765912,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
               ...
             ]
@@ -1803,7 +1803,7 @@ class NumerAPI(object):
             v2UserProfile(username: $username) {
               dailySubmissionPerformances {
                 date
-                expandingCorrelation
+                correlation
                 roundNumber
               }
             }
