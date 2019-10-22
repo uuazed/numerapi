@@ -1648,11 +1648,9 @@ class NumerAPI(object):
         query = '''
           mutation($code: String
             $password: String!
-            $current: String!
             $value: String!) {
               v2Stake(code: $code
                       password: $password
-                      currendStake: $current
                       value: $value) {
                 insertedAt
                 status
@@ -1666,7 +1664,6 @@ class NumerAPI(object):
         }
         '''
         arguments = {'code': 'somecode',
-                     'currentStake': str(self.stake_get()),
                      'password': "somepassword",
                      'value': str(nmr)
                      }
