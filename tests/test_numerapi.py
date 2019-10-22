@@ -102,10 +102,10 @@ def test_get_submission_ids(api):
 def test_error_handling(api):
     # String instead of Int
     with pytest.raises(ValueError):
-        api.get_leaderboard("foo")
+        api.get_v1_leaderboard("foo")
     # round that doesn't exist
     with pytest.raises(ValueError):
-        api.get_leaderboard(-1)
+        api.get_v1_leaderboard(-1)
     # unauthendicated request
     with pytest.raises(ValueError):
         # set wrong token

@@ -42,10 +42,10 @@ def dataset_url(tournament):
               help='The ID of the tournament, defaults to 8')
 @click.option('--round_num', default=0,
               help='The round you are interested in, defaults to current round')
-def leaderboard(round_num=0, tournament=8):
+def v1_leaderboard(round_num=0, tournament=8):
     """Retrieves the leaderboard for the given round."""
-    click.echo(prettify(napi.get_leaderboard(tournament=tournament,
-                                             round_num=round_num)))
+    click.echo(prettify(napi.get_v1_leaderboard(tournament=tournament,
+                                                round_num=round_num)))
 
 
 @cli.command()

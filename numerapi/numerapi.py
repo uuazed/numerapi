@@ -222,7 +222,7 @@ class NumerAPI(object):
             raise ValueError(err)
         return result
 
-    def get_leaderboard(self, round_num=0, tournament=8):
+    def get_v1_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard for the given round.
 
         Args:
