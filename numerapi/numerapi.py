@@ -1672,8 +1672,8 @@ class NumerAPI(object):
         utils.replace(stake, "insertedAt", utils.parse_datetime_string)
         return stake
 
-    def v2_user_profile(self, username):
-        """Fetch the profile of a user.
+    def public_user_profile(self, username):
+        """Fetch the public profile of a user.
 
         Args:
             username (str)
@@ -1691,7 +1691,7 @@ class NumerAPI(object):
 
         Example:
             >>> api = NumerAPI()
-            >>> api.v2_user_profile("niam")
+            >>> api.public_user_profile("niam")
             {'username': 'niam',
              'startDate': datetime.datetime(2018, 6, 14, 22, 58, 2, 186221),
              'netEarnings': None,

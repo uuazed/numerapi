@@ -5,7 +5,7 @@ Notable changes to this project.
 - add v2 version of `get_leaderboard`
 - add `stake_get` & `stake_set`
 - add `stake_increase`, `stake_decrease` & `stake_drain`
-- add `v2_user_profile`
+- add `public_user_profile`
 - add `daily_user_performances`
 - add `daily_submissions_performances`
 - remove v1 staking
