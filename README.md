@@ -33,6 +33,7 @@ and `NUMERAI_SECRET_KEY`).
 
 Usage example:
 
+    import numerapi
     # some API calls do not require logging in
     napi = numerapi.NumerAPI(verbosity="info")
     # download current dataset
@@ -58,6 +59,10 @@ Usage example:
     napi.submission_status()
     # increase your stake by 1.2 NMR
     napi.stake_increase(1.2)
+
+    # convert results to a pandas dataframe
+    import pandas as pd
+    df = pd.io.json.json_normalize(napi.daily_user_performances("uuazed"), sep="-")
 
 ## Command line interface
 
