@@ -7,6 +7,7 @@ import zipfile
 import os
 import logging
 import datetime
+import decimal
 
 # Third Party
 import requests
@@ -1456,7 +1457,7 @@ class NumerAPI(object):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr):
+    def stake_set(self, nmr, username):
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
@@ -1486,7 +1487,9 @@ class NumerAPI(object):
              'posted': True,
              'value': '10'}
         """
-        current = self.stake.get()
+        current = self.stake_get(username)
+        if current is None:
+        	current = decimal.Decimal(0)
         if not isinstance(nmr, decimal.Decimal):
             nmr = decimal.Decimal(str(nmr))
         if nmr == current:
