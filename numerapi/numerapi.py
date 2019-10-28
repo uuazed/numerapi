@@ -1457,7 +1457,7 @@ class NumerAPI(object):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr, username):
+    def stake_set(self, nmr):
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
@@ -1487,13 +1487,18 @@ class NumerAPI(object):
              'posted': True,
              'value': '10'}
         """
+        # get username of logged in user
+        username = self.get_user()['username']
+        # fetch current stake
         current = self.stake_get(username)
+        # convert everything to decimals
         if current is None:
             current = decimal.Decimal(0)
         else:
             current = decimal.Decimal(str(current))
         if not isinstance(nmr, decimal.Decimal):
             nmr = decimal.Decimal(str(nmr))
+        # update stake!
         if nmr == current:
             self.logger.info("Stake already at desired value. Nothing to do.")
             return None
