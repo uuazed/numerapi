@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.0.1] - 2019-10-28
+- fix `stake_set`
+
 ## [2.0.0] - 2019-10-23
 - add v2 version of `get_leaderboard`
 - add `stake_get` & `stake_set`
