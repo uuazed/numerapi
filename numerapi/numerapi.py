@@ -1477,7 +1477,7 @@ class NumerAPI(object):
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> api.stake_drain()
+            >>> api.stake_set(10)
             {'from': None,
              'insertedAt': None,
              'status': None,
@@ -1489,7 +1489,9 @@ class NumerAPI(object):
         """
         current = self.stake_get(username)
         if current is None:
-        	current = decimal.Decimal(0)
+            current = decimal.Decimal(0)
+        else:
+            current = decimal.Decimal(str(current))
         if not isinstance(nmr, decimal.Decimal):
             nmr = decimal.Decimal(str(nmr))
         if nmr == current:
