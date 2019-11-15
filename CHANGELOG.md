@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [dev]
+## [2.1.0] - 2019-11-15
 - add some more details to `get_leaderboard`
 - adapt to changes in Numerai's staking API
 
