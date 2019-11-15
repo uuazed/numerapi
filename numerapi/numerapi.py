@@ -1551,32 +1551,75 @@ class NumerAPI(object):
         stake = data['dailyUserPerformances'][0]['stakeValue']
         return stake
 
+    def stake_change(self, nmr, action="decrease"):
+        """Change stake by `value` NMR.
+
+        Args:
+            nmr (float or str): amount of NMR you want to reduce
+            action (str): `increase` or `decrease`
+
+        Returns:
+            dict: stake information with the following content:
+
+              * dueDate (`datetime`)
+              * status (`str`)
+              * requestedAmount (`decimal.Decimal`)
+              * type (`str`)
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.stake_decrease(10)
+            {'dueDate': None,
+             'requestedAmount': decimal.Decimal('10'),
+             'type': 'decrease',
+             'status': ''}
+        """
+        query = '''
+          mutation($code: String
+                   $password: String!
+                   $value: String!
+                   $type: String!) {
+              v2ChangeStake(code: $code
+                            password: $password
+                            value: $value
+                            type: $type) {
+                dueDate
+                requestedAmount
+                status
+                type
+              }
+        }
+        '''
+        arguments = {'code': 'somecode',
+                     'password': "somepassword",
+                     'value': str(nmr),
+                     'type': action
+
+                     }
+        result = self.raw_query(query, arguments, authorization=True)
+        stake = result['data']
+        utils.replace(stake, "requestedAmount", utils.parse_float_string)
+        utils.replace(stake, "dueDate", utils.parse_datetime_string)
+        return stake
+
     def stake_drain(self):
         """Completely remove your stake.
 
         Returns:
             dict: stake information with the following content:
 
-              * insertedAt (`datetime`)
+              * dueDate (`datetime`)
               * status (`str`)
-              * txHash (`str`)
-              * value (`decimal.Decimal`)
-              * source (`str`)
-              * to (`str`)
-              * from (`str`)
-              * posted (`bool`)
+              * requestedAmount (`decimal.Decimal`)
+              * type (`str`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> api.stake_drain()
-            {'from': None,
-             'insertedAt': None,
-             'status': None,
-             'txHash': '0x76519...2341ca0',
-             'from': '',
-             'to': '',
-             'posted': True,
-             'value': '10'}
+            {'dueDate': None,
+             'requestedAmount': decimal.Decimal('11000000'),
+             'type': 'decrease',
+             'status': ''}
         """
         return self.stake_decrease(11000000)
 
@@ -1589,54 +1632,20 @@ class NumerAPI(object):
         Returns:
             dict: stake information with the following content:
 
-              * insertedAt (`datetime`)
+              * dueDate (`datetime`)
               * status (`str`)
-              * txHash (`str`)
-              * value (`decimal.Decimal`)
-              * source (`str`)
-              * to (`str`)
-              * from (`str`)
-              * posted (`bool`)
+              * requestedAmount (`decimal.Decimal`)
+              * type (`str`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> api.stake_decrease(10)
-            {'from': None,
-             'insertedAt': None,
-             'status': None,
-             'txHash': '0x76519...2341ca0',
-             'from': '',
-             'to': '',
-             'posted': True,
-             'value': '10'}
+            {'dueDate': None,
+             'requestedAmount': decimal.Decimal('10'),
+             'type': 'decrease',
+             'status': ''}
         """
-        query = '''
-          mutation($code: String
-                   $password: String!
-                   $value: String!) {
-              v2ReleaseStakeRequest(code: $code
-                      password: $password
-                      value: $value) {
-                insertedAt
-                status
-                txHash
-                value
-                from
-                source
-                posted
-                to
-              }
-        }
-        '''
-        arguments = {'code': 'somecode',
-                     'password': "somepassword",
-                     'value': str(nmr)
-                     }
-        result = self.raw_query(query, arguments, authorization=True)
-        stake = result['data']
-        utils.replace(stake, "value", utils.parse_float_string)
-        utils.replace(stake, "insertedAt", utils.parse_datetime_string)
-        return stake
+        return self.stake_change(nmr, 'decrease')
 
     def stake_increase(self, nmr):
         """Increase your stake by `value` NMR.
@@ -1647,55 +1656,20 @@ class NumerAPI(object):
         Returns:
             dict: stake information with the following content:
 
-              * insertedAt (`datetime`)
+              * dueDate (`datetime`)
               * status (`str`)
-              * txHash (`str`)
-              * value (`decimal.Decimal`)
-              * source (`str`)
-              * to (`str`)
-              * from (`str`)
-              * posted (`bool`)
+              * requestedAmount (`decimal.Decimal`)
+              * type (`str`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> api.stake_increase(10)
-            {'from': None,
-             'insertedAt': None,
-             'status': None,
-             'txHash': '0x76519...2341ca0',
-             'from': '',
-             'to': '',
-             'posted': True,
-             'value': '10'}
+            {'dueDate': None,
+             'requestedAmount': decimal.Decimal('10'),
+             'type': 'increase',
+             'status': ''}
         """
-
-        query = '''
-          mutation($code: String
-            $password: String!
-            $value: String!) {
-              v2Stake(code: $code
-                      password: $password
-                      value: $value) {
-                insertedAt
-                status
-                txHash
-                value
-                from
-                source
-                posted
-                to
-              }
-        }
-        '''
-        arguments = {'code': 'somecode',
-                     'password': "somepassword",
-                     'value': str(nmr)
-                     }
-        result = self.raw_query(query, arguments, authorization=True)
-        stake = result['data']
-        utils.replace(stake, "value", utils.parse_float_string)
-        utils.replace(stake, "insertedAt", utils.parse_datetime_string)
-        return stake
+        return self.stake_change(nmr, 'increase')
 
     def public_user_profile(self, username):
         """Fetch the public profile of a user.

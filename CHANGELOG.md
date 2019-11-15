@@ -4,6 +4,7 @@ Notable changes to this project.
 
 ## [dev]
 - add some more details to `get_leaderboard`
+- adapt to changes in Numerai's staking API
 
 ## [2.0.1] - 2019-10-28
 - fix `stake_set`
