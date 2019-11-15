@@ -1418,7 +1418,12 @@ class NumerAPI(object):
                 * reputation (`float`)
                 * rank (`int`)
                 * prevRank (`int`)
+                * stakedRank (`int`)
+                * prevStakedRank (`int`)
                 * nmrStaked (`decimal.Decimal`)
+                * oldStakeValue (`decimal.Decimal`)
+                * leaderboardBonus (`decimal.Decimal`)
+                * averageCorrelationPayout (`decimal.Decimal`)
                 * bonusPerc (`float`)
                 * badges (`list of str`)
 
@@ -1429,7 +1434,12 @@ class NumerAPI(object):
               'reputation': -0.00499721,
               'rank': 143,
               'prevRank': 116,
+              'stakedRank': 103,
+              'prevStakedRank': 102,
               'nmrStaked': Decimal('12'),
+              'oldStakeValue': Decimal('12'),
+              `leaderboardBonus`: Decimal('0.1')
+              `averageCorrelationPayout`: Decimal('0.1')
               'bonusPerc': 0.5,
               'badges': ['submission-streak_1', 'burned_2']}]
 
@@ -1441,11 +1451,16 @@ class NumerAPI(object):
                             offset: $offset) {
                 bonusPerc
                 nmrStaked
+                oldStakeValue
                 prevRank
+                prevStakedRank
                 rank
+                stakedRank
                 reputation
                 tier
                 username
+                leaderboardBonus
+                averageCorrelationPayout
                 badges
               }
             }
