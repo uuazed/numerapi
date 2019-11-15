@@ -1597,7 +1597,7 @@ class NumerAPI(object):
 
                      }
         result = self.raw_query(query, arguments, authorization=True)
-        stake = result['data']
+        stake = result['data']['v2ChangeStake']
         utils.replace(stake, "requestedAmount", utils.parse_float_string)
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
