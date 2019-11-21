@@ -1777,6 +1777,50 @@ class NumerAPI(object):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
+    def round_details(self, round_num):
+        """Fetch all correlation scores of a round.
+
+        Args:
+            round_num (int)
+
+        Returns:
+            list of dicts: list containing scores for each user
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * date (`datetime`)
+                * correlation (`float`)
+                * username (`str`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.round_details(180)
+            [{'username': 'abcd',
+              'date': datetime.datetime(2019, 11, 15, 0, 0),
+              'correlation': 0.02116131087},
+              ...
+            ]
+        """
+        query = """
+          query($roundNumber: Int!) {
+            v2RoundDetails(roundNumber: $roundNumber) {
+              userPerformances {
+                date
+                correlation
+                username
+              }
+            }
+          }
+        """
+        arguments = {'roundNumber': round_num}
+        data = self.raw_query(query, arguments)['data']['v2RoundDetails']
+        performances = data['userPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
+
     def daily_submissions_performances(self, username):
         """Fetch daily performance of a user's submissions.
 
@@ -1790,7 +1834,7 @@ class NumerAPI(object):
             content:
 
                 * date (`datetime`)
-                * v (`float`)
+                * correlation (`float`)
                 * roundNumber (`int`)
 
         Example:
