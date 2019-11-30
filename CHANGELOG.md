@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- fix staking after recent changes to the GraphQL backend
+
 ## [2.1.1] - 2019-11-23
 - add `round_details`, returning correlation scores of all users for the round
 

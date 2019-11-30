@@ -1575,13 +1575,9 @@ class NumerAPI(object):
              'status': ''}
         """
         query = '''
-          mutation($code: String
-                   $password: String!
-                   $value: String!
+          mutation($value: String!
                    $type: String!) {
-              v2ChangeStake(code: $code
-                            password: $password
-                            value: $value
+              v2ChangeStake(value: $value
                             type: $type) {
                 dueDate
                 requestedAmount
@@ -1590,12 +1586,7 @@ class NumerAPI(object):
               }
         }
         '''
-        arguments = {'code': 'somecode',
-                     'password': "somepassword",
-                     'value': str(nmr),
-                     'type': action
-
-                     }
+        arguments = {'value': str(nmr), 'type': action}
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']['v2ChangeStake']
         utils.replace(stake, "requestedAmount", utils.parse_float_string)
