@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.1.2] - 2019-11-30
 - fix staking after recent changes to the GraphQL backend
 
 ## [2.1.1] - 2019-11-23
