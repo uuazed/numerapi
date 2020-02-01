@@ -1827,6 +1827,8 @@ class NumerAPI(object):
                 * date (`datetime`)
                 * correlation (`float`)
                 * roundNumber (`int`)
+                * mmc (`float`)
+                * correlationWithMetamodel (`float`)
 
         Example:
             >>> api = NumerAPI()
@@ -1834,6 +1836,8 @@ class NumerAPI(object):
             [{'roundNumber': 181,
               'correlation': -0.011765912,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
+              'mmc': 0.3,
+              'correlationWithMetamodel': 0.87},
               ...
             ]
         """
@@ -1844,6 +1848,8 @@ class NumerAPI(object):
                 date
                 correlation
                 roundNumber
+                mmc
+                correlationWithMetamodel
               }
             }
           }
