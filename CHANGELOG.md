@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [unreleased]
+## [2.1.4] - 2020-03-30 - "Spring cleanup"
 - added "sharpe", "feature exposure" and "correlation with example predictions" to `submission_status`
 - remove deprecated `check_submission_successful`
 - added `bio` and `totalStake` to `public_user_profile`
