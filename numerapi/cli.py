@@ -51,17 +51,6 @@ def v1_leaderboard(round_num=0, tournament=8):
 @cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
-@click.option('--round_num', default=0,
-              help='The round you are interested in, defaults to current round')
-def staking_leaderboard(round_num=0, tournament=8):
-    """Retrieves the staking competition leaderboard for the given round."""
-    click.echo(prettify(napi.get_staking_leaderboard(tournament=tournament,
-                                                     round_num=round_num)))
-
-
-@cli.command()
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
 def competitions(tournament=8):
     """Retrieves information about all competitions"""
     click.echo(prettify(napi.get_competitions(tournament=tournament)))

@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [unreleased]
+- remove deprecated `get_staking_leaderboard`
 - added `mmc` and `correlationWithMetamodel` to `daily_submissions_performances`
 
 ## [2.1.2] - 2019-11-30
