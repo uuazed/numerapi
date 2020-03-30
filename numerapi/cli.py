@@ -77,16 +77,6 @@ def submission_ids(tournament=8):
               help='Number of items to return, defaults to 20')
 @click.option('--offset', default=0,
               help='Number of items to skip, defaults to 0')
-def rankings(limit=20, offset=0):
-    """Get the overall rankings."""
-    click.echo(prettify(napi.get_rankings(limit=limit, offset=offset)))
-
-
-@cli.command()
-@click.option('--limit', default=20,
-              help='Number of items to return, defaults to 20')
-@click.option('--offset', default=0,
-              help='Number of items to skip, defaults to 0')
 def leaderboard(limit=20, offset=0):
     """Get the leaderboard."""
     click.echo(prettify(napi.get_leaderboard(limit=limit, offset=offset)))

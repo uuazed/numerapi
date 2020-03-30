@@ -663,55 +663,6 @@ class NumerAPI(object):
         filenames.sort(key=lambda f: (f['round_num'], f['tournament']))
         return filenames
 
-    def get_rankings(self, limit=50, offset=0):
-        """Get the overall ranking
-
-        Args:
-            limit (int): number of items to return (optional, defaults to 50)
-            offset (int): number of items to skip (optional, defaults to 0)
-
-        Returns:
-            list of dicts: list of ranking items
-
-            Each dict contains the following items:
-
-                * username (`str`)
-                * nmrBurned (`decimal.Decimal`)
-                * nmrEarned (`decimal.Decimal`)
-                * nmrStaked (`decimal.Decimal`)
-                * reputation (`float`)
-                * usdEarned (`decimal.Decimal`)
-
-        Example:
-            >>> numerapi.NumerAPI().get_rankings(1)
-            [{'username': 'glasperlenspiel',
-              'usdEarned': Decimal('16347.12'),
-              'reputation': 0.5121,
-              'nmrStaked': Decimal('250.000000000000000000'),
-              'nmrEarned': Decimal('16061.37'),
-              'nmrBurned': Decimal('295.400000000000000000')]
-        """
-        query = '''
-            query($limit: Int!
-                  $offset: Int!) {
-                  globalLeaderboard(limit: $limit
-                                offset: $offset) {
-                username
-                nmrBurned
-                nmrEarned
-                nmrStaked
-                reputation
-                usdEarned
-              }
-            }
-        '''
-        arguments = {'limit': limit, 'offset': offset}
-        data = self.raw_query(query, arguments)['data']['globalLeaderboard']
-        for item in data:
-            for p in ["nmrBurned", "nmrEarned", "nmrStaked", "usdEarned"]:
-                utils.replace(item, p, utils.parse_float_string)
-        return data
-
     def get_submission_ids(self, tournament=8):
         """Get dict with username->submission_id mapping.
 
