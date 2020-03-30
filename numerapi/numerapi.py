@@ -1554,6 +1554,8 @@ class NumerAPI(object):
                 * historicalNetUsdEarnings (`float`)
                 * historicalNetNmrEarnings (`float`)
                 * badges (`list of str`)
+                * bio (`str`)
+                * totalStake (`float`)
 
         Example:
             >>> api = NumerAPI()
@@ -1564,7 +1566,9 @@ class NumerAPI(object):
              'id': '024c9bb9-77af-4b3f-91c7-63062fce2b80',
              'historicalNetUsdEarnings': '3669.41',
              'historicalNetNmrEarnings': '1094.247665827645663410',
-             'badges': ['burned_3', 'compute_0', 'submission-streak_1']}
+             'badges': ['burned_3', 'compute_0', 'submission-streak_1'],
+             'bio': 'blabla',
+             'totalStake': 12.2}
         """
         query = """
           query($username: String!) {
@@ -1576,6 +1580,8 @@ class NumerAPI(object):
               netEarnings
               startDate
               username
+              bio
+              totalStake
             }
           }
         """

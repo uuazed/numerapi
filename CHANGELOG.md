@@ -5,6 +5,7 @@ Notable changes to this project.
 ## [unreleased]
 - added "sharpe", "feature exposure" and "correlation with example predictions" to `submission_status`
 - remove deprecated `check_submission_successful`
+- added `bio` and `totalStake` to `public_user_profile`
 
 ## [2.1.3] - 2020-03-30
 - fix `get_user_activities`
