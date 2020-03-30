@@ -87,12 +87,6 @@ def test_unauthorized_requests(api, fun):
            "Your session is invalid or has expired." in str(err.value)
 
 
-def test_get_staking_leaderboard(api):
-    stakes = api.get_staking_leaderboard(82, tournament=1)
-    # 115 people staked that round
-    assert len(stakes) == 115
-
-
 def test_get_submission_ids(api):
     ids = api.get_submission_ids()
     assert len(ids) > 0

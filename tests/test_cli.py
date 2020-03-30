@@ -37,13 +37,6 @@ def test_leaderboard(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_staking_leaderboard')
-def test_staking_leaderboard(mocked):
-    result = CliRunner().invoke(cli.staking_leaderboard, ['--tournament', 1])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.get_competitions')
 def test_competitions(mocked):
     result = CliRunner().invoke(cli.competitions, ['--tournament', 1])
