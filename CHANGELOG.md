@@ -2,7 +2,8 @@
 Notable changes to this project.
 
 ## [unreleased]
-- remove deprecated `get_staking_leaderboard`
+- fix `get_user_activities`
+- remove deprecated `get_staking_leaderboard`, `get_nmr_prize_pool`
 - added `mmc` and `correlationWithMetamodel` to `daily_submissions_performances`
 
 ## [2.1.2] - 2019-11-30

@@ -598,7 +598,7 @@ class NumerAPI(object):
                 if item['submission']['date'] is not None]
         for item in data:
             # remove stakes with all values set to None
-            if item['stake']['date'] is None:
+            if item['stake'] is None or item['stake']['date'] is None:
                 del item['stake']
             # parse
             else:
