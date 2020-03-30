@@ -1237,27 +1237,6 @@ class NumerAPI(object):
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
 
-    def check_submission_successful(self, submission_id=None):
-        """Check if the last submission passes submission criteria.
-
-        Args:
-            submission_id (str, optional): submission of interest, defaults to
-                the last submission done with the account
-
-        Return:
-            bool: True if the submission passed all checks, False otherwise.
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> api.upload_predictions("predictions.csv")
-            >>> api.check_submission_successful()
-            True
-        """
-        status = self.submission_status(submission_id)
-        # need to cast to bool to not return None in some cases.
-        success = bool(status["concordance"]["value"])
-        return success
-
     def tournament_number2name(self, number):
         """Translate tournament number to tournament name.
 

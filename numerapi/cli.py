@@ -196,13 +196,6 @@ def submission_status(submission_id):
 
 
 @cli.command()
-@click.argument("submission_id")
-def submission_successful(submission_id):
-    """Check if the last submission passes submission criteria."""
-    click.echo(int(napi.check_submission_successful(submission_id)))
-
-
-@cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
 @click.argument('path', type=click.Path(exists=True))

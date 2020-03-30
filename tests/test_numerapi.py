@@ -195,22 +195,3 @@ def test_check_new_round(api):
     assert api.check_new_round()
     # second
     assert not api.check_new_round()
-
-
-@responses.activate
-@pytest.mark.parametrize('''concordance_pending, concordance_value,
-                            expected''', [
-    (False, True, True),
-    (True, None, False),
-    (False, False, False)])
-def test_check_submission_successful(api, concordance_pending,
-                                     concordance_value, expected):
-    api.token = ("", "")
-    data = {"data": {"submissions": [
-      {"concordance":
-          {"pending": concordance_pending, "value": concordance_value}
-       }
-    ]}}
-    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
-                  json=data)
-    assert api.check_submission_successful(submission_id="") == expected
