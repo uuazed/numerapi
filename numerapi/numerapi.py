@@ -694,7 +694,7 @@ class NumerAPI(object):
         query = '''
             query($limit: Int!
                   $offset: Int!) {
-              globalLeaderboard(limit: $limit
+                  globalLeaderboard(limit: $limit
                                 offset: $offset) {
                 username
                 nmrBurned
@@ -1111,14 +1111,22 @@ class NumerAPI(object):
                  * value (`bool`): whether the submission is concordant
                 * consistency (`float`): consistency of the submission
                 * validationCorrelation (`float`)
+                * filename (`string`)
+                * corrWithExamplePreds (`float`)
+                * validationFeatureExposure (`float`)
+                * validationSharpe (`float`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> api.upload_predictions()
             >>> api.submission_status()
-            {'concordance': {'pending': False, 'value': True},
-             'consistency': 91.66666666666666,
-             'validationCorrelation': 0.53211}
+            {'concordance': None,
+             'consistency': None,
+             'corrWithExamplePreds': 0.3811635610849811,
+             'filename': 'model57-HPzOyr56TPaD.csv',
+             'validationCorrelation': 0.02967954913128146,
+             'validationFeatureExposure': 0.09736206063204657,
+             'validationSharpe': 1.5567641700803665}
         """
         if submission_id is None:
             submission_id = self.submission_id
@@ -1136,6 +1144,10 @@ class NumerAPI(object):
                 }
                 consistency
                 validationCorrelation
+                validationFeatureExposure
+                validationSharpe
+                corrWithExamplePreds
+                filename
               }
             }
             '''
