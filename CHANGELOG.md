@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## [unreleased]
+## [2.1.5] - 2020-04-03
 - added `payoutPending` and `payoutSettled` to `get_leaderboard` (#21)
 - added `sumDeltaCorrelation`, `finalCorrelation`, `payoutPending` and `payoutSettled` to `daily_user_performances` (#21)
 
