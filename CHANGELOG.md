@@ -2,6 +2,10 @@
 Notable changes to this project.
 
 
+## [unreleased]
+- added `payoutPending` and `payoutSettled` to `get_leaderboard` (#21)
+- added `sumDeltaCorrelation`, `finalCorrelation`, `payoutPending` and `payoutSettled` to `daily_user_performances` (#21)
+
 ## [2.1.4] - 2020-03-30 - "Spring cleanup"
 - added "sharpe", "feature exposure" and "correlation with example predictions" to `submission_status`
 - remove deprecated `check_submission_successful`

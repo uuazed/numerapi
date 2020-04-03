@@ -1571,7 +1571,7 @@ class NumerAPI(object):
                 * sumDeltaCorrelation (`float`)
                 * finalCorrelation (`float`)
                 * payoutPending (`float` or None)
-                * payoutSettled(`float` or None)
+                * payoutSettled (`float` or None)
 
         Example:
             >>> api = NumerAPI()
