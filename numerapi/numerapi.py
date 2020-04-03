@@ -1251,6 +1251,8 @@ class NumerAPI(object):
                 * oldStakeValue (`decimal.Decimal`)
                 * leaderboardBonus (`decimal.Decimal`)
                 * averageCorrelationPayout (`decimal.Decimal`)
+                * payoutPending (`decimal.Decimal`)
+                * payoutSettled (`decimal.Decimal`)
                 * bonusPerc (`float`)
                 * badges (`list of str`)
 
@@ -1267,6 +1269,8 @@ class NumerAPI(object):
               'oldStakeValue': Decimal('12'),
               `leaderboardBonus`: Decimal('0.1')
               `averageCorrelationPayout`: Decimal('0.1')
+              `payoutPending`: Decimal('0.1')
+              `payoutSettled`: Decimal('0.1')
               'bonusPerc': 0.5,
               'badges': ['submission-streak_1', 'burned_2']}]
 
@@ -1288,6 +1292,8 @@ class NumerAPI(object):
                 username
                 leaderboardBonus
                 averageCorrelationPayout
+                payoutPending
+                payoutSettled
                 badges
               }
             }
@@ -1562,6 +1568,10 @@ class NumerAPI(object):
                 * date (`datetime`)
                 * averageCorrelationPayout (`float` or None)
                 * averageCorrelation (`float`)
+                * sumDeltaCorrelation (`float`)
+                * finalCorrelation (`float`)
+                * payoutPending (`float` or None)
+                * payoutSettled(`float` or None)
 
         Example:
             >>> api = NumerAPI()
@@ -1573,7 +1583,11 @@ class NumerAPI(object):
               'leaderboardBonus': None,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
               'averageCorrelationPayout': None,
-              'averageCorrelation': -0.000983637},
+              'averageCorrelation': -0.000983637,
+              'sumDeltaCorrelation': -0.000983637,
+              'finalCorrelation': -0.000983637,
+              'payoutPending': None,
+              'payoutSettled': None},
               ...
             ]
         """
@@ -1583,6 +1597,10 @@ class NumerAPI(object):
               dailyUserPerformances {
                 averageCorrelation
                 averageCorrelationPayout
+                sumDeltaCorrelation
+                finalCorrelation
+                payoutPending
+                payoutSettled
                 date
                 leaderboardBonus
                 rank
