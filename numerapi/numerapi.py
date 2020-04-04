@@ -773,7 +773,7 @@ class NumerAPI(object):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_payments(self):
+    def get_payments(self) -> Dict:
         """Get all your payments.
 
         Returns:
@@ -864,7 +864,7 @@ class NumerAPI(object):
             utils.replace(p, "insertedAt", utils.parse_datetime_string)
         return payments
 
-    def get_transactions(self):
+    def get_transactions(self) -> Dict:
         """Get all your deposits and withdrawals.
 
         Returns:
@@ -981,7 +981,7 @@ class NumerAPI(object):
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
 
-    def get_stakes(self):
+    def get_stakes(self) -> List[Dict]:
         """List all your stakes.
 
         Returns:
@@ -1042,7 +1042,7 @@ class NumerAPI(object):
             utils.replace(s, "value", utils.parse_float_string)
         return stakes
 
-    def submission_status(self, submission_id=None):
+    def submission_status(self, submission_id: str = None) -> Dict:
         """submission status of the last submission associated with the account.
 
         Args:
@@ -1102,7 +1102,7 @@ class NumerAPI(object):
         status = data['data']['submissions'][0]
         return status
 
-    def upload_predictions(self, file_path, tournament=8):
+    def upload_predictions(self, file_path: str, tournament: int = 8) -> str:
         """Upload predictions from file.
 
         Args:
@@ -1151,7 +1151,7 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def check_new_round(self, hours=24, tournament=8):
+    def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
         """Check if a new round has started within the last `hours`.
 
         Args:
@@ -1303,7 +1303,7 @@ class NumerAPI(object):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr):
+    def stake_set(self, nmr) -> Dict:
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
@@ -1382,7 +1382,7 @@ class NumerAPI(object):
         stake = data['dailyUserPerformances'][0]['stakeValue']
         return stake
 
-    def stake_change(self, nmr, action="decrease"):
+    def stake_change(self, nmr, action: str = "decrease") -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -1424,7 +1424,7 @@ class NumerAPI(object):
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
 
-    def stake_drain(self):
+    def stake_drain(self) -> Dict:
         """Completely remove your stake.
 
         Returns:
@@ -1445,7 +1445,7 @@ class NumerAPI(object):
         """
         return self.stake_decrease(11000000)
 
-    def stake_decrease(self, nmr):
+    def stake_decrease(self, nmr) -> Dict:
         """Decrease your stake by `value` NMR.
 
         Args:
@@ -1469,7 +1469,7 @@ class NumerAPI(object):
         """
         return self.stake_change(nmr, 'decrease')
 
-    def stake_increase(self, nmr):
+    def stake_increase(self, nmr) -> Dict:
         """Increase your stake by `value` NMR.
 
         Args:
@@ -1493,7 +1493,7 @@ class NumerAPI(object):
         """
         return self.stake_change(nmr, 'increase')
 
-    def public_user_profile(self, username):
+    def public_user_profile(self, username: str) -> Dict:
         """Fetch the public profile of a user.
 
         Args:
@@ -1546,7 +1546,7 @@ class NumerAPI(object):
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
 
-    def daily_user_performances(self, username):
+    def daily_user_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user.
 
         Args:
@@ -1620,7 +1620,7 @@ class NumerAPI(object):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def round_details(self, round_num: int):
+    def round_details(self, round_num: int) -> List[Dict]:
         """Fetch all correlation scores of a round.
 
         Args:
