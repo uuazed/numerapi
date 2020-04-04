@@ -5,6 +5,9 @@ Notable changes to this project.
 - add `rolling_score_rep` to `daily_user_performances` and `get_leaderboard`
 - deprecate `reputation` in `daily_user_performances` and `get_leaderboard`
 
+## [Development]
+- no more Python2 support
+
 ## [2.1.5] - 2020-04-03
 - added `payoutPending` and `payoutSettled` to `get_leaderboard` (#21)
 - added `sumDeltaCorrelation`, `finalCorrelation`, `payoutPending` and `payoutSettled` to `daily_user_performances` (#21)
@@ -93,7 +96,7 @@ Notable changes to this project.
 ## [1.4.5] - 2019-03-05
 - `get_tournaments` now allows to filter for active tournaments only
 -  CLI: `tournaments` gained `active_only` / `all` flags to get all or only
-   the acttive tournaments
+   the active tournaments
 
 ## [1.4.4] - 2019-02-17
 - remove timeout completely to fix upload issues
@@ -130,7 +133,7 @@ Notable changes to this project.
   tournament.
 
 ## [1.2.0] - 2018-08-03
-- added `get_rankings`, which gives access to numer'ai's global leaderboard
+- added `get_rankings`, which gives access to numerai's global leaderboard
 - added `get_user_activities`, that allows to see each user's submission and
   staking activity
 - added `get_submission_filename` to get the submission filename for any user,

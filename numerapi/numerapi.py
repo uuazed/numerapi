@@ -540,14 +540,14 @@ class NumerAPI(object):
                'liveLogloss': None,
                'liveAuroc': None,
                'liveCorrelation': None,
-               'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
+               'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042),
                'consistency': 83.33333333333334,
                'concordance': True},
               'stake': {'value': Decimal('0.10'),
                'usdEarned': None,
                'staked': True,
                'nmrEarned': None,
-               'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845, tzinfo=tzutc()),
+               'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845,
                'confidence': Decimal('0.100000000000000000')},
                'burned': False
               'roundNumber': 116,
@@ -806,8 +806,8 @@ class NumerAPI(object):
             {'payments': [
                 {'nmrAmount': Decimal('0.00'),
                  'round': {'number': 84,
-                 'openTime': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc()),
-                 'resolveTime': datetime.datetime(2018, 1, 1, 18, 0, tzinfo=tzutc()),
+                 'openTime': datetime.datetime(2017, 12, 2, 18, 0,
+                 'resolveTime': datetime.datetime(2018, 1, 1, 18, 0,
                  'resolvedGeneral': True,
                  'resolvedStaking': True},
                  'tournament': 'staking',
@@ -816,12 +816,12 @@ class NumerAPI(object):
                 ],
              'reputationPayments': [
                {'nmrAmount': Decimal('0.1'),
-                'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
+                'insertedAt': datetime.datetime(2017, 12, 2, 18, 0},
                 ...
                 ],
              'otherUsdIssuances': [
                 {'usdAmount': Decimal('0.1'),
-                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
+                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0},
                  ...
              ]
             }
@@ -926,11 +926,11 @@ class NumerAPI(object):
                  'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},},
                  .. ],
              'usdWithdrawals': [
-                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430, tzinfo=tzutc()),
+                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785),
                  'ethAmount': '0.295780674909307710',
                  'from': '0x11.....',
                  'posted': True,
-                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035, tzinfo=tzutc()),
+                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035,
                  'status': 'confirmed',
                  'to': '0x81.....',
                  'txHash': '0x3c....',
@@ -1009,13 +1009,13 @@ class NumerAPI(object):
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> api.get_stakes()
             [{'confidence': Decimal('0.053'),
-              'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000, tzinfo=tzutc()),
+              'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000),
               'roundNumber': 74,
               'soc': Decimal('56.60'),
               'staker': '0x0000000000000000000000000000000000003f9e',
               'status': 'confirmed',
               'tournamentId': 1,
-              'txHash': '0x1cbb985629552a0f57b98a1e30a5e7f101a992121db318cef02e02aaf0e91c95',
+              'txHash': '0x1cbb985629552a0f57b98a1e30acef02e02aaf0e91c95',
               'value': Decimal('3.00')},
               ..
              ]
