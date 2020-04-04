@@ -1,7 +1,7 @@
 import os
 import pytest
 from click.testing import CliRunner
-from mock import patch
+from unittest.mock import patch
 
 from numerapi import cli
 

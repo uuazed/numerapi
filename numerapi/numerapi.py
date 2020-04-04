@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 # System
 import zipfile
 import os
 import logging
 import datetime
 import decimal
+from typing import List, Dict
 
 # Third Party
 import requests
@@ -1188,7 +1187,7 @@ class NumerAPI(object):
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
 
-    def tournament_number2name(self, number):
+    def tournament_number2name(self, number: int) -> str:
         """Translate tournament number to tournament name.
 
         Args:
@@ -1207,7 +1206,7 @@ class NumerAPI(object):
         d = {t['tournament']: t['name'] for t in tournaments}
         return d.get(number, None)
 
-    def tournament_name2number(self, name):
+    def tournament_name2number(self, name: str) -> int:
         """Translate tournament name to tournament number.
 
         Args:
@@ -1228,7 +1227,7 @@ class NumerAPI(object):
 
     #  ################# V2 #####################################
 
-    def get_leaderboard(self, limit=50, offset=0):
+    def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current leaderboard
 
         Args:
@@ -1358,7 +1357,7 @@ class NumerAPI(object):
         elif nmr > current:
             return self.stake_increase(nmr - current)
 
-    def stake_get(self, username):
+    def stake_get(self, username: str) -> float:
         """Get your current stake amount.
 
         Args:
@@ -1625,7 +1624,7 @@ class NumerAPI(object):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def round_details(self, round_num):
+    def round_details(self, round_num: int):
         """Fetch all correlation scores of a round.
 
         Args:
@@ -1669,7 +1668,7 @@ class NumerAPI(object):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def daily_submissions_performances(self, username):
+    def daily_submissions_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user's submissions.
 
         Args:

@@ -7,6 +7,7 @@ Notable changes to this project.
 
 ## [Development]
 - no more Python2 support
+- start adding type hints
 
 ## [2.1.5] - 2020-04-03
 - added `payoutPending` and `payoutSettled` to `get_leaderboard` (#21)
