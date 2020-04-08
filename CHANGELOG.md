@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [development]
+## [2.1.6] - 2020-04-08
 - add `rolling_score_rep` to `daily_user_performances` and `get_leaderboard`
 - deprecate `reputation` in `daily_user_performances` and `get_leaderboard`
 
