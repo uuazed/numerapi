@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [development]
+- add `rolling_score_rep` to `daily_user_performances` and `get_leaderboard`
+- deprecate `reputation` in `daily_user_performances` and `get_leaderboard`
 
 ## [2.1.5] - 2020-04-03
 - added `payoutPending` and `payoutSettled` to `get_leaderboard` (#21)

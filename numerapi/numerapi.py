@@ -1242,7 +1242,8 @@ class NumerAPI(object):
 
                 * username (`str`)
                 * tier (`str`)
-                * reputation (`float`)
+                * reputation (`float`) -- DEPRECATED since 2020-04-05
+                * rolling_score_rep (`float`)
                 * rank (`int`)
                 * prevRank (`int`)
                 * stakedRank (`int`)
@@ -1261,6 +1262,7 @@ class NumerAPI(object):
             [{'username': 'anton',
               'tier': 'C',
               'reputation': -0.00499721,
+              'rolling_score_rep': -0.00499721,
               'rank': 143,
               'prevRank': 116,
               'stakedRank': 103,
@@ -1288,6 +1290,7 @@ class NumerAPI(object):
                 rank
                 stakedRank
                 reputation
+                rolling_score_rep
                 tier
                 username
                 leaderboardBonus
@@ -1562,7 +1565,8 @@ class NumerAPI(object):
 
                 * tier (`str`)
                 * stakeValue (`float` or none)
-                * reputation (`float`)
+                * reputation (`float`) -- DEPRECATED since 2020-04-05
+                * rolling_score_rep (`float`)
                 * rank (`int`)
                 * leaderboardBonus (`float` or None)
                 * date (`datetime`)
@@ -1579,6 +1583,7 @@ class NumerAPI(object):
             [{'tier': 'A',
               'stakeValue': None,
               'reputation': 0.0017099,
+              'rolling_score_rep': 0.0111,
               'rank': 32,
               'leaderboardBonus': None,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
@@ -1605,6 +1610,7 @@ class NumerAPI(object):
                 leaderboardBonus
                 rank
                 reputation
+                rolling_score_rep
                 stakeValue
                 tier
               }
