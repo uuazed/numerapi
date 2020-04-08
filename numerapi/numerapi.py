@@ -1043,7 +1043,7 @@ class NumerAPI(object):
         return stakes
 
     def submission_status(self, submission_id: str = None) -> Dict:
-        """submission status of the last submission associated with the account.
+        """submission status of the last submission associated with the account
 
         Args:
             submission_id (str): submission of interest, defaults to the last

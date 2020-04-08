@@ -24,7 +24,8 @@ def cli():
               help='indication of whether the data should be unzipped')
 def download_dataset(tournament, unzip):
     """Download dataset for the current active round."""
-    click.echo(napi.download_current_dataset(tournament=tournament, unzip=unzip))
+    click.echo(napi.download_current_dataset(
+        tournament=tournament, unzip=unzip))
 
 
 @cli.command()
@@ -39,7 +40,7 @@ def dataset_url(tournament):
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
 @click.option('--round_num', default=0,
-              help='The round you are interested in, defaults to current round')
+              help='The selected round, defaults to current round')
 def v1_leaderboard(round_num=0, tournament=8):
     """Retrieves the leaderboard for the given round."""
     click.echo(prettify(napi.get_v1_leaderboard(tournament=tournament,
