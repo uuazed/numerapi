@@ -77,6 +77,7 @@ To get started with the cli interface, let's take a look at the help page:
       --help  Show this message and exit.
 
     Commands:
+      account                         Get all information about your account!
       check-new-round                 Check if a new round has started within...
       competitions                    Retrieves information about all...
       current-round                   Get number of the current active round.
@@ -85,15 +86,14 @@ To get started with the cli interface, let's take a look at the help page:
       dataset-url                     Fetch url of the current dataset.
       download-dataset                Download dataset for the current active...
       leaderboard                     Get the leaderboard.
+      models                          Get map of account models!
       payments                        List all your payments
       profile                         Fetch the public profile of a user.
-      rankings                        Get the overall rankings.
       stake-decrease                  Decrease your stake by `value` NMR.
       stake-drain                     Completely remove your stake.
       stake-get                       Get stake value of a user.
       stake-increase                  Increase your stake by `value` NMR.
       stakes                          List all your stakes.
-      staking-leaderboard             Retrieves the staking competition...
       submission-filenames            Get filenames of your submissions
       submission-ids                  Get dict with username->submission_id...
       submission-status               checks the submission status
@@ -102,7 +102,7 @@ To get started with the cli interface, let's take a look at the help page:
       tournament-number2name          Translate tournament number to tournament...
       tournaments                     Get all tournaments.
       transactions                    List all your deposits and withdrawals.
-      user                            Get all information about you!
+      user                            Get all information about you! DEPRECATED...
       user-activities                 Get user activities (works for all users!)
       v1-leaderboard                  Retrieves the leaderboard for the given...
       version                         Installed numerapi version.
@@ -117,6 +117,9 @@ Each command has it's own help page, for example:
 
     Options:
       --tournament INTEGER  The ID of the tournament, defaults to 1
+      --model_id TEXT       An account model UUID (required for accounts with
+                            multiple models
+
       --help                Show this message and exit.
 
 
