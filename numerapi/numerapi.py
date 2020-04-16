@@ -132,7 +132,7 @@ class NumerAPI(object):
                 round_number = self.get_current_round(tournament)
             except ValueError:
                 round_number = "x"
-            dest_filename = "numerai_dataset_{round_number}.zip"
+            dest_filename = f"numerai_dataset_{round_number}.zip"
         else:
             # ensure it ends with ".zip"
             if unzip and not dest_filename.endswith(".zip"):
@@ -208,7 +208,7 @@ class NumerAPI(object):
         if authorization:
             if self.token:
                 public_id, secret_key = self.token
-                headers['Authorization'] = 'Token {public_id}${secret_key}'
+                headers['Authorization'] = f'Token {public_id}${secret_key}'
             else:
                 raise ValueError("API keys required for this action.")
 
@@ -327,7 +327,7 @@ class NumerAPI(object):
         result = self.raw_query(query, arguments)['data']['rounds']
 
         if len(result) == 0:
-            msg = "no entries for round {round_num} & tournament {tournament}"
+            msg = f"no entries for round {round_num} & tournament {tournament}"
             self.logger.warning(msg)
             raise ValueError
 
