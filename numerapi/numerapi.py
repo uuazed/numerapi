@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 # System
 import zipfile
 import os
 import logging
 import datetime
 import decimal
+from typing import List, Dict
 
 # Third Party
 import requests
@@ -284,8 +283,6 @@ class NumerAPI(object):
              ...
             ]
         """
-        msg = "getting leaderboard for tournament {} round {}"
-        self.logger.info(msg.format(tournament, round_num))
         query = '''
             query($number: Int!
                   $tournament: Int!) {
@@ -495,7 +492,7 @@ class NumerAPI(object):
             data = [d for d in data if d['active']]
         return data
 
-    def get_account(self):
+    def get_account(self) -> Dict:
         """Get all information about your account!
 
         Returns:
@@ -577,7 +574,7 @@ class NumerAPI(object):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_models(self):
+    def get_models(self) -> Dict:
         """Get mapping of account model names to model ids for convenience
 
         Returns:
@@ -645,14 +642,14 @@ class NumerAPI(object):
                'liveLogloss': None,
                'liveAuroc': None,
                'liveCorrelation': None,
-               'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042, tzinfo=tzutc()),
+               'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042),
                'consistency': 83.33333333333334,
                'concordance': True},
               'stake': {'value': Decimal('0.10'),
                'usdEarned': None,
                'staked': True,
                'nmrEarned': None,
-               'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845, tzinfo=tzutc()),
+               'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845),
                'confidence': Decimal('0.100000000000000000')},
                'burned': False
               'roundNumber': 116,
@@ -717,7 +714,8 @@ class NumerAPI(object):
                           utils.parse_datetime_string)
         return data
 
-    def get_submission_filenames(self, tournament=None, round_num=None, model_id=None):
+    def get_submission_filenames(self, tournament=None, round_num=None,
+                                 model_id=None) -> List[Dict]:
         """Get filenames of the submission of the user.
 
         Args:
@@ -807,7 +805,7 @@ class NumerAPI(object):
                    for item in data['leaderboard']}
         return mapping
 
-    def get_user(self, model_id=None):
+    def get_user(self, model_id: str = None) -> Dict:
         """Get all information about you! DEPRECATED
 
         Args:
@@ -819,12 +817,14 @@ class NumerAPI(object):
                 * assignedEthAddress (`str`)
                 * availableNmr (`decimal.Decimal`)
                 * availableUsd (`decimal.Decimal`)
+                * banned (`bool`)
                 * email (`str`)
                 * id (`str`)
                 * insertedAt (`datetime`)
                 * mfaEnabled (`bool`)
                 * status (`str`)
                 * username (`str`)
+                * country (`str)
                 * apiTokens (`list`) each with the following fields:
                  * name (`str`)
                  * public_id (`str`)
@@ -845,7 +845,9 @@ class NumerAPI(object):
              'assignedEthAddress': '0x0000000000000000000000000001',
              'availableNmr': Decimal('99.01'),
              'availableUsd': Decimal('9.47'),
+             'banned': False,
              'email': 'username@example.com',
+             'country': 'US',
              'id': '1234-ABC..',
              'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
              'mfaEnabled': False,
@@ -859,6 +861,7 @@ class NumerAPI(object):
           query($modelId: String) {
             user(modelId: $modelId) {
               username
+              banned
               assignedEthAddress
               availableNmr
               availableUsd
@@ -866,6 +869,7 @@ class NumerAPI(object):
               id
               mfaEnabled
               status
+              country
               insertedAt
               apiTokens {
                 name
@@ -887,7 +891,7 @@ class NumerAPI(object):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_payments(self, model_id=None):
+    def get_payments(self, model_id: str = None) -> Dict:
         """Get all your payments.
 
         Args:
@@ -919,8 +923,8 @@ class NumerAPI(object):
             {'payments': [
                 {'nmrAmount': Decimal('0.00'),
                  'round': {'number': 84,
-                 'openTime': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc()),
-                 'resolveTime': datetime.datetime(2018, 1, 1, 18, 0, tzinfo=tzutc()),
+                 'openTime': datetime.datetime(2017, 12, 2, 18, 0),
+                 'resolveTime': datetime.datetime(2018, 1, 1, 18, 0),
                  'resolvedGeneral': True,
                  'resolvedStaking': True},
                  'tournament': 'staking',
@@ -929,12 +933,12 @@ class NumerAPI(object):
                 ],
              'reputationPayments': [
                {'nmrAmount': Decimal('0.1'),
-                'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
+                'insertedAt': datetime.datetime(2017, 12, 2, 18, 0)},
                 ...
                 ],
              'otherUsdIssuances': [
                 {'usdAmount': Decimal('0.1'),
-                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0, tzinfo=tzutc())},
+                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0)},
                  ...
              ]
             }
@@ -983,7 +987,7 @@ class NumerAPI(object):
             utils.replace(p, "insertedAt", utils.parse_datetime_string)
         return payments
 
-    def get_account_transactions(self):
+    def get_account_transactions(self) -> Dict:
         """Get all your account deposits and withdrawals.
 
         Returns:
@@ -1064,7 +1068,7 @@ class NumerAPI(object):
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
 
-    def get_transactions(self, model_id=None):
+    def get_transactions(self, model_id: str = None) -> Dict:
         """Get all your deposits and withdrawals.
 
         Args:
@@ -1125,11 +1129,11 @@ class NumerAPI(object):
                  'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},},
                  .. ],
              'usdWithdrawals': [
-                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430, tzinfo=tzutc()),
+                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430),
                  'ethAmount': '0.295780674909307710',
                  'from': '0x11.....',
                  'posted': True,
-                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035, tzinfo=tzutc()),
+                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035),
                  'status': 'confirmed',
                  'to': '0x81.....',
                  'txHash': '0x3c....',
@@ -1187,7 +1191,7 @@ class NumerAPI(object):
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
 
-    def get_stakes(self, model_id=None):
+    def get_stakes(self, model_id: str = None) -> List[Dict]:
         """List all your stakes.
 
         Args:
@@ -1214,13 +1218,13 @@ class NumerAPI(object):
             >>> model = api.get_models()['uuazed']
             >>> api.get_stakes(model)
             [{'confidence': Decimal('0.053'),
-              'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000, tzinfo=tzutc()),
+              'insertedAt': datetime.datetime(2017, 9, 26, 8, 18, 36, 709000),
               'roundNumber': 74,
               'soc': Decimal('56.60'),
               'staker': '0x0000000000000000000000000000000000003f9e',
               'status': 'confirmed',
               'tournamentId': 1,
-              'txHash': '0x1cbb985629552a0f57b98a1e30a5e7f101a992121db318cef02e02aaf0e91c95',
+              'txHash': '0x1cbb985629552a0f57b98a1e30acef02e02aaf0e91c95',
               'value': Decimal('3.00')},
               ..
              ]
@@ -1253,8 +1257,8 @@ class NumerAPI(object):
             utils.replace(s, "value", utils.parse_float_string)
         return stakes
 
-    def submission_status(self, submission_id=None):
-        """submission status of the last submission associated with the account.
+    def submission_status(self, submission_id: str = None) -> Dict:
+        """submission status of the last submission associated with the account
 
         Args:
             submission_id (str): submission of interest, defaults to the last
@@ -1313,7 +1317,7 @@ class NumerAPI(object):
         status = data['data']['submissions'][0]
         return status
 
-    def upload_predictions(self, file_path, tournament=8, model_id=None):
+    def upload_predictions(self, file_path: str, tournament: int = 8, model_id: str = None) -> str:
         """Upload predictions from file.
 
         Args:
@@ -1370,7 +1374,7 @@ class NumerAPI(object):
         self.submission_id = create['data']['create_submission']['id']
         return self.submission_id
 
-    def check_new_round(self, hours=24, tournament=8):
+    def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
         """Check if a new round has started within the last `hours`.
 
         Args:
@@ -1402,7 +1406,7 @@ class NumerAPI(object):
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
 
-    def tournament_number2name(self, number):
+    def tournament_number2name(self, number: int) -> str:
         """Translate tournament number to tournament name.
 
         Args:
@@ -1421,7 +1425,7 @@ class NumerAPI(object):
         d = {t['tournament']: t['name'] for t in tournaments}
         return d.get(number, None)
 
-    def tournament_name2number(self, name):
+    def tournament_name2number(self, name: str) -> int:
         """Translate tournament name to tournament number.
 
         Args:
@@ -1442,7 +1446,7 @@ class NumerAPI(object):
 
     #  ################# V2 #####################################
 
-    def get_leaderboard(self, limit=50, offset=0):
+    def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current leaderboard
 
         Args:
@@ -1456,7 +1460,8 @@ class NumerAPI(object):
 
                 * username (`str`)
                 * tier (`str`)
-                * reputation (`float`)
+                * reputation (`float`) -- DEPRECATED since 2020-04-05
+                * rolling_score_rep (`float`)
                 * rank (`int`)
                 * prevRank (`int`)
                 * stakedRank (`int`)
@@ -1465,6 +1470,8 @@ class NumerAPI(object):
                 * oldStakeValue (`decimal.Decimal`)
                 * leaderboardBonus (`decimal.Decimal`)
                 * averageCorrelationPayout (`decimal.Decimal`)
+                * payoutPending (`decimal.Decimal`)
+                * payoutSettled (`decimal.Decimal`)
                 * bonusPerc (`float`)
                 * badges (`list of str`)
 
@@ -1473,6 +1480,7 @@ class NumerAPI(object):
             [{'username': 'anton',
               'tier': 'C',
               'reputation': -0.00499721,
+              'rolling_score_rep': -0.00499721,
               'rank': 143,
               'prevRank': 116,
               'stakedRank': 103,
@@ -1481,6 +1489,8 @@ class NumerAPI(object):
               'oldStakeValue': Decimal('12'),
               `leaderboardBonus`: Decimal('0.1')
               `averageCorrelationPayout`: Decimal('0.1')
+              `payoutPending`: Decimal('0.1')
+              `payoutSettled`: Decimal('0.1')
               'bonusPerc': 0.5,
               'badges': ['submission-streak_1', 'burned_2']}]
 
@@ -1498,10 +1508,13 @@ class NumerAPI(object):
                 rank
                 stakedRank
                 reputation
+                rolling_score_rep
                 tier
                 username
                 leaderboardBonus
                 averageCorrelationPayout
+                payoutPending
+                payoutSettled
                 badges
               }
             }
@@ -1513,7 +1526,7 @@ class NumerAPI(object):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr):
+    def stake_set(self, nmr) -> Dict:
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
@@ -1563,7 +1576,7 @@ class NumerAPI(object):
         elif nmr > current:
             return self.stake_increase(nmr - current)
 
-    def stake_get(self, username):
+    def stake_get(self, username: str) -> float:
         """Get your current stake amount.
 
         Args:
@@ -1592,7 +1605,7 @@ class NumerAPI(object):
         stake = data['dailyUserPerformances'][0]['stakeValue']
         return stake
 
-    def stake_change(self, nmr, action="decrease", model_id=None):
+    def stake_change(self, nmr, action: str = "decrease", model_id: str = None) -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -1638,7 +1651,7 @@ class NumerAPI(object):
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
 
-    def stake_drain(self, model_id=None):
+    def stake_drain(self, model_id: str = None) -> Dict:
         """Completely remove your stake.
 
         Args:
@@ -1663,7 +1676,7 @@ class NumerAPI(object):
         """
         return self.stake_decrease(11000000, model_id)
 
-    def stake_decrease(self, nmr, model_id=None):
+    def stake_decrease(self, nmr, model_id: str = None) -> Dict:
         """Decrease your stake by `value` NMR.
 
         Args:
@@ -1689,7 +1702,7 @@ class NumerAPI(object):
         """
         return self.stake_change(nmr, 'decrease', model_id)
 
-    def stake_increase(self, nmr, model_id=None):
+    def stake_increase(self, nmr, model_id: str = None) -> Dict:
         """Increase your stake by `value` NMR.
 
         Args:
@@ -1715,7 +1728,7 @@ class NumerAPI(object):
         """
         return self.stake_change(nmr, 'increase', model_id)
 
-    def public_user_profile(self, username):
+    def public_user_profile(self, username: str) -> Dict:
         """Fetch the public profile of a user.
 
         Args:
@@ -1768,7 +1781,7 @@ class NumerAPI(object):
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
 
-    def daily_user_performances(self, username):
+    def daily_user_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user.
 
         Args:
@@ -1782,12 +1795,17 @@ class NumerAPI(object):
 
                 * tier (`str`)
                 * stakeValue (`float` or none)
-                * reputation (`float`)
+                * reputation (`float`) -- DEPRECATED since 2020-04-05
+                * rolling_score_rep (`float`)
                 * rank (`int`)
                 * leaderboardBonus (`float` or None)
                 * date (`datetime`)
                 * averageCorrelationPayout (`float` or None)
                 * averageCorrelation (`float`)
+                * sumDeltaCorrelation (`float`)
+                * finalCorrelation (`float`)
+                * payoutPending (`float` or None)
+                * payoutSettled (`float` or None)
 
         Example:
             >>> api = NumerAPI()
@@ -1795,11 +1813,16 @@ class NumerAPI(object):
             [{'tier': 'A',
               'stakeValue': None,
               'reputation': 0.0017099,
+              'rolling_score_rep': 0.0111,
               'rank': 32,
               'leaderboardBonus': None,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
               'averageCorrelationPayout': None,
-              'averageCorrelation': -0.000983637},
+              'averageCorrelation': -0.000983637,
+              'sumDeltaCorrelation': -0.000983637,
+              'finalCorrelation': -0.000983637,
+              'payoutPending': None,
+              'payoutSettled': None},
               ...
             ]
         """
@@ -1809,10 +1832,15 @@ class NumerAPI(object):
               dailyUserPerformances {
                 averageCorrelation
                 averageCorrelationPayout
+                sumDeltaCorrelation
+                finalCorrelation
+                payoutPending
+                payoutSettled
                 date
                 leaderboardBonus
                 rank
                 reputation
+                rolling_score_rep
                 stakeValue
                 tier
               }
@@ -1827,7 +1855,7 @@ class NumerAPI(object):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def round_details(self, round_num):
+    def round_details(self, round_num: int) -> List[Dict]:
         """Fetch all correlation scores of a round.
 
         Args:
@@ -1871,7 +1899,7 @@ class NumerAPI(object):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def daily_submissions_performances(self, username):
+    def daily_submissions_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user's submissions.
 
         Args:
