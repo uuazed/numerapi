@@ -91,14 +91,16 @@ def user_activities(username, tournament=8):
 
 
 @cli.command()
-@click.option('--tournament', type=int,
+@click.option('--tournament', type=int, default=None,
               help='filter by ID of the tournament, defaults to None')
-@click.option('--round_num', type=int,
+@click.option('--round_num', type=int, default=None,
               help='filter by round number, defaults to None')
-def submission_filenames(round_num=None, tournament=None):
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def submission_filenames(round_num, tournament, model_id):
     """Get filenames of your submissions"""
     click.echo(prettify(
-        napi.get_submission_filenames(tournament, round_num)))
+        napi.get_submission_filenames(tournament, round_num, model_id)))
 
 
 @cli.command()
@@ -112,10 +114,21 @@ def check_new_round(hours=24, tournament=8):
 
 
 @cli.command()
-def user():
-    """Get all information about you!"""
-    click.echo(prettify(napi.get_user()))
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def user(model_id):
+    """Get all information about you! DEPRECATED - use account"""
+    click.echo(prettify(napi.get_user(model_id)))
 
+@cli.command()
+def account():
+    """Get all information about your account!"""
+    click.echo(prettify(napi.get_account()))
+
+@cli.command()
+def models():
+    """Get map of account models!"""
+    click.echo(prettify(napi.get_models()))
 
 @cli.command()
 @click.argument("username")
@@ -139,21 +152,27 @@ def daily_submissions_performances(username):
 
 
 @cli.command()
-def payments():
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def payments(model_id):
     """List all your payments"""
-    click.echo(prettify(napi.get_payments()))
+    click.echo(prettify(napi.get_payments(model_id)))
 
 
 @cli.command()
-def transactions():
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def transactions(model_id):
     """List all your deposits and withdrawals."""
-    click.echo(prettify(napi.get_transactions()))
+    click.echo(prettify(napi.get_transactions(model_id)))
 
 
 @cli.command()
-def stakes():
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def stakes(model_id):
     """List all your stakes."""
-    click.echo(prettify(napi.get_stakes()))
+    click.echo(prettify(napi.get_stakes(model_id)))
 
 
 @cli.command()
@@ -187,10 +206,12 @@ def submission_status(submission_id):
 @cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
 @click.argument('path', type=click.Path(exists=True))
-def submit(path, tournament):
+def submit(path, tournament, model_id):
     """Upload predictions from file."""
-    click.echo(napi.upload_predictions(path, tournament))
+    click.echo(napi.upload_predictions(path, tournament, model_id))
 
 
 @cli.command()
@@ -201,23 +222,29 @@ def stake_get(username):
 
 
 @cli.command()
-def stake_drain():
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def stake_drain(model_id):
     """Completely remove your stake."""
-    click.echo(napi.stake_drain())
+    click.echo(napi.stake_drain(model_id))
 
 
 @cli.command()
 @click.argument("nmr")
-def stake_decrease(nmr):
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def stake_decrease(nmr, model_id):
     """Decrease your stake by `value` NMR."""
-    click.echo(napi.stake_decrease(nmr))
+    click.echo(napi.stake_decrease(nmr, model_id))
 
 
 @cli.command()
 @click.argument("nmr")
-def stake_increase(nmr):
+@click.option('--model_id', type=str, default=None,
+              help="An account model UUID (required for accounts with multiple models")
+def stake_increase(nmr, model_id):
     """Increase your stake by `value` NMR."""
-    click.echo(napi.stake_increase(nmr))
+    click.echo(napi.stake_increase(nmr, model_id))
 
 
 @cli.command()
