@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [Development]
+## [2.2.0] - 2020-04-17
 - no more Python2 support
 - added type hints
 - add `get_account` to return private account information and deprecates `get_user` (#23)
