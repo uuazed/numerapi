@@ -4,8 +4,8 @@ Notable changes to this project.
 ## [Development]
 - no more Python2 support
 - added type hints
-- add `get_account` to return private account information and deprecates `get_user`
-- incorporates updates to the Numerai tournament API in anticipation of the rollout of a new account system with multi-model support
+- add `get_account` to return private account information and deprecates `get_user` (#23)
+- incorporates updates to the Numerai tournament API in anticipation of the rollout of a new account system with multi-model support (#23)
 
 ## [2.1.6] - 2020-04-08
 - add `rolling_score_rep` to `daily_user_performances` and `get_leaderboard`
