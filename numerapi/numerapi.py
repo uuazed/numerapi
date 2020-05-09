@@ -1257,12 +1257,14 @@ class NumerAPI(object):
             utils.replace(s, "value", utils.parse_float_string)
         return stakes
 
-    def submission_status(self, submission_id: str = None) -> Dict:
+    def submission_status(self, submission_id: str = None,
+                          model_id: str = None) -> Dict:
         """submission status of the last submission associated with the account
 
         Args:
             submission_id (str): submission of interest, defaults to the last
                 submission done with the account
+            model_id (str)
 
         Returns:
             dict: submission status with the following content:
@@ -1297,8 +1299,10 @@ class NumerAPI(object):
                               a submission ID')
 
         query = '''
-            query($submission_id: String!) {
-              submissions(id: $submission_id) {
+            query($submission_id: String!
+                  $model_id: String!) {
+              submissions(id: $submission_id
+                          model_id: $model_id) {
                 concordance {
                   pending
                   value
