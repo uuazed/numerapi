@@ -1316,7 +1316,7 @@ class NumerAPI(object):
               }
             }
             '''
-        variable = {'submission_id': submission_id}
+        variable = {'submission_id': submission_id, 'model_id': model_id}
         data = self.raw_query(query, variable, authorization=True)
         status = data['data']['submissions'][0]
         return status

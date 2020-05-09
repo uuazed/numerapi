@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [2.2.1] - 2020-05-09
+## [2.2.2] - 2020-05-09
 - fix `submission_status` for multi model accounts
 
 ## [2.2.0] - 2020-04-17
