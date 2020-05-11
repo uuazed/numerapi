@@ -1,6 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+## [2.2.3] - 2020-05-11
+- Remove required model_id annotation for submissions status lookups so that None can be passed
+- Use consistent modelId in query spec
+- Update doc examples
+
 ## [2.2.2] - 2020-05-09
 - fix `submission_status` for multi model accounts
 
