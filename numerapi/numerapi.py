@@ -1281,8 +1281,9 @@ class NumerAPI(object):
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> api.upload_predictions()
-            >>> api.submission_status()
+            >>> model_id = api.get_models()['uuazed']
+            >>> sub_id = api.upload_predictions("predictions.csv", model_id=model_id)
+            >>> api.submission_status(sub_id, model_id)
             {'concordance': None,
              'consistency': None,
              'corrWithExamplePreds': 0.3811635610849811,
@@ -1300,9 +1301,9 @@ class NumerAPI(object):
 
         query = '''
             query($submission_id: String!
-                  $model_id: String!) {
+                  $modelId: String) {
               submissions(id: $submission_id
-                          model_id: $model_id) {
+                          modelId: $modelId) {
                 concordance {
                   pending
                   value
@@ -1316,7 +1317,7 @@ class NumerAPI(object):
               }
             }
             '''
-        variable = {'submission_id': submission_id, 'model_id': model_id}
+        variable = {'submission_id': submission_id, 'modelId': model_id}
         data = self.raw_query(query, variable, authorization=True)
         status = data['data']['submissions'][0]
         return status
@@ -1334,8 +1335,8 @@ class NumerAPI(object):
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model = api.get_models()['uuazed']
-            >>> api.upload_predictions(model)
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.upload_predictions("prediction.cvs", model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
         """
         self.logger.info("uploading predictions...")
