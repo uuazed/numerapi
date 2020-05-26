@@ -7,3 +7,4 @@ except:
 
 
 from numerapi.numerapi import NumerAPI
+from numerapi.quantapi import QuantAPI

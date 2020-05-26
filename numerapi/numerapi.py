@@ -17,7 +17,7 @@ from numerapi import utils
 API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 
 
-class NumerAPI(object):
+class NumerAPI:
     """Wrapper around the Numerai API
 
     Automatically download and upload data for the Numerai machine learning
