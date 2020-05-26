@@ -1,10 +1,10 @@
 from typing import List, Dict
 
-from numerapi.numerapi import NumerAPI
+from numerapi import base_api
 from numerapi import utils
 
 
-class QuantAPI(NumerAPI):
+class QuantAPI(base_api.Api):
 
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current numerai–quant leaderboard
