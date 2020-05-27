@@ -141,3 +141,90 @@ class QuantAPI(base_api.Api):
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
+
+    def daily_user_performances(self, username: str) -> List[Dict]:
+        """Fetch daily quant performance of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of daily user performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * rank (`int`)
+                * date (`datetime`)
+                * sharpe (`float`)
+
+        Example:
+            >>> api = QuantAPI()
+            >>> api.daily_user_performances("floury_kerril_moodle")
+            [{'date': datetime.datetime(2020, 5, 16, 0, 0,
+              'rank': 1,
+              'sharpe': 2.35},
+             ...]
+        """
+        query = """
+          query($username: String!) {
+            quantUserProfile(username: $username) {
+              dailyUserPerformances {
+                rank
+                date
+                sharpe
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['quantUserProfile']
+        performances = data['dailyUserPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
+
+    def daily_submissions_performances(self, username: str) -> List[Dict]:
+        """Fetch daily quant performance of a user's submissions.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of daily submission performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * date (`datetime`)
+                * returns (`float`)
+                * submission_time (`datetime`)
+
+        Example:
+            >>> api = QuantAPI()
+            >>> api.daily_submissions_performances("floury_kerril_moodle")
+            [{'date': datetime.datetime(2020, 5, 16, 0, 0),
+              'returns': 1.256,
+              'submissionTime': datetime.datetime(2020, 5, 12, 1, 23)},
+             ...
+        """
+        query = """
+          query($username: String!) {
+            quantUserProfile(username: $username) {
+              dailySubmissionPerformances {
+                date
+                returns
+                submissionTime
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['quantUserProfile']
+        performances = data['dailySubmissionPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+            utils.replace(perf, "submissionTime", utils.parse_datetime_string)
+        return performances
