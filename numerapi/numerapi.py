@@ -29,7 +29,7 @@ class NumerAPI(object):
     much more.
     """
 
-    def __init__(self, public_id=None, secret_key=None, verbosity="INFO",
+    def __init__(self, public_id=None, secret_key=None, verbosity=None,
                  show_progress_bars=True):
         """
         initialize Numerai API wrapper for Python
@@ -39,17 +39,11 @@ class NumerAPI(object):
                 Numer.ai->Account->Custom API keys
             secret_key (str): second part of your token generated at
                 Numer.ai->Account->Custom API keys
-            verbosity (str): indicates what level of messages should be
-                displayed. valid values are "debug", "info", "warning",
-                "error" and "critical"
+            verbosity (str): deprecated
             show_progress_bars (bool): flag to turn of progress bars
         """
 
-        # set up logging
         self.logger = logging.getLogger(__name__)
-        numeric_log_level = getattr(logging, verbosity.upper())
-        log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
-        logging.basicConfig(format=log_format, level=numeric_log_level)
 
         self._login(public_id, secret_key)
 
