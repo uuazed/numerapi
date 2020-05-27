@@ -10,7 +10,8 @@ competition.
 
 This library is a Python client to the Numerai API. The interface is programmed
 in Python and allows downloading the training data, uploading predictions, and
-accessing user, submission and competitions information.
+accessing user, submission and competitions information. It works for both, the
+main competition and the newer Numerai-quant competition.
 
 If you encounter a problem or have suggestions, feel free to open an issue.
 
@@ -31,7 +32,7 @@ and `NUMERAI_SECRET_KEY`).
 
 ## Python module
 
-Usage example:
+### Usage example - main competition
 
     import numerapi
     # some API calls do not require logging in
@@ -51,7 +52,7 @@ Usage example:
     # provide api tokens
     example_public_id = "somepublicid"
     example_secret_key = "somesecretkey"
-    napi = NumerAPI(example_public_id, example_secret_key)
+    napi = numerapi.NumerAPI(example_public_id, example_secret_key)
 
     # upload predictions
     submission_id = napi.upload_predictions("preds.csv", tournament=1)
@@ -63,6 +64,28 @@ Usage example:
     # convert results to a pandas dataframe
     import pandas as pd
     df = pd.io.json.json_normalize(napi.daily_user_performances("uuazed"), sep="-")
+
+
+### Usage example - numerai quant
+
+    import numerapi
+
+    napi = numerapi.QuantAPI()
+    # get current leaderboard
+    leaderboard = napi.get_leaderboard()
+
+    # setup API with api tokens
+    example_public_id = "somepublicid"
+    example_secret_key = "somesecretkey"
+    napi = numerapi.QuantAPI(example_public_id, example_secret_key)
+
+    # upload predictions
+    napi.upload_predictions("preds.csv", tournament=1)
+
+    # get daily performance as pandas dataframe
+    import pandas as pd
+    df = pd.DataFrame(napi.daily_user_performances("uuazed"))
+
 
 ## Command line interface
 
