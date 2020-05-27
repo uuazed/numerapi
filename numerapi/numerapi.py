@@ -52,7 +52,7 @@ class NumerAPI(base_api.Api):
 
         Example:
             >>> NumerAPI().get_dataset_url()
-            https://numerai-datasets.s3.amazonaws.com/t1/104/numerai_datasets.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYNVLTPMU6QILOHA%2F20180424%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20180424T084911Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=83863db44689c9907da6d3c8ac28160cd5e2d17aa90f12c7eee6811810e4b8d3
+            https://numerai-datasets.s3.amazonaws.com/t1/104/n.........
         """
         query = """
             query($tournament: Int!) {
@@ -505,7 +505,8 @@ class NumerAPI(base_api.Api):
         Args:
             tournament (int): optionally filter by ID of the tournament
             round_num (int): optionally filter round number
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             list: list of user filenames (`dict`)
@@ -540,7 +541,8 @@ class NumerAPI(base_api.Api):
           }
         """
         arguments = {'modelId': model_id}
-        data = self.raw_query(query, arguments, authorization=True)['data']['model']
+        data = self.raw_query(
+            query, arguments, authorization=True)['data']['model']
 
         filenames = [{"round_num": item['round']['number'],
                       "tournament": item['round']['tournament'],
@@ -593,7 +595,8 @@ class NumerAPI(base_api.Api):
         """Get all information about you! DEPRECATED
 
         Args:
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict: user information including the following fields:
@@ -668,7 +671,8 @@ class NumerAPI(base_api.Api):
           }
         """
         arguments = {'modelId': model_id}
-        data = self.raw_query(query, arguments, authorization=True)['data']['user']
+        data = self.raw_query(
+            query, arguments, authorization=True)['data']['user']
         # convert strings to python objects
         utils.replace(data, "insertedAt", utils.parse_datetime_string)
         utils.replace(data, "availableUsd", utils.parse_float_string)
@@ -679,7 +683,8 @@ class NumerAPI(base_api.Api):
         """Get all your payments.
 
         Args:
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict of lists: payments & reputationPayments
@@ -775,7 +780,8 @@ class NumerAPI(base_api.Api):
         """List all your stakes.
 
         Args:
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             list of dicts: stakes
@@ -862,7 +868,8 @@ class NumerAPI(base_api.Api):
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
-            >>> sub_id = api.upload_predictions("predictions.csv", model_id=model_id)
+            >>> sub_id = api.upload_predictions(
+                "predictions.csv", model_id=model_id)
             >>> api.submission_status(sub_id, model_id)
             {'concordance': None,
              'consistency': None,
@@ -902,13 +909,15 @@ class NumerAPI(base_api.Api):
         status = data['data']['submissions'][0]
         return status
 
-    def upload_predictions(self, file_path: str, tournament: int = 8, model_id: str = None) -> str:
+    def upload_predictions(self, file_path: str, tournament: int = 8,
+                           model_id: str = None) -> str:
         """Upload predictions from file.
 
         Args:
             file_path (str): CSV file with predictions that will get uploaded
             tournament (int): ID of the tournament (optional, defaults to 8)
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             str: submission_id
@@ -1190,13 +1199,15 @@ class NumerAPI(base_api.Api):
         stake = data['dailyUserPerformances'][0]['stakeValue']
         return stake
 
-    def stake_change(self, nmr, action: str = "decrease", model_id: str = None) -> Dict:
+    def stake_change(self, nmr, action: str = "decrease",
+                     model_id: str = None) -> Dict:
         """Change stake by `value` NMR.
 
         Args:
             nmr (float or str): amount of NMR you want to reduce
             action (str): `increase` or `decrease`
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict: stake information with the following content:
@@ -1240,7 +1251,8 @@ class NumerAPI(base_api.Api):
         """Completely remove your stake.
 
         Args:
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict: stake information with the following content:
@@ -1266,7 +1278,8 @@ class NumerAPI(base_api.Api):
 
         Args:
             nmr (float or str): amount of NMR you want to reduce
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict: stake information with the following content:
@@ -1292,7 +1305,8 @@ class NumerAPI(base_api.Api):
 
         Args:
             nmr (float or str): amount of additional NMR you want to stake
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict: stake information with the following content:

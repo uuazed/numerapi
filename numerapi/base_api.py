@@ -228,7 +228,8 @@ class Api:
             }
           }
         """
-        data = self.raw_query(query, authorization=True)['data']['account']['models']
+        data = self.raw_query(
+            query, authorization=True)['data']['account']['models']
         mapping = {model['name']: model['id'] for model in data}
         return mapping
 
@@ -374,18 +375,19 @@ class Api:
                  'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},},
                  .. ],
              'usdWithdrawals': [
-                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2, 785430),
+                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2),
                  'ethAmount': '0.295780674909307710',
                  'from': '0x11.....',
                  'posted': True,
-                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25, 235035),
+                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25),
                  'status': 'confirmed',
                  'to': '0x81.....',
                  'txHash': '0x3c....',
                  'usdAmount': Decimal('10.07')},
                  ..]}
         """
-        self.logger.warning("Method get_transactions is DEPRECATED, use get_account_transactions")
+        self.logger.warning(
+            "Method get_transactions is DEPRECATED, use get_account_transactions")
         query = """
           query($modelId: String) {
             user(modelId: $modelId) {
@@ -422,7 +424,8 @@ class Api:
           }
         """
         arguments = {'modelId': model_id}
-        txs = self.raw_query(query, arguments, authorization=True)['data']['user']
+        txs = self.raw_query(
+            query, arguments, authorization=True)['data']['user']
         # convert strings to python objects
         for t in txs['usdWithdrawals']:
             utils.replace(t, "confirmTime", utils.parse_datetime_string)
