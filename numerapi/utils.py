@@ -5,13 +5,7 @@ import os
 import errno
 import decimal
 import logging
-
-
-# work-around needed for Python2
-try:
-    from json.decoder import JSONDecodeError
-except ImportError:
-    JSONDecodeError = ValueError
+import json
 
 
 logger = logging.getLogger(__name__)
@@ -81,6 +75,6 @@ def post_with_err_handling(url, body, headers, timeout=None):
     except UnboundLocalError as e:
         # `r` isn't available, probably because the try/except above failed
         pass
-    except JSONDecodeError as e:
+    except json.decoder.JSONDecodeError as e:
         logger.error("Did not receive a valid JSON: {}".format(e))
         return {}
