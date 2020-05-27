@@ -1,5 +1,7 @@
 from typing import List, Dict
 
+import requests
+
 from numerapi import base_api
 from numerapi import utils
 

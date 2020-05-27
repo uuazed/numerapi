@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 # System
-import zipfile
 import os
 import logging
 import datetime
 import decimal
-from typing import List, Dict
+from typing import Dict
 
 # Third Party
 import requests
-import pytz
 
 from numerapi import utils
 

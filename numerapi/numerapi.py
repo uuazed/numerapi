@@ -3,7 +3,6 @@
 # System
 import zipfile
 import os
-import logging
 import datetime
 import decimal
 from typing import List, Dict
