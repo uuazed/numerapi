@@ -14,8 +14,6 @@ import pytz
 from numerapi import utils
 from numerapi import base_api
 
-API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
-
 
 class NumerAPI(base_api.Api):
     """Wrapper around the Numerai API

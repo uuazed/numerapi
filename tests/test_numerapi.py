@@ -6,6 +6,7 @@ import pytz
 import responses
 
 import numerapi
+from numerapi import base_api
 
 
 @pytest.fixture(scope='function', name="api")
@@ -84,12 +85,10 @@ def test_upload_predictions(api, tmpdir):
     # we need to mock 3 network calls: 1. auth 2. file upload and 3. submission
     data = {"data": {"submission_upload_auth": {"url": "https://uploadurl",
                                                 "filename": "filename"}}}
-    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
-                  json=data)
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
     responses.add(responses.PUT, "https://uploadurl")
     data = {"data": {"create_submission": {"id": "1234"}}}
-    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
-                  json=data)
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
 
     path = tmpdir.join("somefilepath")
     path.write("content")
@@ -110,8 +109,7 @@ def test_get_stakes(api):
              "status": "-",
              "value": "0.4"}
     data = {'data': {'model': {'stakeTxs': [stake]}}}
-    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
-                  json=data)
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
     stakes = api.get_stakes()
     assert len(stakes) == 1
     assert stakes[0]["confidence"] == decimal.Decimal("0.4")
@@ -122,13 +120,11 @@ def test_get_stakes(api):
 def test_check_new_round(api):
     open_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
-    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
-                  json=data)
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
 
     open_time = datetime.datetime(2000, 1, 1).replace(tzinfo=pytz.utc)
     data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
-    responses.add(responses.POST, numerapi.numerapi.API_TOURNAMENT_URL,
-                  json=data)
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
 
     # first example
     assert api.check_new_round()

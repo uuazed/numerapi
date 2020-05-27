@@ -66,13 +66,15 @@ def test_get_account(api):
                'mfaEnabled': False,
                'models': [{'id': '881778ad-2ee9-4fb0-82b4-7b7c0f7ce17d',
                            'name': 'model1',
-                           'submissions': [{'filename': 'predictions-pPbLKSHGiR.csv',
-                                            'id': 'f2369b69-8c43-47aa-b4de-de3a9de5f52c'}],
+                           'submissions':
+                            [{'filename': 'predictions-pPbLKSHGiR.csv',
+                              'id': 'f2369b69-8c43-47aa-b4de-de3a9de5f52c'}],
                            'v2Stake': {'status': None, 'txHash': None}},
                           {'id': '881778ad-2ee9-4fb0-82b4-7b7c0f7ce17d',
                            'name': 'model2',
-                           'submissions': [{'filename': 'predictions-pPbPOWQNGiR.csv',
-                                            'id': '46a62500-87c7-4d7c-98ad-b743037e8cfd'}],
+                           'submissions':
+                           [{'filename': 'predictions-pPbPOWQNGiR.csv',
+                             'id': '46a62500-87c7-4d7c-98ad-b743037e8cfd'}],
                            'v2Stake': {'status': None, 'txHash': None}}],
                'status': 'VERIFIED',
                'username': 'username1',
@@ -88,8 +90,9 @@ def test_get_account(api):
 @responses.activate
 def test_get_models(api):
     api.token = ("", "")
-    models_list = [dict(name="model_x", id="95b0d9e2-c901-4f2b-9c98-24138b0bd706"),
-                   dict(name="model_y", id="2c6d63a4-013f-42d1-bbaf-bf35725d29f7")]
+    models_list = [
+        {"name": "model_x", "id": "95b0d9e2-c901-4f2b-9c98-24138b0bd706"},
+        {"name": "model_y", "id": "2c6d63a4-013f-42d1-bbaf-bf35725d29f7"}]
     data = {'data': {'account': {'models': models_list}}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
     models = api.get_models()
@@ -107,7 +110,8 @@ def test_get_account_transactions(api):
            "to": "-",
            "txHash": "-",
            "value": "0.4"}
-    data = {'data': {'account': {'nmrDeposits': [nmr], 'nmrWithdrawals': [nmr]}}}
+    data = {'data': {'account':
+            {'nmrDeposits': [nmr], 'nmrWithdrawals': [nmr]}}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
     txs = api.get_account_transactions()
     for txtype in ['nmrDeposits', 'nmrWithdrawals']:
