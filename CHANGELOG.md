@@ -2,8 +2,9 @@
 Notable changes to this project.
 
 ## [dev]
-- numerai-quant API
-
+- added API for Numerai Signals
+- refactor codebase
+- more tests
 
 ## [2.2.4] - 2020-05-11
 - Remove required model_id annotation for submissions status lookups so that None can be passed
