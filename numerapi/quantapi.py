@@ -7,10 +7,10 @@ from numerapi import base_api
 from numerapi import utils
 
 
-class QuantAPI(base_api.Api):
+class SignalsAPI(base_api.Api):
 
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
-        """Get the current numerai–quant leaderboard
+        """Get the current Numerai Signals leaderboard
         Args:
             limit (int): number of items to return (optional, defaults to 50)
             offset (int): number of items to skip (optional, defaults to 0)
@@ -23,7 +23,7 @@ class QuantAPI(base_api.Api):
                 * prevRank (`int`)
                 * today (`float`)
         Example:
-            >>> numerapi.QuantAPI().get_leaderboard(1)
+            >>> numerapi.SignalsAPI().get_leaderboard(1)
             [{'prevRank': 1,
               'rank': 1,
               'sharpe': 2.3,
@@ -60,7 +60,7 @@ class QuantAPI(base_api.Api):
             str: submission_id
 
         Example:
-            >>> api = QuantAPI(secret_key="..", public_id="..")
+            >>> api = SignalsAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
             >>> api.upload_predictions("prediction.cvs", model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
@@ -117,7 +117,7 @@ class QuantAPI(base_api.Api):
                 * filteredCount (`int`)
 
         Example:
-            >>> api = QuantAPI(secret_key="..", public_id="..")
+            >>> api = SignalsAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
             >>> api.submission_status(model_id)
             {'firstEffectiveDate': datetime.datetime(2020, 5, 12, 1, 23),
@@ -151,7 +151,7 @@ class QuantAPI(base_api.Api):
         return status
 
     def public_user_profile(self, username: str) -> Dict:
-        """Fetch the public quant profile of a user.
+        """Fetch the public Numerai Signals profile of a user.
 
         Args:
             username (str)
@@ -167,7 +167,7 @@ class QuantAPI(base_api.Api):
                 * sharpe (`float`)
 
         Example:
-            >>> api = QuantAPI()
+            >>> api = SignalsAPI()
             >>> api.public_user_profile("floury_kerril_moodle")
             {'bio': None,
              'id': '635db2a4-bdc6-4e5d-b515-f5120392c8c9',
@@ -196,7 +196,7 @@ class QuantAPI(base_api.Api):
         return data
 
     def daily_user_performances(self, username: str) -> List[Dict]:
-        """Fetch daily quant performance of a user.
+        """Fetch daily Numerai Signals performance of a user.
 
         Args:
             username (str)
@@ -212,7 +212,7 @@ class QuantAPI(base_api.Api):
                 * sharpe (`float`)
 
         Example:
-            >>> api = QuantAPI()
+            >>> api = SignalsAPI()
             >>> api.daily_user_performances("floury_kerril_moodle")
             [{'date': datetime.datetime(2020, 5, 16, 0, 0,
               'rank': 1,
@@ -239,7 +239,7 @@ class QuantAPI(base_api.Api):
         return performances
 
     def daily_submissions_performances(self, username: str) -> List[Dict]:
-        """Fetch daily quant performance of a user's submissions.
+        """Fetch daily Numerai Signals performance of a user's submissions.
 
         Args:
             username (str)
@@ -255,7 +255,7 @@ class QuantAPI(base_api.Api):
                 * submission_time (`datetime`)
 
         Example:
-            >>> api = QuantAPI()
+            >>> api = SignalsAPI()
             >>> api.daily_submissions_performances("floury_kerril_moodle")
             [{'date': datetime.datetime(2020, 5, 16, 0, 0),
               'returns': 1.256,

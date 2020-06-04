@@ -11,7 +11,7 @@ competition.
 This library is a Python client to the Numerai API. The interface is programmed
 in Python and allows downloading the training data, uploading predictions, and
 accessing user, submission and competitions information. It works for both, the
-main competition and the newer Numerai-quant competition.
+main competition and the newer Numerai Signals competition.
 
 If you encounter a problem or have suggestions, feel free to open an issue.
 
@@ -55,7 +55,8 @@ and `NUMERAI_SECRET_KEY`).
     napi = numerapi.NumerAPI(example_public_id, example_secret_key)
 
     # upload predictions
-    submission_id = napi.upload_predictions("preds.csv", tournament=1)
+    model_id = api.get_models()['uuazed']
+    submission_id = napi.upload_predictions("preds.csv", model_id=model_id)
     # check submission status
     napi.submission_status()
     # increase your stake by 1.2 NMR
@@ -66,21 +67,22 @@ and `NUMERAI_SECRET_KEY`).
     df = pd.io.json.json_normalize(napi.daily_user_performances("uuazed"), sep="-")
 
 
-### Usage example - numerai quant
+### Usage example - Numerai Signals
 
     import numerapi
 
-    napi = numerapi.QuantAPI()
+    napi = numerapi.SignalsAPI()
     # get current leaderboard
     leaderboard = napi.get_leaderboard()
 
     # setup API with api tokens
     example_public_id = "somepublicid"
     example_secret_key = "somesecretkey"
-    napi = numerapi.QuantAPI(example_public_id, example_secret_key)
+    napi = numerapi.SignalsAPI(example_public_id, example_secret_key)
 
     # upload predictions
-    napi.upload_predictions("preds.csv", tournament=1)
+    model_id = api.get_models()['uuazed']
+    napi.upload_predictions("preds.csv", model_id=model_id)
 
     # get daily performance as pandas dataframe
     import pandas as pd

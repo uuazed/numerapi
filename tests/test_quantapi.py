@@ -11,7 +11,7 @@ from numerapi import base_api
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
-    api = numerapi.QuantAPI(verbosity='DEBUG')
+    api = numerapi.SignalsAPI(verbosity='DEBUG')
     return api
 
 
