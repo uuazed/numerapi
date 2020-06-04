@@ -97,8 +97,58 @@ class QuantAPI(base_api.Api):
             '''
         arguments = {'filename': auth['filename'], 'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
-        self.submission_id = create['data']['create_quant_submission']['id']
-        return self.submission_id
+        return create['data']['create_quant_submission']['id']
+
+    def submission_status(self, model_id: str = None) -> Dict:
+        """submission status of the last submission associated with the account
+
+        Args:
+            model_id (str)
+
+        Returns:
+            dict: submission status with the following content:
+
+                * firstEffectiveDate (`datetime.datetime`):
+                * userId (`string`)
+                * filename (`string`)
+                * id (`string`)
+                * submissionIp (`string`)
+                * submittedCount (`int`)
+                * filteredCount (`int`)
+
+        Example:
+            >>> api = QuantAPI(secret_key="..", public_id="..")
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.submission_status(model_id)
+            {'firstEffectiveDate': datetime.datetime(2020, 5, 12, 1, 23),
+             'userId': "slyfox",
+             'filename': 'model57-HPzOyr56TPaD.csv',
+             'id': '1234'
+             'submissionIp': "102.142.12.12",
+             'submittedCount': 112,
+             'filteredCount': 12}
+        """
+
+        query = '''
+            query($modelId: String) {
+                  account {
+                    models{
+                      latestQuantSubmission {
+                        id
+                        filename
+                        firstEffectiveDate
+                        userId
+                        submissionIp
+                        submittedCount
+                        filteredCount
+                        }
+                     }
+                  }
+            '''
+        arguments = {'modelId': model_id}
+        data = self.raw_query(query, arguments, authorization=True)
+        status = data['data']['account']['models']['latestQuantSubmission']
+        return status
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public quant profile of a user.
