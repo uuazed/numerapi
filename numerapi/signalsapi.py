@@ -81,14 +81,13 @@ class SignalsAPI(base_api.Api):
                      'modelId': model_id}
         submission_resp = self.raw_query(auth_query, arguments,
                                          authorization=True)
-        auth = submission_resp['data']['submission_upload_signals_auth']
+        auth = submission_resp['data']['submissionUploadSignalsAuth']
         with open(file_path, 'rb') as fh:
             requests.put(auth['url'], data=fh.read())
         create_query = '''
             mutation($filename: String!
                      $modelId: String) {
                 createSignalsSubmission(filename: $filename
-                                  tournament: $tournament
                                   modelId: $modelId) {
                     id
                     firstEffectiveDate
@@ -97,7 +96,7 @@ class SignalsAPI(base_api.Api):
             '''
         arguments = {'filename': auth['filename'], 'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
-        return create['data']['create_signals_submission']['id']
+        return create['data']['createSignalsSubmission']['id']
 
     def submission_status(self, model_id: str = None) -> Dict:
         """submission status of the last submission associated with the account

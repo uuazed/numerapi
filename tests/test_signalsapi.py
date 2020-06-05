@@ -24,11 +24,11 @@ def test_get_leaderboard(api):
 def test_upload_predictions(api, tmpdir):
     api.token = ("", "")
     # we need to mock 3 network calls: 1. auth 2. file upload and 3. submission
-    data = {"data": {"submission_upload_signals_auth":
+    data = {"data": {"submissionUploadSignalsAuth":
             {"url": "https://uploadurl", "filename": "filename"}}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
     responses.add(responses.PUT, "https://uploadurl")
-    data = {"data": {"create_signals_submission": {"id": "1234"}}}
+    data = {"data": {"createSignalsSubmission": {"id": "1234"}}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
 
     path = tmpdir.join("somefilepath")
