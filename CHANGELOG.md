@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.3.0] - 2020-05-06 - "Signals"
 - added API for Numerai Signals
 - refactor codebase
 - more tests
