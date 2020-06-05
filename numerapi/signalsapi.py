@@ -33,7 +33,7 @@ class SignalsAPI(base_api.Api):
         query = '''
             query($limit: Int!
                   $offset: Int!) {
-              quantLeaderboard(limit: $limit
+              signalsLeaderboard(limit: $limit
                             offset: $offset) {
                 prevRank
                 rank
@@ -45,7 +45,7 @@ class SignalsAPI(base_api.Api):
         '''
 
         arguments = {'limit': limit, 'offset': offset}
-        data = self.raw_query(query, arguments)['data']['quantLeaderboard']
+        data = self.raw_query(query, arguments)['data']['signalsLeaderboard']
         return data
 
     def upload_predictions(self, file_path: str, model_id: str = None) -> str:
@@ -70,7 +70,7 @@ class SignalsAPI(base_api.Api):
         auth_query = '''
             query($filename: String!
                   $modelId: String) {
-              submissionUploadQuantAuth(filename: $filename
+              submissionUploadSignalsAuth(filename: $filename
                                         modelId: $modelId) {
                     filename
                     url
@@ -81,13 +81,13 @@ class SignalsAPI(base_api.Api):
                      'modelId': model_id}
         submission_resp = self.raw_query(auth_query, arguments,
                                          authorization=True)
-        auth = submission_resp['data']['submission_upload_quant_auth']
+        auth = submission_resp['data']['submission_upload_signals_auth']
         with open(file_path, 'rb') as fh:
             requests.put(auth['url'], data=fh.read())
         create_query = '''
             mutation($filename: String!
                      $modelId: String) {
-                createQuantSubmission(filename: $filename
+                createSignalsSubmission(filename: $filename
                                   tournament: $tournament
                                   modelId: $modelId) {
                     id
@@ -97,7 +97,7 @@ class SignalsAPI(base_api.Api):
             '''
         arguments = {'filename': auth['filename'], 'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
-        return create['data']['create_quant_submission']['id']
+        return create['data']['create_signals_submission']['id']
 
     def submission_status(self, model_id: str = None) -> Dict:
         """submission status of the last submission associated with the account
@@ -133,7 +133,7 @@ class SignalsAPI(base_api.Api):
             query($modelId: String) {
                   account {
                     models{
-                      latestQuantSubmission {
+                      latestSignalsSubmission {
                         id
                         filename
                         firstEffectiveDate
@@ -147,7 +147,7 @@ class SignalsAPI(base_api.Api):
             '''
         arguments = {'modelId': model_id}
         data = self.raw_query(query, arguments, authorization=True)
-        status = data['data']['account']['models']['latestQuantSubmission']
+        status = data['data']['account']['models']['latestSignalsSubmission']
         return status
 
     def public_user_profile(self, username: str) -> Dict:
@@ -179,7 +179,7 @@ class SignalsAPI(base_api.Api):
         """
         query = """
           query($username: String!) {
-            quantUserProfile(username: $username) {
+            signalsUserProfile(username: $username) {
               rank
               id
               startDate
@@ -190,7 +190,7 @@ class SignalsAPI(base_api.Api):
           }
         """
         arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['quantUserProfile']
+        data = self.raw_query(query, arguments)['data']['signalsUserProfile']
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
@@ -221,7 +221,7 @@ class SignalsAPI(base_api.Api):
         """
         query = """
           query($username: String!) {
-            quantUserProfile(username: $username) {
+            signalsUserProfile(username: $username) {
               dailyUserPerformances {
                 rank
                 date
@@ -231,7 +231,7 @@ class SignalsAPI(base_api.Api):
           }
         """
         arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['quantUserProfile']
+        data = self.raw_query(query, arguments)['data']['signalsUserProfile']
         performances = data['dailyUserPerformances']
         # convert strings to python objects
         for perf in performances:
@@ -264,7 +264,7 @@ class SignalsAPI(base_api.Api):
         """
         query = """
           query($username: String!) {
-            quantUserProfile(username: $username) {
+            signalsUserProfile(username: $username) {
               dailySubmissionPerformances {
                 date
                 returns
@@ -274,7 +274,7 @@ class SignalsAPI(base_api.Api):
           }
         """
         arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['quantUserProfile']
+        data = self.raw_query(query, arguments)['data']['signalsUserProfile']
         performances = data['dailySubmissionPerformances']
         # convert strings to python objects
         for perf in performances:
