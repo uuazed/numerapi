@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.3.1] - 2020-05-06 - "Signals"
+- fix Signals submission upload (#25)
+
 ## [2.3.0] - 2020-05-06 - "Signals"
 - added API for Numerai Signals
 - refactor codebase
