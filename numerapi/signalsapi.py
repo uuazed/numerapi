@@ -1,5 +1,7 @@
 from typing import List, Dict
 import os
+import csv
+import codecs
 
 import requests
 
@@ -280,3 +282,21 @@ class SignalsAPI(base_api.Api):
             utils.replace(perf, "date", utils.parse_datetime_string)
             utils.replace(perf, "submissionTime", utils.parse_datetime_string)
         return performances
+
+    def ticker_universe(self) -> List[str]:
+        """fetch universe of accepted tickers
+
+        Returns:
+            list of strings: list of currently accepted tickers
+
+        Example:
+            >>> SignalsAPI().ticker_universe()
+            ["MSFT", "AMZN", "APPL", ...]
+        """
+        domain = 'https://numerai-quant-public-data.s3-us-west-2.amazonaws.com'
+        url = f"{domain}/example_predictions/latest.csv"
+        result = requests.get(url, stream=True)
+        iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
+        reader = csv.reader(iterator, delimiter=',', quotechar='"')
+        tickers = [t for t, _ in reader]
+        return tickers

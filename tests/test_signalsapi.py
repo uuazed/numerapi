@@ -63,17 +63,3 @@ def test_daily_user_performances(api):
     result = api.daily_user_performances("uuazed")
     assert len(result) == 1
     assert isinstance(result[0]["date"], datetime.datetime)
-
-
-@responses.activate
-def test_public_user_profile(api):
-    profile = {'rank': 12,
-               'id': "asdfas",
-               'username': "uuazed",
-               'bio': "bio",
-               'sharpe': 1.256,
-               'startDate': "20200516"}
-    data = {'data': {'signalsUserProfile': profile}}
-    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    result = api.public_user_profile("uuazed")
-    assert isinstance(result["startDate"], datetime.datetime)
