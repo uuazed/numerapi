@@ -133,7 +133,7 @@ class SignalsAPI(base_api.Api):
         query = '''
             query($modelId: String) {
                   account {
-                    models{
+                    models(modelId: $modelId) {
                       latestSignalsSubmission {
                         id
                         filename

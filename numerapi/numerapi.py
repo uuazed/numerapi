@@ -843,13 +843,10 @@ class NumerAPI(base_api.Api):
             utils.replace(s, "value", utils.parse_float_string)
         return stakes
 
-    def submission_status(self, submission_id: str = None,
-                          model_id: str = None) -> Dict:
+    def submission_status(self, model_id: str = None) -> Dict:
         """submission status of the last submission associated with the account
 
         Args:
-            submission_id (str): submission of interest, defaults to the last
-                submission done with the account
             model_id (str)
 
         Returns:
@@ -868,9 +865,7 @@ class NumerAPI(base_api.Api):
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
-            >>> sub_id = api.upload_predictions(
-                "predictions.csv", model_id=model_id)
-            >>> api.submission_status(sub_id, model_id)
+            >>> api.submission_status(model_id)
             {'concordance': None,
              'consistency': None,
              'corrWithExamplePreds': 0.3811635610849811,
@@ -879,34 +874,28 @@ class NumerAPI(base_api.Api):
              'validationFeatureExposure': 0.09736206063204657,
              'validationSharpe': 1.5567641700803665}
         """
-        if submission_id is None:
-            submission_id = self.submission_id
-
-        if submission_id is None:
-            raise ValueError('You need to submit something first or provide\
-                              a submission ID')
-
         query = '''
-            query($submission_id: String!
-                  $modelId: String) {
-              submissions(id: $submission_id
-                          modelId: $modelId) {
-                concordance {
-                  pending
-                  value
+            query($modelId: String) {
+                model(modelId: $modelId) {
+                  latestSubmission {
+                    concordance {
+                      pending
+                      value
+                    }
+                    consistency
+                    validationCorrelation
+                    validationFeatureExposure
+                    validationSharpe
+                    corrWithExamplePreds
+                    filename
+                  }
                 }
-                consistency
-                validationCorrelation
-                validationFeatureExposure
-                validationSharpe
-                corrWithExamplePreds
-                filename
               }
-            }
             '''
-        variable = {'submission_id': submission_id, 'modelId': model_id}
-        data = self.raw_query(query, variable, authorization=True)
-        status = data['data']['submissions'][0]
+
+        args = {'modelId': model_id}
+        data = self.raw_query(query, args, authorization=True)
+        status = data['data']['model']['latestSubmission'][0]
         return status
 
     def upload_predictions(self, file_path: str, tournament: int = 8,
