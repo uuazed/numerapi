@@ -75,7 +75,6 @@ def test_error_handling(api):
     with pytest.raises(ValueError):
         # set wrong token
         api.token = ("foo", "bar")
-        api.submission_id = 1
         api.submission_status()
 
 

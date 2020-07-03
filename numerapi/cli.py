@@ -197,10 +197,10 @@ def tournament_name2number(name):
 
 
 @cli.command()
-@click.argument("submission_id")
-def submission_status(submission_id):
+@click.argument("model_id")
+def submission_status(model_id):
     """checks the submission status"""
-    click.echo(prettify(napi.submission_status(submission_id)))
+    click.echo(prettify(napi.submission_status(model_id)))
 
 
 @cli.command()

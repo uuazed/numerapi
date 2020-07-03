@@ -56,9 +56,9 @@ and `NUMERAI_SECRET_KEY`).
 
     # upload predictions
     model_id = api.get_models()['uuazed']
-    submission_id = napi.upload_predictions("preds.csv", model_id=model_id)
+    napi.upload_predictions("preds.csv", model_id=model_id)
     # check submission status
-    napi.submission_status()
+    napi.submission_status(model_id)
     # increase your stake by 1.2 NMR
     napi.stake_increase(1.2)
 
