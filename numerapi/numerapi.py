@@ -955,7 +955,7 @@ class NumerAPI(base_api.Api):
                      'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
         submission_id = create['data']['create_submission']['id']
-        submission_id
+        return submission_id
 
     def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
         """Check if a new round has started within the last `hours`.
