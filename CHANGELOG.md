@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [Development]
+## [2.3.2] - 2020-07-21
 - Signals: added `ticker_universe` to get the list of accepted tickers
 - `submission_status` no longer needs (and accepts) a submission_id. It
   automatically uses the last submission associated with a model
