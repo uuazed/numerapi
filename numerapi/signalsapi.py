@@ -84,8 +84,11 @@ class SignalsAPI(base_api.Api):
         submission_resp = self.raw_query(auth_query, arguments,
                                          authorization=True)
         auth = submission_resp['data']['submissionUploadSignalsAuth']
+
+        # check for numerai compute flag and send it in the header
+        headers = {"is_compute": bool(os.getenv("NUMERAI_COMPUTE", 0))}
         with open(file_path, 'rb') as fh:
-            requests.put(auth['url'], data=fh.read())
+            requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $modelId: String) {
