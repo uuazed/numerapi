@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [Development]
+## [2.3.3] - 2020-07-22
 - get Numerai compute id if available and pass it along during predictions upload
 
 ## [2.3.2] - 2020-07-21
