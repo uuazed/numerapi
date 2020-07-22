@@ -939,7 +939,7 @@ class NumerAPI(base_api.Api):
         submission_auth = submission_resp['data']['submission_upload_auth']
 
         # check for numerai compute flag and send it in the header
-        headers = {"is_compute": bool(os.getenv("NUMERAI_COMPUTE", 0))}
+        headers = {"is_compute": str(bool(os.getenv("NUMERAI_COMPUTE", 0)))}
         with open(file_path, 'rb') as fh:
             requests.put(
                 submission_auth['url'], data=fh.read(), headers=headers)

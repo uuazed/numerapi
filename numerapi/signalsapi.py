@@ -86,7 +86,7 @@ class SignalsAPI(base_api.Api):
         auth = submission_resp['data']['submissionUploadSignalsAuth']
 
         # check for numerai compute flag and send it in the header
-        headers = {"is_compute": bool(os.getenv("NUMERAI_COMPUTE", 0))}
+        headers = {"is_compute": str(bool(os.getenv("NUMERAI_COMPUTE", 0)))}
         with open(file_path, 'rb') as fh:
             requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
