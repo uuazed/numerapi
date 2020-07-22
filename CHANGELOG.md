@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [Development]
+- get Numerai compute id if available and pass it along during predictions upload
+
 ## [2.3.2] - 2020-07-21
 - Signals: added `ticker_universe` to get the list of accepted tickers
 - `submission_status` no longer needs (and accepts) a submission_id. It

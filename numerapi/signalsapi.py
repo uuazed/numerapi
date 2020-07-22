@@ -84,8 +84,11 @@ class SignalsAPI(base_api.Api):
         submission_resp = self.raw_query(auth_query, arguments,
                                          authorization=True)
         auth = submission_resp['data']['submissionUploadSignalsAuth']
+
+        # get compute id if available and pass it along
+        headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
         with open(file_path, 'rb') as fh:
-            requests.put(auth['url'], data=fh.read())
+            requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $modelId: String) {
