@@ -296,7 +296,7 @@ class SignalsAPI(base_api.Api):
             >>> SignalsAPI().ticker_universe()
             ["MSFT", "AMZN", "APPL", ...]
         """
-        domain = 'https://numerai-quant-public-data.s3-us-west-2.amazonaws.com'
+        domain = 'https://numerai-signals-public-data.s3-us-west-2.amazonaws.com'
         url = f"{domain}/example_predictions/latest.csv"
         result = requests.get(url, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
