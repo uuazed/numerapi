@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.3.4] - 2020-08-10
+- update 'ticker_universe' to use the update file location
+
 ## [2.3.3] - 2020-07-22
 - get Numerai compute id if available and pass it along during predictions upload
 
