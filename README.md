@@ -55,7 +55,7 @@ and `NUMERAI_SECRET_KEY`).
     napi = numerapi.NumerAPI(example_public_id, example_secret_key)
 
     # upload predictions
-    model_id = api.get_models()['uuazed']
+    model_id = napi.get_models()['uuazed']
     napi.upload_predictions("preds.csv", model_id=model_id)
     # check submission status
     napi.submission_status(model_id)
@@ -81,7 +81,7 @@ and `NUMERAI_SECRET_KEY`).
     napi = numerapi.SignalsAPI(example_public_id, example_secret_key)
 
     # upload predictions
-    model_id = api.get_models()['uuazed']
+    model_id = napi.get_models()['uuazed']
     napi.upload_predictions("preds.csv", model_id=model_id)
 
     # get daily performance as pandas dataframe
