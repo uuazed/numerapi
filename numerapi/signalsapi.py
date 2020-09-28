@@ -119,6 +119,12 @@ class SignalsAPI(base_api.Api):
                 * submissionIp (`string`)
                 * submittedCount (`int`)
                 * filteredCount (`int`)
+                * invalidTickers ('string)
+                * hasHistoric ('bool')
+                * historicMean ('float')
+                * historicStd ('float')
+                * historicSharpe ('float')
+                * historicMaxDrawdown ('float')
 
         Example:
             >>> api = SignalsAPI(secret_key="..", public_id="..")
@@ -130,28 +136,39 @@ class SignalsAPI(base_api.Api):
              'id': '1234'
              'submissionIp': "102.142.12.12",
              'submittedCount': 112,
-             'filteredCount': 12}
+             'filteredCount': 12,
+             'invalidTickers': 'AAAPL,GOOOG',
+             'hasHistoric': true,
+             'historicMean': 1.23,
+             'historicStd': 2.34,
+             'historicSharpe': 3.45,
+             'historicMaxDrawdown': 4.56}
         """
 
         query = '''
             query($modelId: String) {
-                  account {
-                    models(modelId: $modelId) {
-                      latestSignalsSubmission {
-                        id
-                        filename
-                        firstEffectiveDate
-                        userId
-                        submissionIp
-                        submittedCount
-                        filteredCount
-                        }
-                     }
+                model(modelId: $modelId) {
+                  latestSignalsSubmission {
+                    id
+                    filename
+                    firstEffectiveDate
+                    userId
+                    submissionIp
+                    submittedCount
+                    filteredCount
+                    invalidTickers
+                    hasHistoric
+                    historicMean
+                    historicStd
+                    historicSharpe
+                    historicMaxDrawdown
                   }
+                }
+              }
             '''
         arguments = {'modelId': model_id}
         data = self.raw_query(query, arguments, authorization=True)
-        status = data['data']['account']['models']['latestSignalsSubmission']
+        status = data['data']['model']['latestSignalsSubmission']
         return status
 
     def public_user_profile(self, username: str) -> Dict:
