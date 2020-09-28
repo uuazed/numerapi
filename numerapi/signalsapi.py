@@ -147,29 +147,28 @@ class SignalsAPI(base_api.Api):
 
         query = '''
             query($modelId: String) {
-                  account {
-                    models(modelId: $modelId) {
-                      latestSignalsSubmission {
-                        id
-                        filename
-                        firstEffectiveDate
-                        userId
-                        submissionIp
-                        submittedCount
-                        filteredCount
-                        invalidTickers
-                        hasHistoric
-                        historicMean
-                        historicStd
-                        historicSharpe
-                        historicMaxDrawdown
-                        }
-                     }
+                model(modelId: $modelId) {
+                  latestSignalsSubmission {
+                    id
+                    filename
+                    firstEffectiveDate
+                    userId
+                    submissionIp
+                    submittedCount
+                    filteredCount
+                    invalidTickers
+                    hasHistoric
+                    historicMean
+                    historicStd
+                    historicSharpe
+                    historicMaxDrawdown
                   }
+                }
+              }
             '''
         arguments = {'modelId': model_id}
         data = self.raw_query(query, arguments, authorization=True)
-        status = data['data']['account']['models']['latestSignalsSubmission']
+        status = data['data']['model']['latestSignalsSubmission']
         return status
 
     def public_user_profile(self, username: str) -> Dict:
