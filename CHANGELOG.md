@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+
+## [2.3.5] - 2020-09-28
+- Add signals diagnostics (#28) 
+
 ## [2.3.4] - 2020-08-10
 - update 'ticker_universe' to use the update file location
 
