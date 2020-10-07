@@ -314,9 +314,9 @@ class SignalsAPI(base_api.Api):
             ["MSFT", "AMZN", "APPL", ...]
         """
         domain = 'https://numerai-signals-public-data.s3-us-west-2.amazonaws.com'
-        url = f"{domain}/example_predictions/latest.csv"
+        url = f"{domain}/example_signal/latest.csv"
         result = requests.get(url, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
         reader = csv.reader(iterator, delimiter=',', quotechar='"')
-        tickers = [t for t, _ in reader]
+        tickers = [t for t, _ in reader][1:]
         return tickers
