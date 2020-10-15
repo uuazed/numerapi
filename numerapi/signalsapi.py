@@ -318,5 +318,5 @@ class SignalsAPI(base_api.Api):
         result = requests.get(url, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
         reader = csv.reader(iterator, delimiter=',', quotechar='"')
-        tickers = [t for t, _ in reader][1:]
+        tickers = [t[0] for t in reader if t[2] == 'live']
         return tickers
