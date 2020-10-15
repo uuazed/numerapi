@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.3.7] - 2020-10-15
+- signals: fix ticker universe
+
 ## [2.3.6] - 2020-10-07
 - signals: update ticker universe path (#29)
 
