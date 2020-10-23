@@ -231,13 +231,18 @@ class SignalsAPI(base_api.Api):
                 * rank (`int`)
                 * date (`datetime`)
                 * sharpe (`float`)
+                * mmcRep (`float`)
+                * reputation (`float`)
 
         Example:
             >>> api = SignalsAPI()
             >>> api.daily_user_performances("floury_kerril_moodle")
             [{'date': datetime.datetime(2020, 5, 16, 0, 0,
               'rank': 1,
-              'sharpe': 2.35},
+              'sharpe': 2.35,
+              'mmcRep': 0.35,
+              'reputation': 1.35
+              },
              ...]
         """
         query = """
@@ -247,6 +252,8 @@ class SignalsAPI(base_api.Api):
                 rank
                 date
                 sharpe
+                mmcRep
+                reputation
               }
             }
           }

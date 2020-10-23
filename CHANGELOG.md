@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - 
+- signals: add `mmcRep` and `reputation` to `daily_user_performances`
+
 ## [2.3.7] - 2020-10-15
 - signals: fix ticker universe
 
