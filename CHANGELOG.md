@@ -1,8 +1,10 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] - 
+## [dev] -
 - signals: add `mmcRep` and `reputation` to `daily_user_performances`
+- signals: add `mmc`, `mmcRep`, `correlation`, `corrRep` and `roundNumber`
+           to `daily_submissions_performances`
 
 ## [2.3.7] - 2020-10-15
 - signals: fix ticker universe

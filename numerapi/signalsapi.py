@@ -281,14 +281,26 @@ class SignalsAPI(base_api.Api):
                 * date (`datetime`)
                 * returns (`float`)
                 * submission_time (`datetime`)
+                * correlation (`float`)
+                * mmc (`float`)
+                * roundNumber (`int`)
+                * corrRep (`float`)
+                * mmcRep (`float`)
+
 
         Example:
             >>> api = SignalsAPI()
-            >>> api.daily_submissions_performances("floury_kerril_moodle")
+            >>> api.daily_submissions_performances("uuazed")
             [{'date': datetime.datetime(2020, 5, 16, 0, 0),
               'returns': 1.256,
               'submissionTime': datetime.datetime(2020, 5, 12, 1, 23)},
+              'corrRep': None,
+              'mmc': None,
+              'mmcRep': None,
+              'roundNumber': 226,
+              'correlation': 0.03}
              ...
+              ]
         """
         query = """
           query($username: String!) {
@@ -297,6 +309,11 @@ class SignalsAPI(base_api.Api):
                 date
                 returns
                 submissionTime
+                correlation
+                mmc
+                roundNumber
+                corrRep
+                mmcRep
               }
             }
           }
