@@ -1,6 +1,5 @@
 from typing import List, Dict
 import os
-import csv
 import codecs
 
 import requests
@@ -338,9 +337,8 @@ class SignalsAPI(base_api.Api):
             ["MSFT", "AMZN", "APPL", ...]
         """
         domain = 'https://numerai-signals-public-data.s3-us-west-2.amazonaws.com'
-        url = f"{domain}/example_signal/latest.csv"
+        url = f"{domain}/latest_universe.csv"
         result = requests.get(url, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
-        reader = csv.reader(iterator, delimiter=',', quotechar='"')
-        tickers = [t[0] for t in reader if t[2] == 'live']
+        tickers = [t.strip() for t in iterator]
         return tickers

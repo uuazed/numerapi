@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev] -
+- signals: speedup `ticker_universe`
 - signals: add `mmcRep` and `reputation` to `daily_user_performances`
 - signals: add `mmc`, `mmcRep`, `correlation`, `corrRep` and `roundNumber`
            to `daily_submissions_performances`
