@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] -
+- Add additional metrics to `submission_status` (#30)
+
 ## [2.3.8] - 2020-10-27
 - signals: speedup `ticker_universe`
 - signals: add `mmcRep` and `reputation` to `daily_user_performances`
