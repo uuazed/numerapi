@@ -7,6 +7,12 @@ napi = numerapi.NumerAPI()
 
 
 def prettify(stuff):
+    """
+    Prettify a list of a string.
+
+    Args:
+        stuff: (str): write your description
+    """
     pp = pprint.PrettyPrinter(indent=4)
     return pp.pformat(stuff)
 

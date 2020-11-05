@@ -9,6 +9,11 @@ from numerapi import utils
 
 
 def test_parse_datetime_string():
+    """
+    Parse a string representing a datetime object.
+
+    Args:
+    """
     s = "2017-12-24T20:48:25.90349Z"
     t = datetime.datetime(2017, 12, 24, 20, 48, 25, 903490, tzinfo=tzutc())
     assert utils.parse_datetime_string(s) == t
@@ -16,6 +21,11 @@ def test_parse_datetime_string():
 
 
 def test_parse_float_string():
+    """
+    Parse a string as a float.
+
+    Args:
+    """
     assert utils.parse_float_string(None) is None
     assert utils.parse_float_string("") is None
     assert utils.parse_float_string("1.23") == decimal.Decimal("1.23")
@@ -25,6 +35,11 @@ def test_parse_float_string():
 
 
 def test_replace():
+    """
+    Replace a dictionary with the values in - place
+
+    Args:
+    """
     d = None
     assert utils.replace(d, "a", float) is None
     # empty dict
@@ -38,6 +53,12 @@ def test_replace():
 
 @responses.activate
 def test_download_file(tmpdir):
+    """
+    Download a file
+
+    Args:
+        tmpdir: (str): write your description
+    """
     url = "https://someurl"
     responses.add(responses.GET, url)
 
@@ -48,6 +69,12 @@ def test_download_file(tmpdir):
 
 
 def test_ensure_directory_exists(tmpdir):
+    """
+    Ensure that the given path exists.
+
+    Args:
+        tmpdir: (str): write your description
+    """
     path = str(tmpdir.join("somedirectory"))
     utils.ensure_directory_exists(path)
     assert os.path.exists(path)
@@ -58,6 +85,12 @@ def test_ensure_directory_exists(tmpdir):
 
 @responses.activate
 def test_post_with_err_handling(caplog):
+    """
+    Create a http post.
+
+    Args:
+        caplog: (todo): write your description
+    """
     # unreachable
     responses.add(responses.POST, "https://someurl1", status=404)
     utils.post_with_err_handling("https://someurl1", None, None)
