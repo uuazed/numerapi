@@ -3,6 +3,12 @@ from setuptools import find_packages
 
 
 def load(path):
+    """
+    Load a file
+
+    Args:
+        path: (str): write your description
+    """
     return open(path, 'r').read()
 
 

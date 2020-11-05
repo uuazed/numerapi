@@ -8,17 +8,33 @@ from numerapi import base_api
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
+    """
+    Return an api object for the given the api
+
+    Args:
+    """
     api = base_api.Api(verbosity='DEBUG')
     return api
 
 
 def test_NumerAPI():
+    """
+    Test if numerated api calls
+
+    Args:
+    """
     # invalid log level should raise
     with pytest.raises(AttributeError):
         base_api.Api(verbosity="FOO")
 
 
 def test__login(api):
+    """
+    Login to login
+
+    Args:
+        api: (todo): write your description
+    """
     # passing only one of public_id and secret_key is not enough
     api._login(public_id="foo", secret_key=None)
     assert api.token is None
@@ -36,6 +52,12 @@ def test__login(api):
 
 
 def test_raw_query(api):
+    """
+    Convert raw query.
+
+    Args:
+        api: (todo): write your description
+    """
     query = "query {dataset(tournament:8)}"
     result = api.raw_query(query)
     assert isinstance(result, dict)
@@ -44,6 +66,12 @@ def test_raw_query(api):
 
 @responses.activate
 def test_get_account(api):
+    """
+    Get accounts
+
+    Args:
+        api: (todo): write your description
+    """
     api.token = ("", "")
     account = {'apiTokens': [{'name': 'uploads',
                               'public_id': 'AAA',
@@ -89,6 +117,12 @@ def test_get_account(api):
 
 @responses.activate
 def test_get_models(api):
+    """
+    Get all models that maps
+
+    Args:
+        api: (todo): write your description
+    """
     api.token = ("", "")
     models_list = [
         {"name": "model_x", "id": "95b0d9e2-c901-4f2b-9c98-24138b0bd706"},
@@ -103,6 +137,12 @@ def test_get_models(api):
 
 @responses.activate
 def test_get_account_transactions(api):
+    """
+    Get a list of transactions
+
+    Args:
+        api: (todo): write your description
+    """
     api.token = ("", "")
     nmr = {"from": "-",
            "posted": "2018-01-01 11:11:11",
@@ -121,6 +161,12 @@ def test_get_account_transactions(api):
 
 @responses.activate
 def test_get_transactions(api):
+    """
+    Get transactions
+
+    Args:
+        api: (todo): write your description
+    """
     api.token = ("", "")
     nmr = {"from": "-",
            "posted": "2018-01-01 11:11:11",

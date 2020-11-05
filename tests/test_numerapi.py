@@ -11,17 +11,35 @@ from numerapi import base_api
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
+    """
+    Return an api object.
+
+    Args:
+    """
     api = numerapi.NumerAPI(verbosity='DEBUG')
     return api
 
 
 def test_get_competitions(api):
+    """
+    Returns a list of competitions
+
+    Args:
+        api: (todo): write your description
+    """
     res = api.get_competitions(tournament=1)
     assert isinstance(res, list)
     assert len(res) > 80
 
 
 def test_download_current_dataset(api, tmpdir):
+    """
+    Downloads the current dataset.
+
+    Args:
+        api: (todo): write your description
+        tmpdir: (str): write your description
+    """
     path = api.download_current_dataset(dest_path=str(tmpdir), unzip=True)
     assert os.path.exists(path)
 
@@ -37,11 +55,23 @@ def test_download_current_dataset(api, tmpdir):
 
 
 def test_get_current_round(api):
+    """
+    Get the current round of the current round.
+
+    Args:
+        api: (todo): write your description
+    """
     current_round = api.get_current_round()
     assert current_round >= 82
 
 
 def test_v1_get_leaderboard(api):
+    """
+    Retrieve the leaderboard.
+
+    Args:
+        api: (todo): write your description
+    """
     lb = api.get_v1_leaderboard(67, tournament=1)
     assert len(lb) == 1425
 
@@ -49,6 +79,13 @@ def test_v1_get_leaderboard(api):
 @pytest.mark.parametrize("fun", ["get_user", "get_account", "get_stakes",
                                  "get_transactions", "get_payments"])
 def test_unauthorized_requests(api, fun):
+    """
+    Test if the api is logged in a request.
+
+    Args:
+        api: (todo): write your description
+        fun: (callable): write your description
+    """
     with pytest.raises(ValueError) as err:
         # while this won't work because we are not authorized, it still tells
         # us if the remaining code works
@@ -59,12 +96,24 @@ def test_unauthorized_requests(api, fun):
 
 
 def test_get_submission_ids(api):
+    """
+    Get submission submission ids.
+
+    Args:
+        api: (todo): write your description
+    """
     ids = api.get_submission_ids()
     assert len(ids) > 0
     assert isinstance(ids, dict)
 
 
 def test_error_handling(api):
+    """
+    Test if api is_error.
+
+    Args:
+        api: (todo): write your description
+    """
     # String instead of Int
     with pytest.raises(ValueError):
         api.get_v1_leaderboard("foo")
@@ -80,6 +129,13 @@ def test_error_handling(api):
 
 @responses.activate
 def test_upload_predictions(api, tmpdir):
+    """
+    Upload prediction prediction prediction.
+
+    Args:
+        api: (todo): write your description
+        tmpdir: (str): write your description
+    """
     api.token = ("", "")
     # we need to mock 3 network calls: 1. auth 2. file upload and 3. submission
     data = {"data": {"submission_upload_auth": {"url": "https://uploadurl",
@@ -98,6 +154,12 @@ def test_upload_predictions(api, tmpdir):
 
 @responses.activate
 def test_get_stakes(api):
+    """
+    Gets test information about an api.
+
+    Args:
+        api: (todo): write your description
+    """
     api.token = ("", "")
     stake = {"confidence": "0.4",
              "roundNumber": 99,
@@ -117,6 +179,12 @@ def test_get_stakes(api):
 
 @responses.activate
 def test_check_new_round(api):
+    """
+    Test to make a new api.
+
+    Args:
+        api: (todo): write your description
+    """
     open_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)

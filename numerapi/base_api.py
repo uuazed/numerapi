@@ -46,6 +46,14 @@ class Api:
         self.show_progress_bars = show_progress_bars
 
     def _login(self, public_id=None, secret_key=None):
+        """
+        Perform a login.
+
+        Args:
+            self: (todo): write your description
+            public_id: (str): write your description
+            secret_key: (str): write your description
+        """
         # check env variables if not set
         if not public_id:
             public_id = os.getenv("NUMERAI_PUBLIC_ID")
@@ -62,6 +70,13 @@ class Api:
             self.token = None
 
     def _handle_call_error(self, errors):
+        """
+        Called when an error.
+
+        Args:
+            self: (todo): write your description
+            errors: (todo): write your description
+        """
         if isinstance(errors, list):
             for error in errors:
                 if "message" in error:

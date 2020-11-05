@@ -12,6 +12,12 @@ logger = logging.getLogger(__name__)
 
 
 def parse_datetime_string(s):
+    """
+    Parse a datetime string.
+
+    Args:
+        s: (str): write your description
+    """
     if s is None:
         return None
     dt = dateutil.parser.parse(s)
@@ -19,6 +25,12 @@ def parse_datetime_string(s):
 
 
 def parse_float_string(s):
+    """
+    Parse a decimal number.
+
+    Args:
+        s: (str): write your description
+    """
     if s is None:
         return None
     try:
@@ -29,11 +41,27 @@ def parse_float_string(s):
 
 
 def replace(dictionary, key, function):
+    """
+    Replace dictionary with dictionary with dictionary
+
+    Args:
+        dictionary: (dict): write your description
+        key: (str): write your description
+        function: (todo): write your description
+    """
     if dictionary is not None and key in dictionary:
         dictionary[key] = function(dictionary[key])
 
 
 def download_file(url, dest_path, show_progress_bars=True):
+    """
+    Download a file.
+
+    Args:
+        url: (str): write your description
+        dest_path: (str): write your description
+        show_progress_bars: (bool): write your description
+    """
     r = requests.get(url, stream=True)
     r.raise_for_status()
     # Total size in bytes.
@@ -49,6 +77,12 @@ def download_file(url, dest_path, show_progress_bars=True):
 
 
 def ensure_directory_exists(path):
+    """
+    Ensure that a path exists.
+
+    Args:
+        path: (str): write your description
+    """
     try:
         # `exist_ok` option is only available in Python 3.2+
         os.makedirs(path)
@@ -58,6 +92,15 @@ def ensure_directory_exists(path):
 
 
 def post_with_err_handling(url, body, headers, timeout=None):
+    """
+    Send an http post request to the api.
+
+    Args:
+        url: (str): write your description
+        body: (todo): write your description
+        headers: (dict): write your description
+        timeout: (float): write your description
+    """
     try:
         r = requests.post(url, json=body, headers=headers, timeout=timeout)
         r.raise_for_status()
