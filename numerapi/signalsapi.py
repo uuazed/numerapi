@@ -1,6 +1,7 @@
 from typing import List, Dict
 import os
 import codecs
+import decimal
 
 import requests
 
@@ -356,3 +357,19 @@ class SignalsAPI(base_api.Api):
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
         tickers = [t.strip() for t in iterator]
         return tickers
+
+    def stake_get(self, username) -> decimal.Decimal:
+        """get current stake for a given users
+
+        Args:
+            username (str)
+
+        Returns:
+            decimal.Decimal: current stake
+
+        Example:
+            >>> SignalsAPI().stake_get("uuazed")
+            Decimal('14.63')
+        """
+        data = self.public_user_profile(username)
+        return data['totalStake']
