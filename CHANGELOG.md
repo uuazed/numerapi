@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] -
+## [2.3.9] - 2020-11-26
 - Add additional metrics to `submission_status` (#30)
 - signals: add `mmc`, `mmcRank` and `nmrStaked` to `get_leaderboard`
 - signals: add `totalStake` to `public_user_profile`
