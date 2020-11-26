@@ -4,6 +4,7 @@ Notable changes to this project.
 ## [dev] -
 - Add additional metrics to `submission_status` (#30)
 - signals: add `mmc`, `mmcRank` and `nmrStaked` to `get_leaderboard`
+- signals: add `totalStake` to `public_user_profile`
 
 ## [2.3.8] - 2020-10-27
 - signals: speedup `ticker_universe`

@@ -195,6 +195,7 @@ class SignalsAPI(base_api.Api):
                 * rank (`int`)
                 * bio (`str`)
                 * sharpe (`float`)
+                * totalStake (`decimal.Decimal`)
 
         Example:
             >>> api = SignalsAPI()
@@ -204,7 +205,8 @@ class SignalsAPI(base_api.Api):
              'rank': 1,
              'sharpe': 2.35,
              'startDate': datetime.datetime(2019, 3, 26, 0, 43),
-             'username': 'floury_kerril_moodle'}
+             'username': 'floury_kerril_moodle',
+             'totalStake': Decimal('14.630994874320760131')}
 
         """
         query = """
@@ -216,6 +218,7 @@ class SignalsAPI(base_api.Api):
               username
               bio
               sharpe
+              totalStake
             }
           }
         """
@@ -223,6 +226,7 @@ class SignalsAPI(base_api.Api):
         data = self.raw_query(query, arguments)['data']['signalsUserProfile']
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
+        utils.replace(data, "totalStake", utils.parse_float_string)
         return data
 
     def daily_user_performances(self, username: str) -> List[Dict]:
