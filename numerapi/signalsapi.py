@@ -23,13 +23,20 @@ class SignalsAPI(base_api.Api):
                 * rank (`int`)
                 * prevRank (`int`)
                 * today (`float`)
+                * mmc (`float`)
+                * mmcRank (`int`)
+                * nmrStaked (`float`)
         Example:
             >>> numerapi.SignalsAPI().get_leaderboard(1)
             [{'prevRank': 1,
               'rank': 1,
               'sharpe': 2.3,
               'today': 0.01321,
-              'username': 'floury_kerril_moodle'}]
+              'username': 'floury_kerril_moodle',
+              'mmc': -0.0101202715,
+              'mmcRank': 30,
+              'nmrStaked': 13.0,
+             }]
         """
         query = '''
             query($limit: Int!
@@ -41,6 +48,9 @@ class SignalsAPI(base_api.Api):
                 sharpe
                 today
                 username
+                mmc
+                mmcRank
+                nmrStaked
               }
             }
         '''
