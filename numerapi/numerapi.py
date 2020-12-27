@@ -1242,7 +1242,7 @@ class NumerAPI(base_api.Api):
         return stake
 
     def stake_change(self, nmr, action: str = "decrease",
-                     model_id: str = None) -> Dict:
+                     model_id: str = None, tournament: int = 8) -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -1271,10 +1271,12 @@ class NumerAPI(base_api.Api):
         query = '''
           mutation($value: String!
                    $type: String!
+                   $tournamentNumber: Int!
                    $modelId: String) {
               v2ChangeStake(value: $value
                             type: $type
-                            modelId: $modelId) {
+                            modelId: $modelId
+                            tournamentNumber: $tournamentNumber) {
                 dueDate
                 requestedAmount
                 status
@@ -1282,7 +1284,7 @@ class NumerAPI(base_api.Api):
               }
         }
         '''
-        arguments = {'value': str(nmr), 'type': action, 'modelId': model_id}
+        arguments = {'value': str(nmr), 'type': action, 'modelId': model_id, 'tournamentNumber': tournament}
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']['v2ChangeStake']
         utils.replace(stake, "requestedAmount", utils.parse_float_string)
