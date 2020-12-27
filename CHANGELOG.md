@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- fix `stake_change` call by adding `tournament` parameter (#32) 
+
 ## [2.3.9] - 2020-11-26
 - Add additional metrics to `submission_status` (#30)
 - signals: add `mmc`, `mmcRank` and `nmrStaked` to `get_leaderboard`
