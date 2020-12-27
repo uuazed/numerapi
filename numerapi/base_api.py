@@ -3,12 +3,7 @@
 # System
 import os
 import logging
-import datetime
-import decimal
 from typing import Dict
-
-# Third Party
-import requests
 
 from numerapi import utils
 
