@@ -11,6 +11,7 @@ install:
 
 script:
   - python -m pytest --cov=numerapi
+  - flake8 numerapi
 
 after_success:
   - codecov
