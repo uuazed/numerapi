@@ -2,7 +2,8 @@
 Notable changes to this project.
 
 ## dev
-- fix `stake_change` call by adding `tournament` parameter (#32) 
+- fix `stake_change` call by adding `tournament` parameter (#32)
+- code style checks with `flake8`
 
 ## [2.3.9] - 2020-11-26
 - Add additional metrics to `submission_status` (#30)
