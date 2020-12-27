@@ -1242,7 +1242,7 @@ class NumerAPI(base_api.Api):
         return stake
 
     def stake_change(self, nmr, action: str = "decrease",
-                     model_id: str = None, tournament_number=8) -> Dict:
+                     model_id: str = None, tournament: int = 8) -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -1284,7 +1284,7 @@ class NumerAPI(base_api.Api):
               }
         }
         '''
-        arguments = {'value': str(nmr), 'type': action, 'modelId': model_id, 'tournamentNumber': tournament_number}
+        arguments = {'value': str(nmr), 'type': action, 'modelId': model_id, 'tournamentNumber': tournament}
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']['v2ChangeStake']
         utils.replace(stake, "requestedAmount", utils.parse_float_string)
