@@ -6,5 +6,5 @@ except pkg_resources.DistributionNotFound:
     __version__ = 'unknown'
 
 
-from numerapi.numerapi import NumerAPI
-from numerapi.signalsapi import SignalsAPI
+from numerapi.numerapi import NumerAPI  # noqa
+from numerapi.signalsapi import SignalsAPI  # noqa

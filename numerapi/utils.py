@@ -72,7 +72,7 @@ def post_with_err_handling(url, body, headers, timeout=None):
 
     try:
         return r.json()
-    except UnboundLocalError as e:
+    except UnboundLocalError:
         # `r` isn't available, probably because the try/except above failed
         pass
     except json.decoder.JSONDecodeError as e:

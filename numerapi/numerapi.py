@@ -1284,7 +1284,10 @@ class NumerAPI(base_api.Api):
               }
         }
         '''
-        arguments = {'value': str(nmr), 'type': action, 'modelId': model_id, 'tournamentNumber': tournament}
+        arguments = {'value': str(nmr),
+                     'type': action,
+                     'modelId': model_id,
+                     'tournamentNumber': tournament}
         result = self.raw_query(query, arguments, authorization=True)
         stake = result['data']['v2ChangeStake']
         utils.replace(stake, "requestedAmount", utils.parse_float_string)

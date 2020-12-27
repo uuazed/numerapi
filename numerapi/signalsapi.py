@@ -351,8 +351,8 @@ class SignalsAPI(base_api.Api):
             >>> SignalsAPI().ticker_universe()
             ["MSFT", "AMZN", "APPL", ...]
         """
-        domain = 'https://numerai-signals-public-data.s3-us-west-2.amazonaws.com'
-        url = f"{domain}/latest_universe.csv"
+        dom = 'https://numerai-signals-public-data.s3-us-west-2.amazonaws.com'
+        url = f"{dom}/latest_universe.csv"
         result = requests.get(url, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
         tickers = [t.strip() for t in iterator]

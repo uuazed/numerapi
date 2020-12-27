@@ -313,7 +313,8 @@ class Api:
         """Get all your deposits and withdrawals.
 
         Args:
-            model_id (str): Target model UUID (required for accounts with multiple models)
+            model_id (str): Target model UUID (required for accounts
+                            with multiple models)
 
         Returns:
             dict: lists of your NMR and USD transactions
@@ -382,7 +383,7 @@ class Api:
                  ..]}
         """
         self.logger.warning(
-            "Method get_transactions is DEPRECATED, use get_account_transactions")
+            "get_transactions is DEPRECATED, use get_account_transactions")
         query = """
           query($modelId: String) {
             user(modelId: $modelId) {
