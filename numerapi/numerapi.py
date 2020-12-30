@@ -1276,6 +1276,7 @@ class NumerAPI(base_api.Api):
               v2ChangeStake(value: $value
                             type: $type
                             modelId: $modelId
+                            tournamentNumber: 8
                             tournamentNumber: $tournamentNumber) {
                 dueDate
                 requestedAmount
