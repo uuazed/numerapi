@@ -356,7 +356,7 @@ class SignalsAPI(base_api.Api):
         """
         result = requests.get(self.TICKER_UNIVERSE_URL, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
-        tickers = [t.strip() for t in iterator]
+        tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
         return tickers
 
     def stake_get(self, username) -> decimal.Decimal:

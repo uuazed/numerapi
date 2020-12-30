@@ -68,4 +68,5 @@ def test_ticker_universe(api):
     responses.add(responses.GET,
                   api.TICKER_UNIVERSE_URL, body=data)
     result = api.ticker_universe()
-    assert len(result) == 4
+    assert "bloomberg_ticker" not in result
+    assert len(result) == 3
