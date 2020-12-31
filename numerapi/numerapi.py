@@ -1246,7 +1246,7 @@ class NumerAPI(base_api.Api):
         """Change stake by `value` NMR.
 
         Args:
-            nmr (float or str): amount of NMR you want to reduce
+            nmr (float or str): amount of NMR you want to increase/decrease
             action (str): `increase` or `decrease`
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
@@ -1262,7 +1262,7 @@ class NumerAPI(base_api.Api):
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> model = api.get_models()['uuazed']
-            >>> api.stake_decrease(10, model)
+            >>> api.stake_change(10, "decrease", model)
             {'dueDate': None,
              'requestedAmount': decimal.Decimal('10'),
              'type': 'decrease',
