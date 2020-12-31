@@ -1,8 +1,5 @@
 import pytest
-import os
 import datetime
-import decimal
-import pytz
 import responses
 
 import numerapi
@@ -63,3 +60,13 @@ def test_daily_user_performances(api):
     result = api.daily_user_performances("uuazed")
     assert len(result) == 1
     assert isinstance(result[0]["date"], datetime.datetime)
+
+
+@responses.activate
+def test_ticker_universe(api):
+    data = "bloomberg_ticker\nSTOCK A\nSTOCK B\nSTOCK C"
+    responses.add(responses.GET,
+                  api.TICKER_UNIVERSE_URL, body=data)
+    result = api.ticker_universe()
+    assert "bloomberg_ticker" not in result
+    assert len(result) == 3
