@@ -45,7 +45,7 @@ def test_get_latest_data_paths(api):
         "training": api.get_latest_training_data_path,
         "validation": api.get_latest_validation_data_path,
         "test": api.get_latest_test_data_path,
-        "current_test_era": api.get_latest_current_test_era_data_path,
+        "max_test_era": api.get_latest_max_test_era_data_path,
         "tournament": api.get_latest_tournament_data_path,
         "tournament_ids": api.get_latest_tournament_ids_data_path,
         "example_predictions": api.get_latest_example_predictions_data_path,

@@ -134,7 +134,7 @@ class NumerAPI(base_api.Api):
             "training",
             "validation",
             "test",
-            "current_test_era",
+            "max_test_era",
             "tournament",
             "tournament_ids",
             "example_predictions",
@@ -169,8 +169,8 @@ class NumerAPI(base_api.Api):
     def get_latest_test_data_path(self, ext: str = "csv") -> str:
         return self.get_latest_data_path("test", ext)
 
-    def get_latest_current_test_era_data_path(self, ext: str = "csv") -> str:
-        return self.get_latest_data_path("current_test_era", ext)
+    def get_latest_max_test_era_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("max_test_era", ext)
 
     def get_latest_tournament_data_path(self, ext: str = "csv") -> str:
         return self.get_latest_data_path("tournament", ext)
