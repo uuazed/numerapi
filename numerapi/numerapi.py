@@ -1250,6 +1250,7 @@ class NumerAPI(base_api.Api):
             action (str): `increase` or `decrease`
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             dict: stake information with the following content:
@@ -1294,12 +1295,13 @@ class NumerAPI(base_api.Api):
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
 
-    def stake_drain(self, model_id: str = None) -> Dict:
+    def stake_drain(self, model_id: str = None, tournament: int = 8) -> Dict:
         """Completely remove your stake.
 
         Args:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             dict: stake information with the following content:
@@ -1318,15 +1320,17 @@ class NumerAPI(base_api.Api):
              'type': 'decrease',
              'status': ''}
         """
-        return self.stake_decrease(11000000, model_id)
+        return self.stake_decrease(11000000, model_id, tournament)
 
-    def stake_decrease(self, nmr, model_id: str = None) -> Dict:
+    def stake_decrease(self, nmr, model_id: str = None,
+                       tournament: int = 8) -> Dict:
         """Decrease your stake by `value` NMR.
 
         Args:
             nmr (float or str): amount of NMR you want to reduce
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             dict: stake information with the following content:
@@ -1345,15 +1349,17 @@ class NumerAPI(base_api.Api):
              'type': 'decrease',
              'status': ''}
         """
-        return self.stake_change(nmr, 'decrease', model_id)
+        return self.stake_change(nmr, 'decrease', model_id, tournament)
 
-    def stake_increase(self, nmr, model_id: str = None) -> Dict:
+    def stake_increase(self, nmr, model_id: str = None,
+                       tournament: int = 8) -> Dict:
         """Increase your stake by `value` NMR.
 
         Args:
             nmr (float or str): amount of additional NMR you want to stake
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
+            tournament (int): ID of the tournament (optional, defaults to 8)
 
         Returns:
             dict: stake information with the following content:
@@ -1372,7 +1378,7 @@ class NumerAPI(base_api.Api):
              'type': 'increase',
              'status': ''}
         """
-        return self.stake_change(nmr, 'increase', model_id)
+        return self.stake_change(nmr, 'increase', model_id, tournament)
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public profile of a user.

@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - fix `stake_change` call by adding `tournament` parameter (#32)
+- add `tournament` parameter to all stake related endpoints
 - code style checks with `flake8`
 - Remove header from signals universe (#33)
 
