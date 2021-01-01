@@ -8,8 +8,6 @@ import responses
 import numerapi
 from numerapi import base_api
 
-PUBLIC_DATASETS_URL = "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
-
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
@@ -38,34 +36,34 @@ def test_download_current_dataset(api, tmpdir):
         assert len(rsps.calls) == 0
 
 
-def test_get_latest_data_paths(api):
+def test_get_latest_data_urls(api):
     # Dict of data types and their associated functions
     function_dict = {
-        "live": api.get_latest_live_data_path,
-        "training": api.get_latest_training_data_path,
-        "validation": api.get_latest_validation_data_path,
-        "test": api.get_latest_test_data_path,
-        "max_test_era": api.get_latest_max_test_era_data_path,
-        "tournament": api.get_latest_tournament_data_path,
-        "tournament_ids": api.get_latest_tournament_ids_data_path,
-        "example_predictions": api.get_latest_example_predictions_data_path,
+        "live": api.get_latest_live_data_url,
+        "training": api.get_latest_training_data_url,
+        "validation": api.get_latest_validation_data_url,
+        "test": api.get_latest_test_data_url,
+        "max_test_era": api.get_latest_max_test_era_data_url,
+        "tournament": api.get_latest_tournament_data_url,
+        "tournament_ids": api.get_latest_tournament_ids_data_url,
+        "example_predictions": api.get_latest_example_predictions_data_url,
     }
 
-    exts = ["csv", "csv.xz", "parquet"]
+    extensions = ["csv", "csv.xz", "parquet"]
 
-    # Test each combination of function and ext
+    # Test each combination of function and extension
     for data_type, fn in function_dict.items():
         with pytest.raises(ValueError):
-            path = fn(ext='.txt')
+            url = fn(extension='.txt')
 
-        for ext in exts:
-            expected_path = f"{PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{ext}"
+        for extension in extensions:
+            expected_url = f"{api.PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{extension}"
 
-            path = fn(ext=ext)
-            assert path == expected_path
+            url = fn(extension=extension)
+            assert url == expected_url
 
-            path = fn(ext=f'.{ext}')
-            assert path == expected_path
+            url = fn(extension=f'.{extension}')
+            assert url == expected_url
 
 
 def test_get_current_round(api):
