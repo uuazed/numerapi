@@ -8,6 +8,8 @@ import responses
 import numerapi
 from numerapi import base_api
 
+PUBLIC_DATASETS_URL = "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
+
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
@@ -34,6 +36,36 @@ def test_download_current_dataset(api, tmpdir):
         api.download_current_dataset(dest_path=str(tmpdir),
                                      dest_filename=os.path.basename(path))
         assert len(rsps.calls) == 0
+
+
+def test_get_latest_data_paths(api):
+    # Dict of data types and their associated functions
+    function_dict = {
+        "live": api.get_latest_live_data_path,
+        "training": api.get_latest_training_data_path,
+        "validation": api.get_latest_validation_data_path,
+        "test": api.get_latest_test_data_path,
+        "current_test_era": api.get_latest_current_test_era_data_path,
+        "tournament": api.get_latest_tournament_data_path,
+        "tournament_ids": api.get_latest_tournament_ids_data_path,
+        "example_predictions": api.get_latest_example_predictions_data_path,
+    }
+
+    exts = ["csv", "csv.xz", "parquet"]
+
+    # Test each combination of function and ext
+    for data_type, fn in function_dict.items():
+        with pytest.raises(ValueError):
+            path = fn(ext='.txt')
+
+        for ext in exts:
+            expected_path = f"{PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{ext}"
+
+            path = fn(ext=ext)
+            assert path == expected_path
+
+            path = fn(ext=f'.{ext}')
+            assert path == expected_path
 
 
 def test_get_current_round(api):

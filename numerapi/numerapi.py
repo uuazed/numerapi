@@ -27,6 +27,8 @@ class NumerAPI(base_api.Api):
     much more.
     """
 
+    PUBLIC_DATASETS_URL = "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
+
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
         self.logger.info("unzipping file...")
@@ -111,6 +113,73 @@ class NumerAPI(base_api.Api):
             self._unzip_file(dataset_path, dest_path, dataset_name)
 
         return dataset_path
+
+    def get_latest_data_path(self, data_type: str, ext: str = "csv") -> str:
+        """Fetch url of the latest data path for a specified data type
+
+        Args:
+            data_type (str): type of data to return
+            data_type (str): file extension to get (optional, defaults to csv)
+
+        Returns:
+            str: url of the requested dataset
+
+        Example:
+            >>> NumerAPI().get_latest_data_path("live", "csv")
+            https://numerai-public-datasets.s3.amazonaws.com/latest_numerai_live_data.csv
+        """
+        valid_exts = ["csv", "csv.xz", "parquet"]
+        valid_data_types = [
+            "live",
+            "training",
+            "validation",
+            "test",
+            "current_test_era",
+            "tournament",
+            "tournament_ids",
+            "example_predictions",
+        ]
+
+        # Allow ext to have a "." as the first character
+        if ext[0] == ".":
+            ext = ext[1:]
+
+        # Validate arguments
+        if ext not in valid_exts:
+            raise ValueError(f"ext must be set to one of {valid_exts}")
+
+        if ext not in valid_exts:
+            raise ValueError(
+                f"data_type must be set to one of {valid_data_types}")
+
+        path = f"{self.PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{ext}"
+
+        return path
+
+    # Convenience functions for get_latest_data_path()
+    def get_latest_live_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("live", ext)
+
+    def get_latest_training_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("training", ext)
+
+    def get_latest_validation_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("validation", ext)
+
+    def get_latest_test_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("test", ext)
+
+    def get_latest_current_test_era_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("current_test_era", ext)
+
+    def get_latest_tournament_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("tournament", ext)
+
+    def get_latest_tournament_ids_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("tournament_ids", ext)
+
+    def get_latest_example_predictions_data_path(self, ext: str = "csv") -> str:
+        return self.get_latest_data_path("example_predictions", ext)
 
     def get_v1_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard for the given round.
