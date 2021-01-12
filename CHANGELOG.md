@@ -6,6 +6,7 @@ Notable changes to this project.
 - add `tournament` parameter to all stake related endpoints
 - code style checks with `flake8`
 - Remove header from signals universe (#33)
+- Add `get_latest_data_path` and `download_latest_data` (#35)
 
 ## [2.3.9] - 2020-11-26
 - Add additional metrics to `submission_status` (#30)
