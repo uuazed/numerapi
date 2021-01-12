@@ -36,33 +36,33 @@ def test_download_current_dataset(api, tmpdir):
         assert len(rsps.calls) == 0
 
 
-def test_get_latest_data_urls(api):
-    # Dict of data types and their associated functions
-    function_dict = {
-        "live": api.get_latest_live_data_url,
-        "training": api.get_latest_training_data_url,
-        "validation": api.get_latest_validation_data_url,
-        "test": api.get_latest_test_data_url,
-        "max_test_era": api.get_latest_max_test_era_data_url,
-        "tournament": api.get_latest_tournament_data_url,
-        "tournament_ids": api.get_latest_tournament_ids_data_url,
-        "example_predictions": api.get_latest_example_predictions_data_url,
-    }
+def test_get_latest_data_url(api):
+    # List of data types that have latest data files
+    data_types = [
+        "live",
+        "training",
+        "validation",
+        "test",
+        "max_test_era",
+        "tournament",
+        "tournament_ids",
+        "example_predictions",
+    ]
 
     extensions = ["csv", "csv.xz", "parquet"]
 
     # Test each combination of function and extension
-    for data_type, fn in function_dict.items():
+    for data_type in data_types:
         with pytest.raises(ValueError):
-            url = fn(extension='.txt')
+            url = api.get_latest_data_url(data_type, extension='.txt')
 
         for extension in extensions:
             expected_url = f"{api.PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{extension}"
 
-            url = fn(extension=extension)
+            url = api.get_latest_data_url(data_type, extension)
             assert url == expected_url
 
-            url = fn(extension=f'.{extension}')
+            url = api.get_latest_data_url(data_type, f'.{extension}')
             assert url == expected_url
 
 

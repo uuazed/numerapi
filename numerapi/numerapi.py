@@ -126,7 +126,7 @@ class NumerAPI(base_api.Api):
 
         Example:
             >>> url = NumerAPI().get_latest_data_url("live", "csv")
-            >>> numerapi.utils.download_file(url)
+            >>> numerapi.utils.download_file(url, ".")
         """
         valid_extensions = ["csv", "csv.xz", "parquet"]
         valid_data_types = [
@@ -155,30 +155,35 @@ class NumerAPI(base_api.Api):
 
         return url
 
-    # Convenience functions for get_latest_data_url()
-    def get_latest_live_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("live", extension)
+    def download_latest_data(self, data_type: str, extension: str, dest_path: str):
+        url = self.get_latest_data_url(data_type, extension)
+        utils.download_file(url, dest_path, self.show_progress_bars)
 
-    def get_latest_training_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("training", extension)
+    # Convenience functions for download_latest_data()
+    # The extension argument must be one of: "csv", "csv.xz", or "parquet"
+    def download_latest_live_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("live", extension, dest_path)
 
-    def get_latest_validation_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("validation", extension)
+    def download_latest_training_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("training", extension, dest_path)
 
-    def get_latest_test_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("test", extension)
+    def download_latest_validation_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("validation", extension, dest_path)
 
-    def get_latest_max_test_era_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("max_test_era", extension)
+    def download_latest_test_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("test", extension, dest_path)
 
-    def get_latest_tournament_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("tournament", extension)
+    def download_latest_max_test_era_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("max_test_era", extension, dest_path)
 
-    def get_latest_tournament_ids_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("tournament_ids", extension)
+    def download_latest_tournament_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("tournament", extension, dest_path)
 
-    def get_latest_example_predictions_data_url(self, extension: str = "csv") -> str:
-        return self.get_latest_data_url("example_predictions", extension)
+    def download_latest_tournament_ids_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("tournament_ids", extension, dest_path)
+
+    def download_latest_example_predictions_data(self, extension="csv", dest_path="."):
+        self.download_latest_data("example_predictions", extension, dest_path)
 
     def get_v1_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard for the given round.
