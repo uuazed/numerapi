@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.4.0] - 2021-01-12
 - fix `stake_change` call by adding `tournament` parameter (#32)
 - add `tournament` parameter to all stake related endpoints
 - code style checks with `flake8`
