@@ -27,6 +27,8 @@ class NumerAPI(base_api.Api):
     much more.
     """
 
+    PUBLIC_DATASETS_URL = "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
+
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
         self.logger.info("unzipping file...")
@@ -111,6 +113,51 @@ class NumerAPI(base_api.Api):
             self._unzip_file(dataset_path, dest_path, dataset_name)
 
         return dataset_path
+
+    def get_latest_data_url(self, data_type: str, extension: str = "csv") -> str:
+        """Fetch url of the latest data url for a specified data type
+
+        Args:
+            data_type (str): type of data to return
+            extension (str): file extension to get (optional, defaults to csv)
+
+        Returns:
+            str: url of the requested dataset
+
+        Example:
+            >>> url = NumerAPI().get_latest_data_url("live", "csv")
+            >>> numerapi.utils.download_file(url, ".")
+        """
+        valid_extensions = ["csv", "csv.xz", "parquet"]
+        valid_data_types = [
+            "live",
+            "training",
+            "validation",
+            "test",
+            "max_test_era",
+            "tournament",
+            "tournament_ids",
+            "example_predictions",
+        ]
+
+        # Allow extension to have a "." as the first character
+        extension = extension.lstrip(".")
+
+        # Validate arguments
+        if extension not in valid_extensions:
+            raise ValueError(f"extension must be set to one of {valid_extensions}")
+
+        if extension not in valid_extensions:
+            raise ValueError(
+                f"data_type must be set to one of {valid_data_types}")
+
+        url = f"{self.PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{extension}"
+
+        return url
+
+    def download_latest_data(self, data_type: str, extension: str = "csv", dest_path: str = "."):
+        url = self.get_latest_data_url(data_type, extension)
+        utils.download_file(url, dest_path, self.show_progress_bars)
 
     def get_v1_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard for the given round.
