@@ -27,7 +27,8 @@ class NumerAPI(base_api.Api):
     much more.
     """
 
-    PUBLIC_DATASETS_URL = "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
+    PUBLIC_DATASETS_URL = \
+        "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
 
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
@@ -114,7 +115,8 @@ class NumerAPI(base_api.Api):
 
         return dataset_path
 
-    def get_latest_data_url(self, data_type: str, extension: str = "csv") -> str:
+    def get_latest_data_url(self, data_type: str,
+                            extension: str = "csv") -> str:
         """Fetch url of the latest data url for a specified data type
 
         Args:
@@ -145,17 +147,20 @@ class NumerAPI(base_api.Api):
 
         # Validate arguments
         if extension not in valid_extensions:
-            raise ValueError(f"extension must be set to one of {valid_extensions}")
+            msg = f"extension must be set to one of {valid_extensions}"
+            raise ValueError(msg)
 
         if extension not in valid_extensions:
             raise ValueError(
                 f"data_type must be set to one of {valid_data_types}")
 
-        url = f"{self.PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{extension}"
+        url = (f"{self.PUBLIC_DATASETS_URL}/"
+               f"latest_numerai_{data_type}_data.{extension}")
 
         return url
 
-    def download_latest_data(self, data_type: str, extension: str = "csv", dest_path: str = "."):
+    def download_latest_data(self, data_type: str,
+                             extension: str = "csv", dest_path: str = "."):
         url = self.get_latest_data_url(data_type, extension)
         utils.download_file(url, dest_path, self.show_progress_bars)
 
