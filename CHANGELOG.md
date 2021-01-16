@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- improve docstrings and signals example code
+
 ## [2.4.0] - 2021-01-12
 - fix `stake_change` call by adding `tournament` parameter (#32)
 - add `tournament` parameter to all stake related endpoints
