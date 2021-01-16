@@ -84,6 +84,10 @@ and `NUMERAI_SECRET_KEY`).
     model_id = napi.get_models()['uuazed']
     napi.upload_predictions("preds.csv", model_id=model_id)
 
+    # get submission status and invalid tickers
+    status = napi.submission_status(model_id)
+    invalid_tickers = status['invalidTickers']
+
     # get daily performance as pandas dataframe
     import pandas as pd
     df = pd.DataFrame(napi.daily_user_performances("uuazed"))
