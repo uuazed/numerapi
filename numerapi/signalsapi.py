@@ -132,12 +132,12 @@ class SignalsAPI(base_api.Api):
                 * submissionIp (`string`)
                 * submittedCount (`int`)
                 * filteredCount (`int`)
-                * invalidTickers ('string)
-                * hasHistoric ('bool')
-                * historicMean ('float')
-                * historicStd ('float')
-                * historicSharpe ('float')
-                * historicMaxDrawdown ('float')
+                * invalidTickers (`string`)
+                * hasHistoric (`bool`)
+                * historicMean (`float`)
+                * historicStd (`float`)
+                * historicSharpe (`float`)
+                * historicMaxDrawdown (`float`)
 
         Example:
             >>> api = SignalsAPI(secret_key="..", public_id="..")
