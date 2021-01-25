@@ -159,10 +159,19 @@ class NumerAPI(base_api.Api):
 
         return url
 
-    def download_latest_data(self, data_type: str,
-                             extension: str = "csv", dest_path: str = "."):
+    def download_latest_data(self, data_type: str, extension: str = "csv",
+                             dest_path: str = ".", dest_filename: str = None):
+        # set up download path
+        if dest_filename is None:
+            dest_filename = f"latest_numerai_{data_type}_data.{extension}"
+
+        dataset_path = os.path.join(dest_path, dest_filename)
+
+        # create parent folder if necessary
+        utils.ensure_directory_exists(dest_path)
+
         url = self.get_latest_data_url(data_type, extension)
-        utils.download_file(url, dest_path, self.show_progress_bars)
+        utils.download_file(url, dataset_path, self.show_progress_bars)
 
     def get_v1_leaderboard(self, round_num=0, tournament=8):
         """Retrieves the leaderboard for the given round.
