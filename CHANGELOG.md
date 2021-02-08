@@ -4,6 +4,7 @@ Notable changes to this project.
 ## dev
 - improve docstrings and signals example code
 - remove deprecated `get_v1_leaderboard`
+- Fix default file path for `download_latest_data` (#37)
 
 ## [2.4.0] - 2021-01-12
 - fix `stake_change` call by adding `tournament` parameter (#32)
