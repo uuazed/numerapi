@@ -58,13 +58,6 @@ def test_submission_ids(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_leaderboard')
-def test_leaderboard(mocked):
-    result = CliRunner().invoke(cli.leaderboard)
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.get_user_activities')
 def test_user_activities(mocked, login):
     result = CliRunner().invoke(cli.user_activities, 'username')
