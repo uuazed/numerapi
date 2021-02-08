@@ -71,11 +71,6 @@ def test_get_current_round(api):
     assert current_round >= 82
 
 
-def test_v1_get_leaderboard(api):
-    lb = api.get_v1_leaderboard(67, tournament=1)
-    assert len(lb) == 1425
-
-
 @pytest.mark.parametrize("fun", ["get_user", "get_account", "get_stakes",
                                  "get_transactions", "get_payments"])
 def test_unauthorized_requests(api, fun):
