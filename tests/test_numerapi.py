@@ -87,9 +87,6 @@ def test_error_handling(api):
     # String instead of Int
     with pytest.raises(ValueError):
         api.round_details("foo")
-    # round that doesn't exist
-    with pytest.raises(ValueError):
-        api.round_details(-1)
     # unauthendicated request
     with pytest.raises(ValueError):
         # set wrong token
