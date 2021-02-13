@@ -126,13 +126,6 @@ def test_transactions(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_stakes')
-def test_stakes(mocked):
-    result = CliRunner().invoke(cli.stakes, ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.get_tournaments')
 def test_tournaments(mocked):
     result = CliRunner().invoke(cli.tournaments)

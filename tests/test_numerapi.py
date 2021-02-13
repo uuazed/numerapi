@@ -71,7 +71,7 @@ def test_get_current_round(api):
     assert current_round >= 82
 
 
-@pytest.mark.parametrize("fun", ["get_user", "get_account", "get_stakes",
+@pytest.mark.parametrize("fun", ["get_user", "get_account",
                                  "get_transactions", "get_payments"])
 def test_unauthorized_requests(api, fun):
     with pytest.raises(ValueError) as err:
@@ -119,25 +119,6 @@ def test_upload_predictions(api, tmpdir):
     submission_id = api.upload_predictions(str(path))
     assert submission_id == "1234"
     assert len(responses.calls) == 3
-
-
-@responses.activate
-def test_get_stakes(api):
-    api.token = ("", "")
-    stake = {"confidence": "0.4",
-             "roundNumber": 99,
-             "tournamentId": 1,
-             "soc": "0.4",
-             "insertedAt": "2018-01-01 11:11:11",
-             "staker": "-",
-             "status": "-",
-             "value": "0.4"}
-    data = {'data': {'model': {'stakeTxs': [stake]}}}
-    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    stakes = api.get_stakes()
-    assert len(stakes) == 1
-    assert stakes[0]["confidence"] == decimal.Decimal("0.4")
-    assert isinstance(stakes[0]["insertedAt"], datetime.datetime)
 
 
 @responses.activate
