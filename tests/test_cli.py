@@ -32,7 +32,7 @@ def test_dataset_url(mocked):
 
 @patch('numerapi.NumerAPI.get_leaderboard')
 def test_leaderboard(mocked):
-    result = CliRunner().invoke(cli.leaderboard, ['--tournament', 1])
+    result = CliRunner().invoke(cli.leaderboard)
     # just testing if calling works fine
     assert result.exit_code == 0
 
