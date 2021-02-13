@@ -53,14 +53,6 @@ def current_round(tournament=8):
 
 
 @cli.command()
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
-def submission_ids(tournament=8):
-    """Get dict with username->submission_id mapping."""
-    click.echo(prettify(napi.get_submission_ids(tournament=tournament)))
-
-
-@cli.command()
 @click.option('--limit', default=20,
               help='Number of items to return, defaults to 20')
 @click.option('--offset', default=0,

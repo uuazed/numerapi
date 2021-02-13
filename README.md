@@ -123,7 +123,6 @@ To get started with the cli interface, let's take a look at the help page:
       stake-get                       Get stake value of a user.
       stake-increase                  Increase your stake by `value` NMR.
       submission-filenames            Get filenames of your submissions
-      submission-ids                  Get dict with username->submission_id...
       submission-status               checks the submission status
       submit                          Upload predictions from file.
       tournament-name2number          Translate tournament name to tournament...

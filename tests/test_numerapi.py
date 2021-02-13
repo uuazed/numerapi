@@ -83,12 +83,6 @@ def test_unauthorized_requests(api, fun):
            "Your session is invalid or has expired." in str(err.value)
 
 
-def test_get_submission_ids(api):
-    ids = api.get_submission_ids()
-    assert len(ids) > 0
-    assert isinstance(ids, dict)
-
-
 def test_error_handling(api):
     # String instead of Int
     with pytest.raises(ValueError):

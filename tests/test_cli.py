@@ -51,13 +51,6 @@ def test_current_round(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_submission_ids')
-def test_submission_ids(mocked):
-    result = CliRunner().invoke(cli.submission_ids, ['--tournament', 1])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.get_user_activities')
 def test_user_activities(mocked, login):
     result = CliRunner().invoke(cli.user_activities, 'username')

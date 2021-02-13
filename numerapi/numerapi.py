@@ -495,41 +495,6 @@ class NumerAPI(base_api.Api):
         filenames.sort(key=lambda f: (f['round_num'], f['tournament']))
         return filenames
 
-    def get_submission_ids(self, tournament=8):
-        """Get dict with username->submission_id mapping.
-
-        Args:
-            tournament (int): ID of the tournament (optional, defaults to 8)
-
-        Returns:
-            dict: username->submission_id mapping, string->string
-
-        Example:
-            >>> NumerAPI().get_submission_ids()
-            {'1337ai': '93c46857-fed9-4594-981e-82db2b358daf',
-             '1x0r': '108c7601-822c-4910-835d-241da93e2e24',
-             ...
-             }
-        """
-        query = """
-            query($tournament: Int!) {
-              rounds(tournament: $tournament
-                     number: 0) {
-                leaderboard {
-                  username
-                  submissionId
-                }
-            }
-        }
-        """
-        arguments = {'tournament': tournament}
-        data = self.raw_query(query, arguments)['data']['rounds'][0]
-        if data is None:
-            return None
-        mapping = {item['username']: item['submissionId']
-                   for item in data['leaderboard']}
-        return mapping
-
     def get_user(self, model_id: str = None) -> Dict:
         """Get all information about you! DEPRECATED
 
