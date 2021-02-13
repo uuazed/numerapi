@@ -1,11 +1,12 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.4.1] - 2021-02-13
 - improve docstrings and signals example code
 - remove deprecated `get_v1_leaderboard`
 - remove deprecated `get_stakes` & `get_submission_ids`
 - Fix default file path for `download_latest_data` (#37)
+- test suite: fixes
 
 ## [2.4.0] - 2021-01-12
 - fix `stake_change` call by adding `tournament` parameter (#32)
