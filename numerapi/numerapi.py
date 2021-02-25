@@ -1056,7 +1056,8 @@ class NumerAPI(base_api.Api):
             username (str)
 
         Returns:
-            float: current stake
+            float: current stake (including projected NMR earnings from open
+                   rounds)
 
         Example:
             >>> api = NumerAPI()
@@ -1403,8 +1404,8 @@ class NumerAPI(base_api.Api):
                 * date (`datetime`)
                 * correlation (`float`)
                 * roundNumber (`int`)
-                * mmc (`float`)
-                * fnc (`float`)
+                * mmc (`float`): metamodel contribution
+                * fnc (`float`): feature neutral correlation
                 * tournamentName (`str`)
                 * correlationWithMetamodel (`float`)
 
