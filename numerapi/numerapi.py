@@ -1442,4 +1442,7 @@ class NumerAPI(base_api.Api):
         # convert strings to python objects
         for perf in performances:
             utils.replace(perf, "date", utils.parse_datetime_string)
+        # remove useless items
+        performances = [p for p in performances
+                        if any([p['correlation'], p['fnc'], p['mmc']])]
         return performances

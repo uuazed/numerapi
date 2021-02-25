@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - `daily_user_performances` add `fnc`
+- `daily_submissions_performances` filter all-None items
 
 ## [2.4.1] - 2021-02-13
 - improve docstrings and signals example code
