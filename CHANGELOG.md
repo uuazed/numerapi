@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- `daily_user_performances` add `fnc`
+
 ## [2.4.1] - 2021-02-13
 - improve docstrings and signals example code
 - remove deprecated `get_v1_leaderboard`

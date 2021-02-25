@@ -1404,6 +1404,8 @@ class NumerAPI(base_api.Api):
                 * correlation (`float`)
                 * roundNumber (`int`)
                 * mmc (`float`)
+                * fnc (`float`)
+                * tournamentName (`str`)
                 * correlationWithMetamodel (`float`)
 
         Example:
@@ -1413,6 +1415,7 @@ class NumerAPI(base_api.Api):
               'correlation': -0.011765912,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
               'mmc': 0.3,
+              'fnc': 0.1,
               'correlationWithMetamodel': 0.87},
               ...
             ]
@@ -1424,7 +1427,9 @@ class NumerAPI(base_api.Api):
                 date
                 correlation
                 roundNumber
+                tournamentName
                 mmc
+                fnc
                 correlationWithMetamodel
               }
             }
