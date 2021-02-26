@@ -274,7 +274,6 @@ class NumerAPI(base_api.Api):
         round_num = data["number"]
         return round_num
 
-
     def get_user_activities(self, username, tournament=8):
         """Get user activities (works for all users!).
 
