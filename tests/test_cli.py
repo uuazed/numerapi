@@ -119,27 +119,6 @@ def test_transactions(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_tournaments')
-def test_tournaments(mocked):
-    result = CliRunner().invoke(cli.tournaments)
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
-@patch('numerapi.NumerAPI.tournament_number2name')
-def test_tournament_number2name(mocked):
-    result = CliRunner().invoke(cli.tournament_number2name, ["1"])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
-@patch('numerapi.NumerAPI.tournament_name2number')
-def test_tournament_name2number(mocked):
-    result = CliRunner().invoke(cli.tournament_name2number, ["frank"])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.upload_predictions')
 def test_submit(mocked, login, tmpdir):
     path = tmpdir.join("somefilepath")
