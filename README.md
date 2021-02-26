@@ -122,12 +122,10 @@ To get started with the cli interface, let's take a look at the help page:
       stake-drain                     Completely remove your stake.
       stake-get                       Get stake value of a user.
       stake-increase                  Increase your stake by `value` NMR.
+      stakes                          List all your stakes.
       submission-filenames            Get filenames of your submissions
       submission-status               checks the submission status
       submit                          Upload predictions from file.
-      tournament-name2number          Translate tournament name to tournament...
-      tournament-number2name          Translate tournament number to tournament...
-      tournaments                     Get all tournaments.
       transactions                    List all your deposits and withdrawals.
       user                            Get all information about you! DEPRECATED...
       user-activities                 Get user activities (works for all users!)
