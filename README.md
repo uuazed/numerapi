@@ -64,7 +64,7 @@ and `NUMERAI_SECRET_KEY`).
 
     # convert results to a pandas dataframe
     import pandas as pd
-    df = pd.io.json.json_normalize(napi.daily_user_performances("uuazed"), sep="-")
+    df = pd.DataFrame(napi.daily_user_performances("uuazed"))
 
 
 ### Usage example - Numerai Signals
