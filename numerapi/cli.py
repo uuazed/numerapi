@@ -165,27 +165,6 @@ def stakes(model_id):
 
 
 @cli.command()
-@click.option('--only_active/--all', default=True)
-def tournaments(only_active):
-    """Get all tournaments."""
-    click.echo(prettify(napi.get_tournaments(only_active)))
-
-
-@cli.command()
-@click.argument("number", type=int)
-def tournament_number2name(number):
-    """Translate tournament number to tournament name."""
-    click.echo(prettify(napi.tournament_number2name(number)))
-
-
-@cli.command()
-@click.argument("name", type=str)
-def tournament_name2number(name):
-    """Translate tournament name to tournament number."""
-    click.echo(prettify(napi.tournament_name2number(name)))
-
-
-@cli.command()
 @click.argument("model_id")
 def submission_status(model_id):
     """checks the submission status"""

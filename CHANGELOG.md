@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- deprecate multi-tournament handling
+
 ## [2.4.2] - 2021-02-25
 - `daily_user_performances` add `fnc`
 - `daily_submissions_performances` filter all-None items

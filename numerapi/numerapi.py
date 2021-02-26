@@ -49,6 +49,7 @@ class NumerAPI(base_api.Api):
 
         Args:
             tournament (int, optional): ID of the tournament, defaults to 8
+              -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             str: url of the current dataset
@@ -76,6 +77,7 @@ class NumerAPI(base_api.Api):
             unzip (bool, optional): indication of whether the training data
                 should be unzipped, defaults to `True`
             tournament (int, optional): ID of the tournament, defaults to 8
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             str: Path to the downloaded dataset
@@ -178,6 +180,7 @@ class NumerAPI(base_api.Api):
 
         Args:
             tournament (int, optional): ID of the tournament, defaults to 8
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             list of dicts: list of rounds
@@ -246,6 +249,7 @@ class NumerAPI(base_api.Api):
 
         Args:
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             int: number of the current active round
@@ -270,57 +274,6 @@ class NumerAPI(base_api.Api):
         round_num = data["number"]
         return round_num
 
-    def get_tournaments(self, only_active=True):
-        """Get all tournaments
-
-        Args:
-            only_active (bool): Flag to indicate of only active tournaments
-                                should be returned or all of them. Defaults
-                                to True.
-
-        Returns:
-            list of dicts: list of tournaments
-
-            Each tournaments' dict contains the following items:
-
-                * id (`str`)
-                * name (`str`)
-                * tournament (`int`)
-                * active (`bool`)
-
-        Example:
-            >>> NumerAPI().get_tournaments()
-            [ { 'id': '2ecf30f4-4b4f-42e9-8e72-cc5bd61c2733',
-                'name': 'alpha',
-                'tournament': 1,
-                'active': True},
-              { 'id': '6ff44cca-263d-40bd-b029-a1ab8f42798f',
-                'name': 'bravo',
-                'tournament': 2,
-                'active': True},
-              { 'id': 'ebf0d62b-0f60-4550-bcec-c737b168c65d',
-                'name': 'charlie',
-                'tournament': 3
-                'active': False},
-              { 'id': '5fac6ece-2726-4b66-9790-95866b3a77fc',
-                'name': 'delta',
-                'tournament': 4,
-                'active': True}]
-        """
-        query = """
-            query {
-              tournaments {
-                id
-                name
-                tournament
-                active
-            }
-        }
-        """
-        data = self.raw_query(query)['data']['tournaments']
-        if only_active:
-            data = [d for d in data if d['active']]
-        return data
 
     def get_user_activities(self, username, tournament=8):
         """Get user activities (works for all users!).
@@ -328,6 +281,7 @@ class NumerAPI(base_api.Api):
         Args:
             username (str): name of the user
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             list: list of user activities (`dict`)
@@ -443,6 +397,7 @@ class NumerAPI(base_api.Api):
 
         Args:
             tournament (int): optionally filter by ID of the tournament
+                -- DEPRECATED there is only one tournament nowadays
             round_num (int): optionally filter round number
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
@@ -791,6 +746,7 @@ class NumerAPI(base_api.Api):
         Args:
             file_path (str): CSV file with predictions that will get uploaded
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
 
@@ -853,6 +809,7 @@ class NumerAPI(base_api.Api):
         Args:
             hours (int, optional): timeframe to consider, defaults to 24
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             bool: True if a new round has started, False otherwise.
@@ -878,44 +835,6 @@ class NumerAPI(base_api.Api):
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
-
-    def tournament_number2name(self, number: int) -> str:
-        """Translate tournament number to tournament name.
-
-        Args:
-            number (int): tournament number to translate
-
-        Returns:
-            name (str): name of the tournament or `None` if unknown.
-
-        Examples:
-            >>> NumerAPI().tournament_number2name(4)
-            'delta'
-            >>> NumerAPI().tournament_number2name(99)
-            None
-        """
-        tournaments = self.get_tournaments()
-        d = {t['tournament']: t['name'] for t in tournaments}
-        return d.get(number, None)
-
-    def tournament_name2number(self, name: str) -> int:
-        """Translate tournament name to tournament number.
-
-        Args:
-            name (str): tournament name to translate
-
-        Returns:
-            number (int): number of the tournament or `None` if unknown.
-
-        Examples:
-            >>> NumerAPI().tournament_name2number('delta')
-            4
-            >>> NumerAPI().tournament_name2number('foo')
-            None
-        """
-        tournaments = self.get_tournaments()
-        d = {t['name']: t['tournament'] for t in tournaments}
-        return d.get(name, None)
 
     #  ################# V2 #####################################
 
@@ -1089,6 +1008,7 @@ class NumerAPI(base_api.Api):
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1140,6 +1060,7 @@ class NumerAPI(base_api.Api):
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1169,6 +1090,7 @@ class NumerAPI(base_api.Api):
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1198,6 +1120,7 @@ class NumerAPI(base_api.Api):
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1406,7 +1329,6 @@ class NumerAPI(base_api.Api):
                 * roundNumber (`int`)
                 * mmc (`float`): metamodel contribution
                 * fnc (`float`): feature neutral correlation
-                * tournamentName (`str`)
                 * correlationWithMetamodel (`float`)
 
         Example:
@@ -1428,7 +1350,6 @@ class NumerAPI(base_api.Api):
                 date
                 correlation
                 roundNumber
-                tournamentName
                 mmc
                 fnc
                 correlationWithMetamodel
