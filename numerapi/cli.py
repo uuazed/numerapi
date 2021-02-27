@@ -111,9 +111,11 @@ def account():
 
 
 @cli.command()
-def models():
+@click.option('--tournament', default=8,
+              help='The ID of the tournament, defaults to 8')
+def models(tournament):
     """Get map of account models!"""
-    click.echo(prettify(napi.get_models()))
+    click.echo(prettify(napi.get_models(tournament)))
 
 
 @cli.command()
