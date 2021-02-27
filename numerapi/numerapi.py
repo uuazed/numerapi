@@ -34,7 +34,6 @@ class NumerAPI(base_api.Api):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 8
 
-
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
         self.logger.info("unzipping file...")
