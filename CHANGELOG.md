@@ -3,6 +3,9 @@ Notable changes to this project.
 
 ## dev
 - deprecate multi-tournament handling
+- `get_models` now returns the list of models depending on the tournament you
+  are working on - numerai classic (NumerAPI) vs numerai signals (SignalsAPI).
+  This is necessary after the recent "model split". 
 
 ## [2.4.2] - 2021-02-25
 - `daily_user_performances` add `fnc`
