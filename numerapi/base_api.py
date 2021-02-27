@@ -202,9 +202,12 @@ class Api:
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_models(self) -> Dict:
+    def get_models(self, tournament: int = 8) -> Dict:
         """Get mapping of account model names to model ids for convenience
-
+        
+        Args:
+            tournament (int): ID of the tournament (optional, defaults to 8)
+        
         Returns:
             dict: modelname->model_id mapping, string->string
 
@@ -219,13 +222,16 @@ class Api:
               models {
                 id
                 name
+                tournament
               }
             }
           }
         """
         data = self.raw_query(
             query, authorization=True)['data']['account']['models']
-        mapping = {model['name']: model['id'] for model in data}
+        mapping = {
+            model['name']: model['id'] for model in data if model['tournament'] == tournament
+        }
         return mapping
 
     def get_account_transactions(self) -> Dict:
