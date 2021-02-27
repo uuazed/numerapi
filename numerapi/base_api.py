@@ -204,10 +204,10 @@ class Api:
 
     def get_models(self, tournament: int = 8) -> Dict:
         """Get mapping of account model names to model ids for convenience
-        
+
         Args:
             tournament (int): ID of the tournament (optional, defaults to 8)
-        
+
         Returns:
             dict: modelname->model_id mapping, string->string
 
@@ -230,7 +230,8 @@ class Api:
         data = self.raw_query(
             query, authorization=True)['data']['account']['models']
         mapping = {
-            model['name']: model['id'] for model in data if model['tournament'] == tournament
+            model['name']: model['id'] for model in data
+            if model['tournament'] == tournament
         }
         return mapping
 
