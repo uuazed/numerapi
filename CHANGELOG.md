@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.4.3] - 2021-02-27
 - deprecate multi-tournament handling
 - `get_models` now returns the list of models depending on the tournament you
   are working on - numerai classic (NumerAPI) vs numerai signals (SignalsAPI).
