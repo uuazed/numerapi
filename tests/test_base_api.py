@@ -91,8 +91,10 @@ def test_get_account(api):
 def test_get_models(api):
     api.token = ("", "")
     models_list = [
-        {"name": "model_x", "id": "95b0d9e2-c901-4f2b-9c98-24138b0bd706"},
-        {"name": "model_y", "id": "2c6d63a4-013f-42d1-bbaf-bf35725d29f7"}]
+        {"name": "model_x", "id": "95b0d9e2-c901-4f2b-9c98-24138b0bd706",
+         "tournament": 0},
+        {"name": "model_y", "id": "2c6d63a4-013f-42d1-bbaf-bf35725d29f7",
+         "tournament": 0}]
     data = {'data': {'account': {'models': models_list}}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
     models = api.get_models()
