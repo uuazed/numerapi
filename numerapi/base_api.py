@@ -39,6 +39,7 @@ class Api:
 
         self.submission_id = None
         self.show_progress_bars = show_progress_bars
+        self.tournament_id = 0
 
     def _login(self, public_id=None, secret_key=None):
         # check env variables if not set
@@ -202,11 +203,11 @@ class Api:
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_models(self, tournament: int = 8) -> Dict:
+    def get_models(self, tournament: int = None) -> Dict:
         """Get mapping of account model names to model ids for convenience
 
         Args:
-            tournament (int): ID of the tournament (optional, defaults to 8)
+            tournament (int): ID of the tournament (optional)
 
         Returns:
             dict: modelname->model_id mapping, string->string
@@ -227,6 +228,8 @@ class Api:
             }
           }
         """
+        if tournament is None:
+            tournament = self.tournament_id
         data = self.raw_query(
             query, authorization=True)['data']['account']['models']
         mapping = {

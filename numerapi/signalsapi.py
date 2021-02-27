@@ -14,6 +14,10 @@ SIGNALS_DOM = "https://numerai-signals-public-data.s3-us-west-2.amazonaws.com"
 class SignalsAPI(base_api.Api):
     TICKER_UNIVERSE_URL = f"{SIGNALS_DOM}/latest_universe.csv"
 
+    def __init__(self, *args, **kwargs):
+        base_api.Api.__init__(self, *args, **kwargs)
+        self.tournament_id = 11
+
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current Numerai Signals leaderboard
         Args:
