@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # System
-import zipfile
 import os
 import datetime
 import decimal
@@ -33,20 +32,6 @@ class NumerAPI(base_api.Api):
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 8
-
-    def _unzip_file(self, src_path, dest_path, filename):
-        """unzips file located at src_path into destination_path"""
-        self.logger.info("unzipping file...")
-
-        # construct full path (including file name) for unzipping
-        unzip_path = os.path.join(dest_path, filename)
-        utils.ensure_directory_exists(unzip_path)
-
-        # extract data
-        with zipfile.ZipFile(src_path, "r") as z:
-            z.extractall(unzip_path)
-
-        return True
 
     def get_dataset_url(self, tournament=8):
         """Fetch url of the current dataset.
@@ -247,36 +232,6 @@ class NumerAPI(base_api.Api):
             utils.replace(r, "prizePoolNmr", utils.parse_float_string)
             utils.replace(r, "prizePoolUsd", utils.parse_float_string)
         return rounds
-
-    def get_current_round(self, tournament=8):
-        """Get number of the current active round.
-
-        Args:
-            tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
-
-        Returns:
-            int: number of the current active round
-
-        Example:
-            >>> NumerAPI().get_current_round()
-            104
-        """
-        # zero is an alias for the current round!
-        query = '''
-            query($tournament: Int!) {
-              rounds(tournament: $tournament
-                     number: 0) {
-                number
-              }
-            }
-        '''
-        arguments = {'tournament': tournament}
-        data = self.raw_query(query, arguments)['data']['rounds'][0]
-        if data is None:
-            return None
-        round_num = data["number"]
-        return round_num
 
     def get_user_activities(self, username, tournament=8):
         """Get user activities (works for all users!).

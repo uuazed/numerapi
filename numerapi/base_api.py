@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # System
+import zipfile
 import os
 import logging
 from typing import Dict
@@ -444,3 +445,47 @@ class Api:
             utils.replace(t, "value", utils.parse_float_string)
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
+
+    def get_current_round(self, tournament=8):
+            """Get number of the current active round.
+
+            Args:
+                tournament (int): ID of the tournament (optional, defaults to 8)
+                    -- DEPRECATED there is only one tournament nowadays
+
+            Returns:
+                int: number of the current active round
+
+            Example:
+                >>> NumerAPI().get_current_round()
+                104
+            """
+            # zero is an alias for the current round!
+            query = """
+                query($tournament: Int!) {
+                rounds(tournament: $tournament
+                        number: 0) {
+                    number
+                }
+                }
+            """
+            arguments = {"tournament": tournament}
+            data = self.raw_query(query, arguments)["data"]["rounds"][0]
+            if data is None:
+                return None
+            round_num = data["number"]
+            return round_num
+
+    def _unzip_file(self, src_path, dest_path, filename):
+        """unzips file located at src_path into destination_path"""
+        self.logger.info("unzipping file...")
+
+        # construct full path (including file name) for unzipping
+        unzip_path = os.path.join(dest_path, filename)
+        utils.ensure_directory_exists(unzip_path)
+
+        # extract data
+        with zipfile.ZipFile(src_path, "r") as z:
+            z.extractall(unzip_path)
+
+        return True

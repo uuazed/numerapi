@@ -1,4 +1,5 @@
 import pytest
+import os
 import datetime
 import responses
 
@@ -70,3 +71,18 @@ def test_ticker_universe(api):
     result = api.ticker_universe()
     assert "bloomberg_ticker" not in result
     assert len(result) == 3
+
+
+def test_download_current_dataset(api, tmpdir):
+    path = api.download_current_dataset(dest_path=str(tmpdir), unzip=True)
+    assert os.path.exists(path)
+
+    directory = path.replace(".zip", "")
+    filename = "historical_targets.csv"
+    assert os.path.exists(os.path.join(directory, filename))
+
+    # calling again shouldn't download again
+    with responses.RequestsMock() as rsps:
+        api.download_current_dataset(dest_path=str(tmpdir),
+                                     dest_filename=os.path.basename(path))
+        assert len(rsps.calls) == 0

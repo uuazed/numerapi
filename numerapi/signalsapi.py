@@ -378,3 +378,51 @@ class SignalsAPI(base_api.Api):
         """
         data = self.public_user_profile(username)
         return data['totalStake']
+
+    def download_current_dataset(self, dest_path=".", dest_filename=None, unzip=True):
+        """Download dataset for the current Numerai Signals active round.
+
+        Args:
+            dest_path (str, optional): destination folder, defaults to `.`
+            dest_filename (str, optional): desired filename of dataset file,
+                defaults to `signals_dataset_<round number>.zip`
+            unzip (bool, optional): indication of whether the training data
+                should be unzipped, defaults to `True`
+
+        Returns:
+            str: Path to the downloaded dataset
+
+        Example:
+            >>> SignalsAPI().download_current_dataset()
+            ./signals_dataset_253.zip
+        """
+        # set up download path
+        if dest_filename is None:
+            try:
+                round_number = self.get_current_round()
+            except ValueError:
+                round_number = "x"
+            dest_filename = f"signals_dataset_{round_number}.zip"
+        else:
+            # ensure it ends with ".zip"
+            if unzip and not dest_filename.endswith(".zip"):
+                dest_filename += ".zip"
+        dataset_path = os.path.join(dest_path, dest_filename)
+
+        if os.path.exists(dataset_path):
+            self.logger.info("target file already exists")
+            return dataset_path
+
+        # create parent folder if necessary
+        utils.ensure_directory_exists(dest_path)
+
+        url = f"{SIGNALS_DOM}/latest_signals_dataset.zip"
+        utils.download_file(url, dataset_path, self.show_progress_bars)
+
+        # unzip dataset
+        if unzip:
+            # remove the ".zip" in the end
+            dataset_name = dest_filename[:-4]
+            self._unzip_file(dataset_path, dest_path, dataset_name)
+
+        return dataset_path
