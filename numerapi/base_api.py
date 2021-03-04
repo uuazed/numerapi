@@ -238,6 +238,37 @@ class Api:
         }
         return mapping
 
+    def get_current_round(self, tournament: int = None) -> int:
+        """Get number of the current active round.
+
+        Args:
+            tournament (int): ID of the tournament (optional)
+
+        Returns:
+            int: number of the current active round
+
+        Example:
+            >>> NumerAPI().get_current_round()
+            104
+        """
+        if tournament is None:
+            tournament = self.tournament_id
+        # zero is an alias for the current round!
+        query = '''
+            query($tournament: Int!) {
+              rounds(tournament: $tournament
+                     number: 0) {
+                number
+              }
+            }
+        '''
+        arguments = {'tournament': tournament}
+        data = self.raw_query(query, arguments)['data']['rounds'][0]
+        if data is None:
+            return None
+        round_num = data["number"]
+        return round_num
+
     def get_account_transactions(self) -> Dict:
         """Get all your account deposits and withdrawals.
 

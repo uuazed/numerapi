@@ -248,36 +248,6 @@ class NumerAPI(base_api.Api):
             utils.replace(r, "prizePoolUsd", utils.parse_float_string)
         return rounds
 
-    def get_current_round(self, tournament=8):
-        """Get number of the current active round.
-
-        Args:
-            tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
-
-        Returns:
-            int: number of the current active round
-
-        Example:
-            >>> NumerAPI().get_current_round()
-            104
-        """
-        # zero is an alias for the current round!
-        query = '''
-            query($tournament: Int!) {
-              rounds(tournament: $tournament
-                     number: 0) {
-                number
-              }
-            }
-        '''
-        arguments = {'tournament': tournament}
-        data = self.raw_query(query, arguments)['data']['rounds'][0]
-        if data is None:
-            return None
-        round_num = data["number"]
-        return round_num
-
     def get_user_activities(self, username, tournament=8):
         """Get user activities (works for all users!).
 
