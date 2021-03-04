@@ -13,6 +13,7 @@ SIGNALS_DOM = "https://numerai-signals-public-data.s3-us-west-2.amazonaws.com"
 
 class SignalsAPI(base_api.Api):
     TICKER_UNIVERSE_URL = f"{SIGNALS_DOM}/latest_universe.csv"
+    HISTORICAL_DATA_URL = f"{SIGNALS_DOM}/signals_train_val_bbg.csv"
 
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
@@ -362,6 +363,29 @@ class SignalsAPI(base_api.Api):
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
         tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
         return tickers
+
+    def download_validation_data(self, dest_path: str = ".",
+                                 dest_filename: str = None) -> str:
+        """download CSV file with historical targets and ticker universe
+
+        Returns:
+            str: path to csv file
+
+        Example:
+            >>> SignalsAPI().download_validation_data()
+            signals_train_val_bbg.csv
+        """
+        # set up download path
+        if dest_filename is None:
+            dest_filename = f"numerai_signals_historical.csv"
+
+        path = os.path.join(dest_path, dest_filename)
+
+        # create parent folder if necessary
+        utils.ensure_directory_exists(dest_path)
+        utils.download_file(
+            self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
+        return path
 
     def stake_get(self, username) -> decimal.Decimal:
         """get current stake for a given users

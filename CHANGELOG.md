@@ -3,6 +3,8 @@ Notable changes to this project.
 
 ## dev
 - make `get_current_round` available in SignalsAPI
+- add `download_validation_data` to SignalsAPI, to download the latest validation
+  data, historical targets and ticker universe
 
 ## [2.4.3] - 2021-02-27
 - deprecate multi-tournament handling
