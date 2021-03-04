@@ -377,7 +377,7 @@ class SignalsAPI(base_api.Api):
         """
         # set up download path
         if dest_filename is None:
-            dest_filename = f"numerai_signals_historical.csv"
+            dest_filename = "numerai_signals_historical.csv"
 
         path = os.path.join(dest_path, dest_filename)
 
