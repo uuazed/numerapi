@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.4.4] - 2021-03-04
 - make `get_current_round` available in SignalsAPI
 - add `download_validation_data` to SignalsAPI, to download the latest validation
   data, historical targets and ticker universe
