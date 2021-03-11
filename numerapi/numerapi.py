@@ -105,7 +105,7 @@ class NumerAPI(base_api.Api):
 
         if os.path.exists(dataset_path):
             self.logger.info("target file already exists")
-            return dataset_path
+            # return dataset_path
 
         # create parent folder if necessary
         utils.ensure_directory_exists(dest_path)

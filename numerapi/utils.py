@@ -34,15 +34,32 @@ def replace(dictionary, key, function):
 
 
 def download_file(url, dest_path, show_progress_bars=True):
+    file_size = 0
     r = requests.get(url, stream=True)
     r.raise_for_status()
     # Total size in bytes.
     total_size = int(r.headers.get('content-length', 0))
-
+    
+    if os.path.exists(dest_path):
+        file_size = os.stat(dest_path).st_size # File size in bytes
+        if file_size < total_size:
+            resume_header = {'Range': 'bytes=%d-' % file_size}
+            r = requests.get(url, headers=resume_header, stream=True,  verify=False, allow_redirects=True)
+        elif file_size == total_size:
+            # Download complete
+            return
+        else:
+            # Error, delete file and restart download
+            os.remove(dest_path)
+            file_size = 0
+            pass
+    
     # write dataset to file and show progress bar
     pbar = tqdm.tqdm(total=total_size, unit='B', unit_scale=True,
                      desc=dest_path, disable=not show_progress_bars)
-    with open(dest_path, "wb") as f:
+    for i in range(file_size//1024):
+        pbar.update(1024)
+    with open(dest_path, "ab") as f:
         for chunk in r.iter_content(1024):
             f.write(chunk)
             pbar.update(1024)
