@@ -476,11 +476,10 @@ class Api:
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
 
-    def set_submission_webhook(self, model_id: str, webhook: str = None) -> bool:
-
+    def set_submission_webhook(self, model_id: str,
+                               webhook: str = None) -> bool:
         """Set a model's submission webhook used in Numerai Compute.
         Read More: https://docs.numer.ai/tournament/compute
-
 
         Args:
             model_id (str): Target model UUID
