@@ -70,6 +70,8 @@ class SignalsAPI(base_api.Api):
 
     def upload_predictions(self, file_path: str, model_id: str = None) -> str:
         """Upload predictions from file.
+        Will read TRIGGER_ID from the environment if this model is enabled with a
+        Numerai Compute cluster setup by Numerai CLI.
 
         Args:
             file_path (str): CSV file with predictions that will get uploaded
@@ -109,15 +111,19 @@ class SignalsAPI(base_api.Api):
             requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
-                     $modelId: String) {
+                     $modelId: String
+                     $triggerId: String) {
                 createSignalsSubmission(filename: $filename
-                                  modelId: $modelId) {
+                                        modelId: $modelId
+                                        triggerId: $triggerId) {
                     id
                     firstEffectiveDate
                 }
             }
             '''
-        arguments = {'filename': auth['filename'], 'modelId': model_id}
+        arguments = {'filename': auth['filename'],
+                     'modelId': model_id,
+                     'triggerId': os.getenv('TRIGGER_ID', None)}
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 

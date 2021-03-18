@@ -149,3 +149,19 @@ def test_get_transactions(api):
         assert txs[txtype][0]["value"] == decimal.Decimal("0.4")
     assert len(txs['usdWithdrawals']) == 1
     assert txs['usdWithdrawals'][0]['usdAmount'] == decimal.Decimal("0.4")
+
+
+@responses.activate
+def test_set_submission_webhook(api):
+    api.token = ("", "")
+    data = {
+      "data": {
+        "setSubmissionWebhook": "true"
+      }
+    }
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
+    res = api.set_submission_webhook(
+        '2c6d63a4-013f-42d1-bbaf-bf35725d29f7',
+        'https://triggerurl'
+    )
+    assert res

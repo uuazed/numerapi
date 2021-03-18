@@ -715,6 +715,8 @@ class NumerAPI(base_api.Api):
     def upload_predictions(self, file_path: str, tournament: int = 8,
                            model_id: str = None) -> str:
         """Upload predictions from file.
+        Will read TRIGGER_ID from the environment if this model is enabled with a
+        Numerai Compute cluster setup by Numerai CLI.
 
         Args:
             file_path (str): CSV file with predictions that will get uploaded
@@ -761,17 +763,20 @@ class NumerAPI(base_api.Api):
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
-                     $modelId: String) {
+                     $modelId: String
+                     $triggerId: String) {
                 create_submission(filename: $filename
                                   tournament: $tournament
-                                  modelId: $modelId) {
+                                  modelId: $modelId
+                                  triggerId: $triggerId) {
                     id
                 }
             }
             '''
         arguments = {'filename': submission_auth['filename'],
                      'tournament': tournament,
-                     'modelId': model_id}
+                     'modelId': model_id,
+                     'triggerId': os.getenv('TRIGGER_ID', None)}
         create = self.raw_query(create_query, arguments, authorization=True)
         submission_id = create['data']['create_submission']['id']
         return submission_id
