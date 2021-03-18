@@ -508,5 +508,4 @@ class Api:
         '''
         arguments = {'modelId': model_id, 'newSubmissionWebhook': webhook}
         res = self.raw_query(query, arguments, authorization=True)
-        print(res)
         return res['data']['setSubmissionWebhook'] == "true"
