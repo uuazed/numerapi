@@ -476,7 +476,25 @@ class Api:
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
 
-    def set_submission_webhook(self, model_id: str, webhook: str = None):
+    def set_submission_webhook(self, model_id: str, webhook: str = None) -> bool:
+
+        """Set a model's submission webhook used in Numerai Compute.
+        Read More: https://docs.numer.ai/tournament/compute
+
+
+        Args:
+            model_id (str): Target model UUID
+
+            webhook (str): The compute webhook to trigger this model
+
+        Returns:
+            bool: confirmation that your webhook has been set
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.set_submission_webhook(model_id="..", webhook="..")
+            True
+        """
         query = '''
           mutation (
             $modelId: String!
@@ -488,8 +506,7 @@ class Api:
             )
           }
         '''
-        arguments = {'modelId': model_id,
-                     'newSubmissionWebhook': webhook}
-        return self.raw_query(
-            query, arguments, authorization=True
-        )
+        arguments = {'modelId': model_id, 'newSubmissionWebhook': webhook}
+        res = self.raw_query(query, arguments, authorization=True)
+        print(res)
+        return res['data']['setSubmissionWebhook'] == "true"

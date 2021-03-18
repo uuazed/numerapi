@@ -70,6 +70,8 @@ class SignalsAPI(base_api.Api):
 
     def upload_predictions(self, file_path: str, model_id: str = None) -> str:
         """Upload predictions from file.
+        Will read TRIGGER_ID from the environment if this model is enabled with a
+        Numerai Compute cluster setup by Numerai CLI.
 
         Args:
             file_path (str): CSV file with predictions that will get uploaded

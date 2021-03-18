@@ -160,7 +160,8 @@ def test_set_submission_webhook(api):
       }
     }
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    api.set_submission_webhook(
+    res = api.set_submission_webhook(
         '2c6d63a4-013f-42d1-bbaf-bf35725d29f7',
         'https://triggerurl'
     )
+    assert res
