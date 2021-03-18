@@ -1,12 +1,11 @@
-import dateutil.parser
-import requests
-import tqdm
 import os
 import errno
 import decimal
 import logging
 import json
-
+import dateutil.parser
+import requests
+import tqdm
 
 logger = logging.getLogger(__name__)
 
@@ -14,18 +13,17 @@ logger = logging.getLogger(__name__)
 def parse_datetime_string(s):
     if s is None:
         return None
-    dt = dateutil.parser.parse(s)
-    return dt
+    return dateutil.parser.parse(s)
 
 
 def parse_float_string(s):
     if s is None:
         return None
     try:
-        f = decimal.Decimal(s.replace(",", ""))
+        val = decimal.Decimal(s.replace(",", ""))
     except decimal.InvalidOperation:
-        f = None
-    return f
+        val = None
+    return val
 
 
 def replace(dictionary, key, function):
@@ -61,20 +59,20 @@ def post_with_err_handling(url, body, headers, timeout=None):
     try:
         r = requests.post(url, json=body, headers=headers, timeout=timeout)
         r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        logger.error("Http Error: {}".format(e))
-    except requests.exceptions.ConnectionError as e:
-        logger.error("Error Connecting: {}".format(e))
-    except requests.exceptions.Timeout as e:
-        logger.error("Timeout Error: {}".format(e))
-    except requests.exceptions.RequestException as e:
-        logger.error("Oops, something went wrong: {}".format(e))
+    except requests.exceptions.HTTPError as err:
+        logger.error(f"Http Error: {err}")
+    except requests.exceptions.ConnectionError as err:
+        logger.error(f"Error Connecting: {err}")
+    except requests.exceptions.Timeout as err:
+        logger.error(f"Timeout Error: {err}")
+    except requests.exceptions.RequestException as err:
+        logger.error(f"Oops, something went wrong: {err}")
 
     try:
         return r.json()
     except UnboundLocalError:
         # `r` isn't available, probably because the try/except above failed
         pass
-    except json.decoder.JSONDecodeError as e:
-        logger.error("Did not receive a valid JSON: {}".format(e))
+    except json.decoder.JSONDecodeError as err:
+        logger.error(f"Did not receive a valid JSON: {err}")
         return {}
