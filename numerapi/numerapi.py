@@ -761,17 +761,20 @@ class NumerAPI(base_api.Api):
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
-                     $modelId: String) {
+                     $modelId: String
+                     $triggerId: String) {
                 create_submission(filename: $filename
                                   tournament: $tournament
-                                  modelId: $modelId) {
+                                  modelId: $modelId
+                                  triggerId: $triggerId) {
                     id
                 }
             }
             '''
         arguments = {'filename': submission_auth['filename'],
                      'tournament': tournament,
-                     'modelId': model_id}
+                     'modelId': model_id,
+                     'triggerId': os.getenv('TRIGGER_ID', None)}
         create = self.raw_query(create_query, arguments, authorization=True)
         submission_id = create['data']['create_submission']['id']
         return submission_id

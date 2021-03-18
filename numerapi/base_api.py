@@ -475,3 +475,20 @@ class Api:
             utils.replace(t, "value", utils.parse_float_string)
             utils.replace(t, "insertedAt", utils.parse_datetime_string)
         return txs
+
+    def set_submission_webhook(self, model_id: str, webhook: str = None):
+        query = '''
+          mutation (
+            $modelId: String!
+            $newSubmissionWebhook: String
+          ) {
+            setSubmissionWebhook(
+              modelId: $modelId
+              newSubmissionWebhook: $newSubmissionWebhook
+            )
+          }
+        '''
+        arguments = {'modelId': model_id,
+                     'newSubmissionWebhook': webhook}
+        self.raw_query(
+            query, arguments, authorization=True)

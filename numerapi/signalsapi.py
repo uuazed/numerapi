@@ -109,15 +109,19 @@ class SignalsAPI(base_api.Api):
             requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
-                     $modelId: String) {
+                     $modelId: String
+                     $triggerId: String) {
                 createSignalsSubmission(filename: $filename
-                                  modelId: $modelId) {
+                                        modelId: $modelId
+                                        triggerId: $triggerId) {
                     id
                     firstEffectiveDate
                 }
             }
             '''
-        arguments = {'filename': auth['filename'], 'modelId': model_id}
+        arguments = {'filename': auth['filename'],
+                     'modelId': model_id,
+                     'triggerId': os.getenv('TRIGGER_ID', None)}
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 
