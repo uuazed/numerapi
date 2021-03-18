@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.4.5] - 2021-03-18
 - enable registering submission webhooks and trigger IDs (#44)
 
 ## [2.4.4] - 2021-03-04
