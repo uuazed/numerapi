@@ -490,5 +490,6 @@ class Api:
         '''
         arguments = {'modelId': model_id,
                      'newSubmissionWebhook': webhook}
-        self.raw_query(
-            query, arguments, authorization=True)
+        return self.raw_query(
+            query, arguments, authorization=True
+        )
