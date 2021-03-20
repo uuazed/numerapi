@@ -1,42 +1,43 @@
-import dateutil.parser
-import requests
-import tqdm
 import os
 import errno
 import decimal
 import logging
+import datetime
 import json
-
+from typing import Optional, Dict
+import dateutil.parser
+import requests
+import tqdm
 
 logger = logging.getLogger(__name__)
 
 
-def parse_datetime_string(s):
+def parse_datetime_string(s: str) -> datetime.datetime:
     if s is None:
         return None
-    dt = dateutil.parser.parse(s)
-    return dt
+    return dateutil.parser.parse(s)
 
 
-def parse_float_string(s):
+def parse_float_string(s: str) -> Optional[float]:
     if s is None:
         return None
     try:
-        f = decimal.Decimal(s.replace(",", ""))
+        val = decimal.Decimal(s.replace(",", ""))
     except decimal.InvalidOperation:
-        f = None
-    return f
+        val = None
+    return val
 
 
-def replace(dictionary, key, function):
+def replace(dictionary: Dict, key: str, function):
     if dictionary is not None and key in dictionary:
         dictionary[key] = function(dictionary[key])
 
 
-def download_file(url, dest_path, show_progress_bars=True):
+def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
     file_size = 0
     req = requests.get(url, stream=True)
     req.raise_for_status()
+
     # Total size in bytes.
     total_size = int(req.headers.get('content-length', 0))
 
@@ -73,7 +74,7 @@ def download_file(url, dest_path, show_progress_bars=True):
             pbar.update(1024)
 
 
-def ensure_directory_exists(path):
+def ensure_directory_exists(path: str):
     try:
         # `exist_ok` option is only available in Python 3.2+
         os.makedirs(path)
@@ -82,24 +83,25 @@ def ensure_directory_exists(path):
             raise
 
 
-def post_with_err_handling(url, body, headers, timeout=None):
+def post_with_err_handling(url: str, body: str, headers: Dict,
+                           timeout: Optional[int] = None):
     try:
         r = requests.post(url, json=body, headers=headers, timeout=timeout)
         r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        logger.error("Http Error: {}".format(e))
-    except requests.exceptions.ConnectionError as e:
-        logger.error("Error Connecting: {}".format(e))
-    except requests.exceptions.Timeout as e:
-        logger.error("Timeout Error: {}".format(e))
-    except requests.exceptions.RequestException as e:
-        logger.error("Oops, something went wrong: {}".format(e))
+    except requests.exceptions.HTTPError as err:
+        logger.error(f"Http Error: {err}")
+    except requests.exceptions.ConnectionError as err:
+        logger.error(f"Error Connecting: {err}")
+    except requests.exceptions.Timeout as err:
+        logger.error(f"Timeout Error: {err}")
+    except requests.exceptions.RequestException as err:
+        logger.error(f"Oops, something went wrong: {err}")
 
     try:
         return r.json()
     except UnboundLocalError:
         # `r` isn't available, probably because the try/except above failed
         pass
-    except json.decoder.JSONDecodeError as e:
-        logger.error("Did not receive a valid JSON: {}".format(e))
+    except json.decoder.JSONDecodeError as err:
+        logger.error(f"Did not receive a valid JSON: {err}")
         return {}
