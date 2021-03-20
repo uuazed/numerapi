@@ -103,10 +103,6 @@ class NumerAPI(base_api.Api):
                 dest_filename += ".zip"
         dataset_path = os.path.join(dest_path, dest_filename)
 
-        if os.path.exists(dataset_path):
-            self.logger.info("target file already exists")
-            # return dataset_path
-
         # create parent folder if necessary
         utils.ensure_directory_exists(dest_path)
 
