@@ -1,7 +1,6 @@
 import pytest
 import os
 import datetime
-import decimal
 import pytz
 import responses
 
@@ -28,12 +27,6 @@ def test_download_current_dataset(api, tmpdir):
     directory = path.replace(".zip", "")
     filename = "numerai_tournament_data.csv"
     assert os.path.exists(os.path.join(directory, filename))
-
-    # calling again shouldn't download again
-    with responses.RequestsMock() as rsps:
-        api.download_current_dataset(dest_path=str(tmpdir),
-                                     dest_filename=os.path.basename(path))
-        assert len(rsps.calls) == 0
 
 
 def test_get_latest_data_url(api):
