@@ -152,7 +152,7 @@ class NumerAPI(base_api.Api):
             msg = f"extension must be set to one of {valid_extensions}"
             raise ValueError(msg)
 
-        if extension not in valid_extensions:
+        if data_type not in valid_data_types:
             raise ValueError(
                 f"data_type must be set to one of {valid_data_types}")
 
