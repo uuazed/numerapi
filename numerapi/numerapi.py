@@ -786,12 +786,12 @@ class NumerAPI(base_api.Api):
 
     def upload_predictions(self, df: pd.DataFrame, tournament: int = 8,
                            model_id: str = None) -> str:
-        """Upload predictions from file.
+        """Upload predictions from pandas DataFrame.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
 
         Args:
-            file_path (str): Pandas DataFrame with predictions that will get uploaded
+            df (pandas.DataFrame): Pandas DataFrame with predictions that will get uploaded
             tournament (int): ID of the tournament (optional, defaults to 8)
                 -- DEPRECATED there is only one tournament nowadays
             model_id (str): Target model UUID (required for accounts with
@@ -803,7 +803,7 @@ class NumerAPI(base_api.Api):
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
-            >>> api.upload_predictions("prediction.cvs", model_id=model_id)
+            >>> api.upload_predictions(submission_dataframe, model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
         """
         self.logger.info("uploading predictions...")

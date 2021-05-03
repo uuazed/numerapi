@@ -147,7 +147,7 @@ class SignalsAPI(base_api.Api):
         Example:
             >>> api = SignalsAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
-            >>> api.upload_predictions("prediction.cvs", model_id=model_id)
+            >>> api.upload_predictions(submission_dataframe, model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
         """
         self.logger.info("uploading predictions...")
