@@ -132,12 +132,12 @@ class SignalsAPI(base_api.Api):
         return create['data']['createSignalsSubmission']['id']
 
     def upload_predictions(self, df:pd.DataFrame, model_id: str = None) -> str:
-        """Upload predictions from file.
+        """Upload predictions from pandas DataFrame.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
 
         Args:
-            file_path (str): CSV file with predictions that will get uploaded
+            df (pandas.DataFrame): Pandas DataFrame with predictions that will get uploaded
             model_id (str): Target model UUID (required for accounts
                             with multiple models)
 

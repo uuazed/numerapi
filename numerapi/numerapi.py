@@ -791,7 +791,7 @@ class NumerAPI(base_api.Api):
         a Numerai Compute cluster setup by Numerai CLI.
 
         Args:
-            file_path (str): CSV file with predictions that will get uploaded
+            file_path (str): Pandas DataFrame with predictions that will get uploaded
             tournament (int): ID of the tournament (optional, defaults to 8)
                 -- DEPRECATED there is only one tournament nowadays
             model_id (str): Target model UUID (required for accounts with
