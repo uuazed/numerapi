@@ -3,3 +3,4 @@ pytest-cov
 codecov
 responses
 flake8
+pandas>=1.2.2

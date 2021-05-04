@@ -2,6 +2,8 @@ import pytest
 import datetime
 import responses
 
+import pandas as pd
+
 import numerapi
 from numerapi import base_api
 
@@ -31,6 +33,12 @@ def test_upload_predictions(api, tmpdir):
     path = tmpdir.join("somefilepath")
     path.write("content")
     submission_id = api.upload_predictions(str(path))
+
+    df = pd.DataFrame.from_dict({"bloomberg_ticker":["a","b","c","d"],"signal":[0.4,0.2,0.3,0.1]})
+    submission_id_df = api.upload_predictions(df = df)
+
+    assert submission_id_df == "1234"
+
     assert submission_id == "1234"
     assert len(responses.calls) == 3
 

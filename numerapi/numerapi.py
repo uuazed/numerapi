@@ -13,11 +13,6 @@ import requests
 import pytz
 import pandas as pd
 
-
-
-
-
-
 from numerapi import utils
 from numerapi import base_api
 
@@ -715,8 +710,8 @@ class NumerAPI(base_api.Api):
         status = data['data']['model']['latestSubmission'][0]
         return status
 
-    def upload_predictions(self, file_path: str, tournament: int = 8,
-                           model_id: str = None) -> str:
+    def upload_predictions(self, file_path: str = "predictions.csv", tournament: int = 8,
+                           model_id: str = None, df: pd.DataFrame = None) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -727,6 +722,7 @@ class NumerAPI(base_api.Api):
                 -- DEPRECATED there is only one tournament nowadays
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
+            df (pandas.DataFrame): Pandas DataFrame to upload, if function is given df and file_path, df will be uploaded
 
         Returns:
             str: submission_id
@@ -739,74 +735,14 @@ class NumerAPI(base_api.Api):
         """
         self.logger.info("uploading predictions...")
 
-        auth_query = '''
-            query($filename: String!
-                  $tournament: Int!
-                  $modelId: String) {
-                submission_upload_auth(filename: $filename
-                                       tournament: $tournament
-                                       modelId: $modelId) {
-                    filename
-                    url
-                }
-            }
-            '''
-        arguments = {'filename': os.path.basename(file_path),
-                     'tournament': tournament,
-                     'modelId': model_id}
-        submission_resp = self.raw_query(auth_query, arguments,
-                                         authorization=True)
-        submission_auth = submission_resp['data']['submission_upload_auth']
+        # write the pandas DataFrame as a binary buffer if provided
+        buffer_csv = None
 
-        # get compute id if available and pass it along
-        headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
-        with open(file_path, 'rb') as fh:
-            requests.put(
-                submission_auth['url'], data=fh.read(), headers=headers)
-        create_query = '''
-            mutation($filename: String!
-                     $tournament: Int!
-                     $modelId: String
-                     $triggerId: String) {
-                create_submission(filename: $filename
-                                  tournament: $tournament
-                                  modelId: $modelId
-                                  triggerId: $triggerId) {
-                    id
-                }
-            }
-            '''
-        arguments = {'filename': submission_auth['filename'],
-                     'tournament': tournament,
-                     'modelId': model_id,
-                     'triggerId': os.getenv('TRIGGER_ID', None)}
-        create = self.raw_query(create_query, arguments, authorization=True)
-        submission_id = create['data']['create_submission']['id']
-        return submission_id
-
-    def upload_predictions(self, df: pd.DataFrame, tournament: int = 8,
-                           model_id: str = None) -> str:
-        """Upload predictions from pandas DataFrame.
-        Will read TRIGGER_ID from the environment if this model is enabled with
-        a Numerai Compute cluster setup by Numerai CLI.
-
-        Args:
-            df (pandas.DataFrame): Pandas DataFrame with predictions that will get uploaded
-            tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
-            model_id (str): Target model UUID (required for accounts with
-                multiple models)
-
-        Returns:
-            str: submission_id
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model_id = api.get_models()['uuazed']
-            >>> api.upload_predictions(submission_dataframe, model_id=model_id)
-            '93c46857-fed9-4594-981e-82db2b358daf'
-        """
-        self.logger.info("uploading predictions...")
+        if not df is None:
+            file_path = "predictions.csv"
+            buffer_csv = BytesIO()
+            buffer_csv.name = file_path
+            df.to_csv(buffer_csv, index = False)
 
         auth_query = '''
             query($filename: String!
@@ -829,14 +765,9 @@ class NumerAPI(base_api.Api):
 
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
-        
-        buffer_csv = BytesIO()
-
-        df.to_csv(buffer_csv, index = False)
-
-        with buffer_csv as fh:
+        with open(file_path, 'rb') if df is None else buffer_csv as fh:
             requests.put(
-                submission_auth['url'], data=fh.read(), headers=headers)
+                submission_auth['url'], data=fh.read() if df is None else fh.getvalue(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!

@@ -1,12 +1,12 @@
+# System
 from typing import List, Dict
 import os
 import codecs
 import decimal
-
 from io import BytesIO
 
+# Third Party
 import requests
-
 import pandas as pd
 
 from numerapi import base_api
@@ -72,7 +72,7 @@ class SignalsAPI(base_api.Api):
         data = self.raw_query(query, arguments)['data']['signalsLeaderboard']
         return data
 
-    def upload_predictions(self, file_path: str, model_id: str = None) -> str:
+    def upload_predictions(self, file_path: str = "predictions.csv", model_id: str = None, df: pd.DataFrame = None) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -81,6 +81,7 @@ class SignalsAPI(base_api.Api):
             file_path (str): CSV file with predictions that will get uploaded
             model_id (str): Target model UUID (required for accounts
                             with multiple models)
+            df (pandas.DataFrame): Pandas DataFrame to upload, if function is given df and file_path, df will be uploaded
 
         Returns:
             str: submission_id
@@ -93,64 +94,17 @@ class SignalsAPI(base_api.Api):
         """
         self.logger.info("uploading predictions...")
 
-        auth_query = '''
-            query($filename: String!
-                  $modelId: String) {
-              submissionUploadSignalsAuth(filename: $filename
-                                        modelId: $modelId) {
-                    filename
-                    url
-                }
-            }
-            '''
-        arguments = {'filename': os.path.basename(file_path),
-                     'modelId': model_id}
-        submission_resp = self.raw_query(auth_query, arguments,
-                                         authorization=True)
-        auth = submission_resp['data']['submissionUploadSignalsAuth']
+        # write the pandas DataFrame as a binary buffer if provided
+        buffer_csv = None
 
-        # get compute id if available and pass it along
-        headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
-        with open(file_path, 'rb') as fh:
-            requests.put(auth['url'], data=fh.read(), headers=headers)
-        create_query = '''
-            mutation($filename: String!
-                     $modelId: String
-                     $triggerId: String) {
-                createSignalsSubmission(filename: $filename
-                                        modelId: $modelId
-                                        triggerId: $triggerId) {
-                    id
-                    firstEffectiveDate
-                }
-            }
-            '''
-        arguments = {'filename': auth['filename'],
-                     'modelId': model_id,
-                     'triggerId': os.getenv('TRIGGER_ID', None)}
-        create = self.raw_query(create_query, arguments, authorization=True)
-        return create['data']['createSignalsSubmission']['id']
+        if not df is None:
+            file_path = "predictions.csv"
+            buffer_csv = BytesIO()
+            buffer_csv.name = file_path
+            df.to_csv(buffer_csv, index = False)
+            #print(buffer_csv.getvalue())
+            #print(buffer_csv.name)
 
-    def upload_predictions(self, df:pd.DataFrame, model_id: str = None) -> str:
-        """Upload predictions from pandas DataFrame.
-        Will read TRIGGER_ID from the environment if this model is enabled with
-        a Numerai Compute cluster setup by Numerai CLI.
-
-        Args:
-            df (pandas.DataFrame): Pandas DataFrame with predictions that will get uploaded
-            model_id (str): Target model UUID (required for accounts
-                            with multiple models)
-
-        Returns:
-            str: submission_id
-
-        Example:
-            >>> api = SignalsAPI(secret_key="..", public_id="..")
-            >>> model_id = api.get_models()['uuazed']
-            >>> api.upload_predictions(submission_dataframe, model_id=model_id)
-            '93c46857-fed9-4594-981e-82db2b358daf'
-        """
-        self.logger.info("uploading predictions...")
 
         auth_query = '''
             query($filename: String!
@@ -162,6 +116,7 @@ class SignalsAPI(base_api.Api):
                 }
             }
             '''
+
         arguments = {'filename': os.path.basename(file_path),
                      'modelId': model_id}
         submission_resp = self.raw_query(auth_query, arguments,
@@ -171,12 +126,10 @@ class SignalsAPI(base_api.Api):
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
 
-        buffer_csv = BytesIO()
-
-        df.to_csv(buffer_csv, index = False)
-
-        with buffer_csv as fh:
-            requests.put(auth['url'], data=fh.read(), headers=headers)
+        
+        # use the dataframe buffer to upload if it was provided otherwise open the filepath
+        with open(file_path, 'rb') if df is None else buffer_csv as fh:
+            requests.put(auth['url'], data=fh.read() if df is None else fh.getvalue(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $modelId: String
