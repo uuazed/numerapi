@@ -738,11 +738,11 @@ class NumerAPI(base_api.Api):
         # write the pandas DataFrame as a binary buffer if provided
         buffer_csv = None
 
-        if not df is None:
-            file_path = "predictions.csv"
+        if df is not None:
             buffer_csv = BytesIO()
             buffer_csv.name = file_path
             df.to_csv(buffer_csv, index = False)
+            buffer_csv.seek(0)
 
         auth_query = '''
             query($filename: String!
@@ -767,7 +767,7 @@ class NumerAPI(base_api.Api):
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
         with open(file_path, 'rb') if df is None else buffer_csv as fh:
             requests.put(
-                submission_auth['url'], data=fh.read() if df is None else fh.getvalue(), headers=headers)
+                submission_auth['url'], data=fh.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!

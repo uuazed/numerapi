@@ -97,11 +97,11 @@ class SignalsAPI(base_api.Api):
         # write the pandas DataFrame as a binary buffer if provided
         buffer_csv = None
 
-        if not df is None:
-            file_path = "predictions.csv"
+        if df is not None:
             buffer_csv = BytesIO()
             buffer_csv.name = file_path
             df.to_csv(buffer_csv, index = False)
+            buffer_csv.seek(0)
             #print(buffer_csv.getvalue())
             #print(buffer_csv.name)
 
@@ -129,7 +129,7 @@ class SignalsAPI(base_api.Api):
         
         # use the dataframe buffer to upload if it was provided otherwise open the filepath
         with open(file_path, 'rb') if df is None else buffer_csv as fh:
-            requests.put(auth['url'], data=fh.read() if df is None else fh.getvalue(), headers=headers)
+            requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $modelId: String
