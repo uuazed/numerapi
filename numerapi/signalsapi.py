@@ -5,6 +5,7 @@ import codecs
 import decimal
 from io import BytesIO
 
+
 # Third Party
 import requests
 import pandas as pd
@@ -72,9 +73,7 @@ class SignalsAPI(base_api.Api):
         data = self.raw_query(query, arguments)['data']['signalsLeaderboard']
         return data
 
-    def upload_predictions(self, file_path: str = "predictions.csv",
-                           model_id: str = None,
-                           df: pd.DataFrame = None) -> str:
+    def upload_predictions(self, file_path: str = "predictions.csv", model_id: str = None, df: pd.DataFrame = None) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -83,8 +82,7 @@ class SignalsAPI(base_api.Api):
             file_path (str): CSV file with predictions that will get uploaded
             model_id (str): Target model UUID (required for accounts
                             with multiple models)
-            df (pandas.DataFrame): Pandas DataFrame to upload, if function is
-                given df and file_path, df will be uploaded
+            df (pandas.DataFrame): Pandas DataFrame to upload, if function is given df and file_path, df will be uploaded
 
         Returns:
             str: submission_id
@@ -95,7 +93,8 @@ class SignalsAPI(base_api.Api):
             >>> api.upload_predictions("prediction.cvs", model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
 
-            >>> # upload directly from a pandas DataFrame:
+            >>> api = SignalsAPI(secret_key="..", public_id="..")
+            >>> model_id = api.get_models()['uuazed']
             >>> api.upload_predictions(df = predictions_df, model_id=model_id)
         """
         self.logger.info("uploading predictions...")
@@ -127,6 +126,8 @@ class SignalsAPI(base_api.Api):
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
 
+        
+        # use the dataframe buffer to upload if it was provided otherwise open the filepath
         with open(file_path, 'rb') if df is None else buffer_csv as fh:
             requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
@@ -214,6 +215,10 @@ class SignalsAPI(base_api.Api):
         data = self.raw_query(query, arguments, authorization=True)
         status = data['data']['model']['latestSignalsSubmission']
         return status
+    
+    
+
+
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public Numerai Signals profile of a user.

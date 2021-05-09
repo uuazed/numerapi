@@ -710,10 +710,8 @@ class NumerAPI(base_api.Api):
         status = data['data']['model']['latestSubmission'][0]
         return status
 
-    def upload_predictions(self, file_path: str = "predictions.csv",
-                           tournament: int = 8,
-                           model_id: str = None,
-                           df: pd.DataFrame = None) -> str:
+    def upload_predictions(self, file_path: str = "predictions.csv", tournament: int = 8,
+                           model_id: str = None, df: pd.DataFrame = None) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -724,8 +722,7 @@ class NumerAPI(base_api.Api):
                 -- DEPRECATED there is only one tournament nowadays
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
-            df (pandas.DataFrame): pandas DataFrame to upload, if function is
-                given df and file_path, df will be uploaded.
+            df (pandas.DataFrame): Pandas DataFrame to upload, if function is given df and file_path, df will be uploaded
 
         Returns:
             str: submission_id
@@ -735,8 +732,10 @@ class NumerAPI(base_api.Api):
             >>> model_id = api.get_models()['uuazed']
             >>> api.upload_predictions("prediction.cvs", model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
-            >>> # upload from pandas DataFrame directly:
-            >>> api.upload_predictions(df=predictions_df, model_id=model_id)
+
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.upload_predictions(df = predictions_df, model_id=model_id)
         """
         self.logger.info("uploading predictions...")
 
