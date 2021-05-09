@@ -4,6 +4,8 @@ import datetime
 import pytz
 import responses
 
+import pandas as pd
+
 import numerapi
 from numerapi import base_api
 
@@ -101,8 +103,32 @@ def test_upload_predictions(api, tmpdir):
     path = tmpdir.join("somefilepath")
     path.write("content")
     submission_id = api.upload_predictions(str(path))
+
     assert submission_id == "1234"
     assert len(responses.calls) == 3
+
+#Test the dataframe uploading version of upload_predictions
+@responses.activate   
+def test_upload_predictions_df(api):
+
+    api.token = ("", "")
+
+    data = {"data": {"submission_upload_auth": {"url": "https://uploadurl",
+                                                "filename": "predictions.csv"}}}
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
+    responses.add(responses.PUT, "https://uploadurl")
+    data = {"data": {"create_submission": {"id": "12345"}}}
+    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
+
+    df = pd.DataFrame.from_dict({"id":[],"prediction":[]})
+    submission_id = api.upload_predictions(df = df)
+
+    
+
+    assert len(responses.calls) == 3
+    assert submission_id == "12345"
+
+
 
 
 @responses.activate
