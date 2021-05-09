@@ -217,10 +217,6 @@ class SignalsAPI(base_api.Api):
         status = data['data']['model']['latestSignalsSubmission']
         return status
 
-
-
-
-
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public Numerai Signals profile of a user.
 
