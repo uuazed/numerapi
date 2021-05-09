@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - resumable download (#42)
+- Upload submission functions using a pandas dataframe (#46)
 
 ## [2.4.5] - 2021-03-18
 - enable registering submission webhooks and trigger IDs (#44)
