@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.5.0] - 2021-05-09
 - resumable download (#42)
 - Upload submission functions using a pandas dataframe (#46)
 
