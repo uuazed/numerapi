@@ -5,6 +5,7 @@ import codecs
 import decimal
 from io import BytesIO
 
+
 # Third Party
 import requests
 import pandas as pd
@@ -102,13 +103,8 @@ class SignalsAPI(base_api.Api):
         buffer_csv = None
 
         if df is not None:
-            buffer_csv = BytesIO()
+            buffer_csv = BytesIO(df.to_csv(index = False).encode()) 
             buffer_csv.name = file_path
-            df.to_csv(buffer_csv, index = False)
-            buffer_csv.seek(0)
-            #print(buffer_csv.getvalue())
-            #print(buffer_csv.name)
-
 
         auth_query = '''
             query($filename: String!
