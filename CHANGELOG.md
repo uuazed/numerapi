@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+
+## dev
+- lower pandas requirement to pandas>=1.1.0 to fix problems for users working in google colab (#48)
+
 ## [2.5.0] - 2021-05-09
 - resumable download (#42)
 - Upload submission functions using a pandas dataframe (#46)

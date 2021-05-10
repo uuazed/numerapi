@@ -104,7 +104,7 @@ class SignalsAPI(base_api.Api):
         buffer_csv = None
 
         if df is not None:
-            buffer_csv = BytesIO(df.to_csv(index = False).encode()) 
+            buffer_csv = BytesIO(df.to_csv(index=False).encode())
             buffer_csv.name = file_path
 
         auth_query = '''
