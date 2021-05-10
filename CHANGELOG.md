@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 
-## dev
+## [2.5.1] - 2021-05-10
 - lower pandas requirement to pandas>=1.1.0 to fix problems for users working in google colab (#48)
 
 ## [2.5.0] - 2021-05-09
