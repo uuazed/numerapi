@@ -189,30 +189,20 @@ class NumerAPI(base_api.Api):
 
             Each round's dict contains the following items:
 
-                * datasetId (`str`)
                 * number (`int`)
                 * openTime (`datetime`)
                 * resolveTime (`datetime`)
-                * participants (`int`): number of participants
-                * prizePoolNmr (`decimal.Decimal`)
-                * prizePoolUsd (`decimal.Decimal`)
                 * resolvedGeneral (`bool`)
                 * resolvedStaking (`bool`)
-                * ruleset (`string`)
 
         Example:
             >>> NumerAPI().get_competitions()
             [
-             {'datasetId': '59a70840ca11173c8b2906ac',
-              'number': 71,
+             {'number': 71,
               'openTime': datetime.datetime(2017, 8, 31, 0, 0),
               'resolveTime': datetime.datetime(2017, 9, 27, 21, 0),
-              'participants': 1287,
-              'prizePoolNmr': Decimal('0.00'),
-              'prizePoolUsd': Decimal('6000.00'),
               'resolvedGeneral': True,
               'resolvedStaking': True,
-              'ruleset': 'p_auction'
              },
               ..
             ]
@@ -224,14 +214,9 @@ class NumerAPI(base_api.Api):
               rounds(tournament: $tournament) {
                 number
                 resolveTime
-                datasetId
                 openTime
                 resolvedGeneral
                 resolvedStaking
-                participants
-                prizePoolNmr
-                prizePoolUsd
-                ruleset
               }
             }
         '''
@@ -242,8 +227,6 @@ class NumerAPI(base_api.Api):
         for r in rounds:
             utils.replace(r, "openTime", utils.parse_datetime_string)
             utils.replace(r, "resolveTime", utils.parse_datetime_string)
-            utils.replace(r, "prizePoolNmr", utils.parse_float_string)
-            utils.replace(r, "prizePoolUsd", utils.parse_float_string)
         return rounds
 
     def get_user_activities(self, username, tournament=8):
