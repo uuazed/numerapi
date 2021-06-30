@@ -229,7 +229,6 @@ class NumerAPI(base_api.Api):
             utils.replace(r, "resolveTime", utils.parse_datetime_string)
         return rounds
 
-
     def get_submission_filenames(self, tournament=None, round_num=None,
                                  model_id=None) -> List[Dict]:
         """Get filenames of the submission of the user.
@@ -909,7 +908,8 @@ class NumerAPI(base_api.Api):
             >>> api.public_user_profile("integration_test")
             {'bio': 'The official example model. Submits example predictions.',
              'id': '59de8728-38e5-45bd-a3d5-9d4ad649dd3f',
-             'startDate': datetime.datetime(2018, 6, 6, 17, 33, 21, tzinfo=tzutc()),
+             'startDate': datetime.datetime(
+                2018, 6, 6, 17, 33, 21, tzinfo=tzutc()),
              'totalStake': '57.582371875005243780',
              'username': 'integration_test'}
 
