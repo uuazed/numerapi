@@ -8,6 +8,7 @@ Notable changes to this project.
   - remove misc deprecated fields from userProfile like badges, earnings
   - remove misc deprecated scores from submissions like consistency and concordance
   - remove misc deprecated fields from userProfile.dailyUserPerformances like reputation and rolling_score_rep (use corrRep/mmcRep/fncRep instead), and all the early staking 2.0 fields like averageCorrelation, averageCorrelationPayout, sumDeltaCorrelation etc.
+- fix 'get_competitions' by removig deprecated fields (#49)
 
 ## [2.5.1] - 2021-05-10
 - lower pandas requirement to pandas>=1.1.0 to fix problems for users working in google colab (#48)
