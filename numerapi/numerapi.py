@@ -246,121 +246,6 @@ class NumerAPI(base_api.Api):
             utils.replace(r, "prizePoolUsd", utils.parse_float_string)
         return rounds
 
-    def get_user_activities(self, username, tournament=8):
-        """Get user activities (works for all users!).
-
-        Args:
-            username (str): name of the user
-            tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
-
-        Returns:
-            list: list of user activities (`dict`)
-
-            Each activity in the list as the following structure:
-
-                * resolved (`bool`)
-                * roundNumber (`int`)
-                * tournament (`int`)
-                * submission (`dict`)
-                 * concordance (`bool`)
-                 * consistency (`float`)
-                 * date (`datetime`)
-                 * liveLogloss (`float`)
-                 * liveAuroc (`float`)
-                 * liveCorrelation (`float`)
-                 * validationLogloss (`float`)
-                 * validationAuroc (`float`)
-                 * validationCorrelation (`float`)
-                * stake (`dict`)
-                 * confidence (`decimal.Decimal`)
-                 * date (`datetime`)
-                 * nmrEarned (`decimal.Decimal`)
-                 * staked (`bool`)
-                 * usdEarned (`decimal.Decimal`)
-                 * burned (`bool`)
-
-        Example:
-            >>> NumerAPI().get_user_activities("slyfox", 5)
-            [{'tournament': 5,
-              'submission': {
-               'validationLogloss': 0.6928141372700635,
-               'validationAuroc': 0.52,
-               'validationCorrelation': 0.52,
-               'liveLogloss': None,
-               'liveAuroc': None,
-               'liveCorrelation': None,
-               'date': datetime.datetime(2018, 7, 14, 17, 5, 27, 206042),
-               'consistency': 83.33333333333334,
-               'concordance': True},
-              'stake': {'value': Decimal('0.10'),
-               'usdEarned': None,
-               'staked': True,
-               'nmrEarned': None,
-               'date': datetime.datetime(2018, 7, 14, 17, 7, 7, 877845),
-               'confidence': Decimal('0.100000000000000000')},
-               'burned': False
-              'roundNumber': 116,
-              'resolved': False},
-             {'tournament': 5,
-              'submission': {'validationLogloss': 0.6928141372700635,
-
-               ...
-
-               ]
-
-        """
-        query = '''
-            query($tournament: Int!
-                  $username: String!) {
-              userActivities(tournament: $tournament
-                     username: $username) {
-                resolved
-                roundNumber
-                tournament
-                submission {
-                    concordance
-                    consistency
-                    date
-                    liveLogloss
-                    liveAuroc
-                    liveCorrelation
-                    validationLogloss
-                    validationAuroc
-                    validationCorrelation
-                }
-                stake {
-                    confidence
-                    date
-                    nmrEarned
-                    staked
-                    usdEarned
-                    value
-                    burned
-                }
-              }
-            }
-        '''
-        arguments = {'tournament': tournament, 'username': username}
-        data = self.raw_query(query, arguments)['data']['userActivities']
-        # filter rounds with no activity
-        data = [item for item in data
-                if item['submission']['date'] is not None]
-        for item in data:
-            # remove stakes with all values set to None
-            if item['stake'] is None or item['stake']['date'] is None:
-                del item['stake']
-            # parse
-            else:
-                utils.replace(item['stake'], "date",
-                              utils.parse_datetime_string)
-                for col in ['confidence', 'value', 'nmrEarned', 'usdEarned']:
-                    utils.replace(item['stake'], col, utils.parse_float_string)
-        # parse
-        for item in data:
-            utils.replace(item['submission'], "date",
-                          utils.parse_datetime_string)
-        return data
 
     def get_submission_filenames(self, tournament=None, round_num=None,
                                  model_id=None) -> List[Dict]:
@@ -509,103 +394,6 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_payments(self, model_id: str = None) -> Dict:
-        """Get all your payments.
-
-        Args:
-            model_id (str): Target model UUID (required for accounts with
-                multiple models)
-
-        Returns:
-            dict of lists: payments & reputationPayments
-
-            A dict containing the following items:
-               * payments (`list`)
-                 * nmrAmount (`decimal.Decimal`)
-                 * usdAmount (`decimal.Decimal`)
-                 * tournament (`str`)
-                 * round (`dict`)
-                   * number (`int`)
-                   * openTime (`datetime`)
-                   * resolveTime (`datetime`)
-                   * resolvedGeneral (`bool`)
-                   * resolvedStaking (`bool`)
-               * reputationPayment (`list`)
-                 * nmrAmount (`decimal.Decimal`)
-                 * insertedAt (`datetime`)
-
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model = api.get_models()['uuazed']
-            >>> api.get_payments(model)
-            {'payments': [
-                {'nmrAmount': Decimal('0.00'),
-                 'round': {'number': 84,
-                 'openTime': datetime.datetime(2017, 12, 2, 18, 0),
-                 'resolveTime': datetime.datetime(2018, 1, 1, 18, 0),
-                 'resolvedGeneral': True,
-                 'resolvedStaking': True},
-                 'tournament': 'staking',
-                 'usdAmount': Decimal('17.44')},
-                 ...
-                ],
-             'reputationPayments': [
-               {'nmrAmount': Decimal('0.1'),
-                'insertedAt': datetime.datetime(2017, 12, 2, 18, 0)},
-                ...
-                ],
-             'otherUsdIssuances': [
-                {'usdAmount': Decimal('0.1'),
-                 'insertedAt': datetime.datetime(2017, 12, 2, 18, 0)},
-                 ...
-             ]
-            }
-        """
-        query = """
-          query($modelId: String) {
-            model(modelId: $modelId) {
-              reputationPayments {
-                insertedAt
-                nmrAmount
-              }
-              otherUsdIssuances {
-                insertedAt
-                usdAmount
-              }
-              payments {
-                nmrAmount
-                usdAmount
-                tournament
-                round {
-                  number
-                  openTime
-                  resolveTime
-                  resolvedGeneral
-                  resolvedStaking
-                }
-              }
-            }
-          }
-        """
-        arguments = {'modelId': model_id}
-        data = self.raw_query(query, arguments, authorization=True)['data']
-        payments = data['model']
-        # convert strings to python objects
-        for p in payments['payments']:
-            utils.replace(p['round'], "openTime", utils.parse_datetime_string)
-            utils.replace(p['round'], "resolveTime",
-                          utils.parse_datetime_string)
-            utils.replace(p, "usdAmount", utils.parse_float_string)
-            utils.replace(p, "nmrAmount", utils.parse_float_string)
-        for p in payments['reputationPayments']:
-            utils.replace(p, "nmrAmount", utils.parse_float_string)
-            utils.replace(p, "insertedAt", utils.parse_datetime_string)
-        for p in payments['otherUsdIssuances']:
-            utils.replace(p, "usdAmount", utils.parse_float_string)
-            utils.replace(p, "insertedAt", utils.parse_datetime_string)
-        return payments
-
     def submission_status(self, model_id: str = None) -> Dict:
         """submission status of the last submission associated with the account
 
@@ -615,10 +403,6 @@ class NumerAPI(base_api.Api):
         Returns:
             dict: submission status with the following content:
 
-                * concordance (`dict`):
-                 * pending (`bool`)
-                 * value (`bool`): whether the submission is concordant
-                * consistency (`float`): consistency of the submission
                 * filename (`string`)
                 * corrWithExamplePreds (`float`)
                 * validationCorrelation (`float`)
@@ -644,9 +428,7 @@ class NumerAPI(base_api.Api):
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
             >>> api.submission_status(model_id)
-            {'concordance': None,
-             'consistency': None,
-             'corrWithExamplePreds': 0.7217288907243551,
+            {'corrWithExamplePreds': 0.7217288907243551,
              'filename': 'model57-HPzOyr56TPaD.csv',
              'validationCorrPlusMmcSharpe': 1.0583461013814541,
              'validationCorrPlusMmcSharpeDiff': -0.23505145970149166,
@@ -672,11 +454,6 @@ class NumerAPI(base_api.Api):
             query($modelId: String) {
                 model(modelId: $modelId) {
                   latestSubmission {
-                    concordance {
-                      pending
-                      value
-                    }
-                    consistency
                     filename
                     corrWithExamplePreds
                     validationCorrelation
@@ -1138,38 +915,26 @@ class NumerAPI(base_api.Api):
 
         Returns:
             dict: user profile including the following fields:
-
                 * username (`str`)
                 * startDate (`datetime`)
-                * netEarnings (`float`)
                 * id (`string`)
-                * historicalNetUsdEarnings (`float`)
-                * historicalNetNmrEarnings (`float`)
-                * badges (`list of str`)
                 * bio (`str`)
                 * totalStake (`float`)
 
         Example:
             >>> api = NumerAPI()
-            >>> api.public_user_profile("niam")
-            {'username': 'niam',
-             'startDate': datetime.datetime(2018, 6, 14, 22, 58, 2, 186221),
-             'netEarnings': None,
-             'id': '024c9bb9-77af-4b3f-91c7-63062fce2b80',
-             'historicalNetUsdEarnings': '3669.41',
-             'historicalNetNmrEarnings': '1094.247665827645663410',
-             'badges': ['burned_3', 'compute_0', 'submission-streak_1'],
-             'bio': 'blabla',
-             'totalStake': 12.2}
+            >>> api.public_user_profile("integration_test")
+            {'bio': 'The official example model. Submits example predictions.',
+             'id': '59de8728-38e5-45bd-a3d5-9d4ad649dd3f',
+             'startDate': datetime.datetime(2018, 6, 6, 17, 33, 21, tzinfo=tzutc()),
+             'totalStake': '57.582371875005243780',
+             'username': 'integration_test'}
+
         """
         query = """
           query($username: String!) {
             v2UserProfile(username: $username) {
-              badges
-              historicalNetNmrEarnings
-              historicalNetUsdEarnings
               id
-              netEarnings
               startDate
               username
               bio
@@ -1195,56 +960,41 @@ class NumerAPI(base_api.Api):
             For each entry in the list, there is a dict with the following
             content:
 
-                * tier (`str`)
                 * stakeValue (`float` or none)
-                * reputation (`float`) -- DEPRECATED since 2020-04-05
-                * rolling_score_rep (`float`)
                 * rank (`int`)
-                * leaderboardBonus (`float` or None)
                 * date (`datetime`)
-                * averageCorrelationPayout (`float` or None)
-                * averageCorrelation (`float`)
-                * sumDeltaCorrelation (`float`)
-                * finalCorrelation (`float`)
                 * payoutPending (`float` or None)
                 * payoutSettled (`float` or None)
+                * corrRep (`float` or None)
+                * mmcRep (`float` or None)
+                * fncRep (`float` or None)
 
         Example:
             >>> api = NumerAPI()
             >>> api.daily_user_performances("uuazed")
-            [{'tier': 'A',
-              'stakeValue': None,
-              'reputation': 0.0017099,
-              'rolling_score_rep': 0.0111,
-              'rank': 32,
-              'leaderboardBonus': None,
-              'date': datetime.datetime(2019, 10, 16, 0, 0),
-              'averageCorrelationPayout': None,
-              'averageCorrelation': -0.000983637,
-              'sumDeltaCorrelation': -0.000983637,
-              'finalCorrelation': -0.000983637,
-              'payoutPending': None,
-              'payoutSettled': None},
-              ...
+            [{'corrRep': 0.04989791277211584,
+             'date': datetime.datetime(2021, 6, 29, 0, 0, tzinfo=tzutc()),
+             'fncRep': 0.013364783709176759,
+             'mmcRep': 0.006799019156483222,
+             'payoutPending': '5.979926674348371782',
+             'payoutSettled': None,
+             'rank': 559,
+             'stakeValue': '226.746596100340180000'},
+             ...
             ]
         """
         query = """
           query($username: String!) {
             v2UserProfile(username: $username) {
               dailyUserPerformances {
-                averageCorrelation
-                averageCorrelationPayout
-                sumDeltaCorrelation
-                finalCorrelation
+                corrRep
+                date
+                fncRep
+                mmcRep
                 payoutPending
                 payoutSettled
-                date
-                leaderboardBonus
                 rank
-                reputation
-                rolling_score_rep
                 stakeValue
-                tier
               }
             }
           }
