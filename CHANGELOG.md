@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.5.2] - 2021-06-30
 - remove deprecated fields (#50)
   - remove userActivities query (deprecated, use userProfile fields instead)
   - remove payments query (deprecated, use userProfile fields instead)
