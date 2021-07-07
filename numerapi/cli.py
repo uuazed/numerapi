@@ -63,15 +63,6 @@ def leaderboard(limit=20, offset=0):
 
 
 @cli.command()
-@click.argument("username")
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
-def user_activities(username, tournament=8):
-    """Get user activities (works for all users!)"""
-    click.echo(prettify(napi.get_user_activities(username, tournament)))
-
-
-@cli.command()
 @click.option('--tournament', type=int, default=None,
               help='filter by ID of the tournament, defaults to None')
 @click.option('--round_num', type=int, default=None,
@@ -137,15 +128,6 @@ def daily_user_performances(username):
 def daily_submissions_performances(username):
     """Fetch daily performance of a user's submissions."""
     click.echo(prettify(napi.daily_submissions_performances(username)))
-
-
-@cli.command()
-@click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
-def payments(model_id):
-    """List all your payments"""
-    click.echo(prettify(napi.get_payments(model_id)))
 
 
 @cli.command()

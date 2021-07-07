@@ -67,7 +67,7 @@ def test_get_current_round(api):
 
 
 @pytest.mark.parametrize("fun", ["get_user", "get_account",
-                                 "get_transactions", "get_payments"])
+                                 "get_transactions"])
 def test_unauthorized_requests(api, fun):
     with pytest.raises(ValueError) as err:
         # while this won't work because we are not authorized, it still tells
