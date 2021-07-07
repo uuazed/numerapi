@@ -103,6 +103,7 @@ To get started with the cli interface, let's take a look at the help page:
       Wrapper around the Numerai API
 
     Options:
+      --json  Output JSON instead of Dict.
       --help  Show this message and exit.
 
     Commands:
@@ -116,7 +117,6 @@ To get started with the cli interface, let's take a look at the help page:
       download-dataset                Download dataset for the current active...
       leaderboard                     Get the leaderboard.
       models                          Get map of account models!
-      payments                        List all your payments
       profile                         Fetch the public profile of a user.
       stake-decrease                  Decrease your stake by `value` NMR.
       stake-drain                     Completely remove your stake.
@@ -128,7 +128,6 @@ To get started with the cli interface, let's take a look at the help page:
       submit                          Upload predictions from file.
       transactions                    List all your deposits and withdrawals.
       user                            Get all information about you! DEPRECATED...
-      user-activities                 Get user activities (works for all users!)
       version                         Installed numerapi version.
 
 

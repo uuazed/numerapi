@@ -1,20 +1,50 @@
 import pprint
 import click
+import json
+import datetime
+import decimal
 
 import numerapi
 
 napi = numerapi.NumerAPI()
 
 
+class CommonJSONEncoder(json.JSONEncoder):
+    """
+    Common JSON Encoder
+    json.dumps(myString, cls=CommonJSONEncoder)
+    """
+    def default(self, obj):
+        """Encode: Decimal"""
+        if isinstance(obj, decimal.Decimal):
+            return str(obj)
+        """Encode: Date & Datetime"""
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+          return obj.isoformat()
+        pass
+
+
+"""
+When True (set in cli(json)), instructs the CLI to output JSON instead of Dictionary
+(used long name to prevent collisions)
+"""
+numerapi_cli_output_json_flag=False
+
+
 def prettify(stuff):
     pp = pprint.PrettyPrinter(indent=4)
+    if numerapi_cli_output_json_flag:
+      return json.dumps(stuff, cls=CommonJSONEncoder, indent=4)
     return pp.pformat(stuff)
 
 
 @click.group()
-def cli():
+@click.option('--json', type=bool, is_flag=True, default=False,
+              help='Output JSON instead of Dict.')
+def cli(json=False):
     """Wrapper around the Numerai API"""
-    pass
+    global numerapi_cli_output_json_flag
+    numerapi_cli_output_json_flag=json
 
 
 @cli.command()
