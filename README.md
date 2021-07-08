@@ -103,7 +103,6 @@ To get started with the cli interface, let's take a look at the help page:
       Wrapper around the Numerai API
 
     Options:
-      --json  Output JSON instead of Dict.
       --help  Show this message and exit.
 
     Commands:
