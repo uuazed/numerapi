@@ -51,13 +51,6 @@ def test_current_round(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_user_activities')
-def test_user_activities(mocked, login):
-    result = CliRunner().invoke(cli.user_activities, 'username')
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.get_submission_filenames')
 def test_submission_filenames(mocked):
     result = CliRunner().invoke(cli.submission_filenames, ['--tournament', 1])
@@ -93,13 +86,6 @@ def test_user(mocked, login):
 @patch('numerapi.NumerAPI.get_user')
 def test_user_with_model_id(mocked, login):
     result = CliRunner().invoke(cli.user, ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-@patch('numerapi.NumerAPI.get_payments')
-def test_payments(mocked, login):
-    result = CliRunner().invoke(cli.payments,
-                                ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
     # just testing if calling works fine
     assert result.exit_code == 0
 
