@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- cli: remove deprecated 'payments' and 'user-activities' commands (#51)
+
+
 ## [2.5.2] - 2021-06-30
 - remove deprecated fields (#50)
   - remove userActivities query (deprecated, use userProfile fields instead)

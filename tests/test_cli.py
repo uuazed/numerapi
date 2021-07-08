@@ -71,11 +71,13 @@ def test_account(mocked, login):
     # just testing if calling works fine
     assert result.exit_code == 0
 
+
 @patch('numerapi.NumerAPI.get_models')
 def test_models(mocked, login):
     result = CliRunner().invoke(cli.models)
     # just testing if calling works fine
     assert result.exit_code == 0
+
 
 @patch('numerapi.NumerAPI.get_user')
 def test_user(mocked, login):
@@ -83,9 +85,11 @@ def test_user(mocked, login):
     # just testing if calling works fine
     assert result.exit_code == 0
 
+
 @patch('numerapi.NumerAPI.get_user')
 def test_user_with_model_id(mocked, login):
-    result = CliRunner().invoke(cli.user, ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
+    result = CliRunner().invoke(
+        cli.user, ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
     # just testing if calling works fine
     assert result.exit_code == 0
 
@@ -99,8 +103,9 @@ def test_submission_status(mocked, login):
 
 @patch('numerapi.NumerAPI.get_transactions')
 def test_transactions(mocked):
-    result = CliRunner().invoke(cli.transactions,
-                                ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
+    result = CliRunner().invoke(
+        cli.transactions,
+        ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
     # just testing if calling works fine
     assert result.exit_code == 0
 
@@ -109,8 +114,9 @@ def test_transactions(mocked):
 def test_submit(mocked, login, tmpdir):
     path = tmpdir.join("somefilepath")
     path.write("content")
-    result = CliRunner().invoke(cli.submit,
-                                [str(path), '--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
+    result = CliRunner().invoke(
+        cli.submit,
+        [str(path), '--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
     # just testing if calling works fine
     assert result.exit_code == 0
 
