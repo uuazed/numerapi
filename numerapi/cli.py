@@ -1,14 +1,30 @@
-import pprint
 import click
+import json
+import datetime
+import decimal
 
 import numerapi
 
 napi = numerapi.NumerAPI()
 
 
+class CommonJSONEncoder(json.JSONEncoder):
+    """
+    Common JSON Encoder
+    json.dumps(jsonString, cls=CommonJSONEncoder)
+    """
+    def default(self, obj):
+        """Encode: Decimal"""
+        if isinstance(obj, decimal.Decimal):
+            return str(obj)
+        """Encode: Date & Datetime"""
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+          return obj.isoformat()
+        pass
+
+
 def prettify(stuff):
-    pp = pprint.PrettyPrinter(indent=4)
-    return pp.pformat(stuff)
+    return json.dumps(stuff, cls=CommonJSONEncoder, indent=4)
 
 
 @click.group()
