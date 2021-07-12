@@ -19,7 +19,7 @@ class CommonJSONEncoder(json.JSONEncoder):
             return str(obj)
         """Encode: Date & Datetime"""
         if isinstance(obj, (datetime.date, datetime.datetime)):
-          return obj.isoformat()
+            return obj.isoformat()
         pass
 
 

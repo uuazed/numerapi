@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - cli: remove deprecated 'payments' and 'user-activities' commands (#51)
+- cli: converting the output to JSON (#52)
 
 
 ## [2.5.2] - 2021-06-30
