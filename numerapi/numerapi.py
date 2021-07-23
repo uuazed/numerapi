@@ -210,7 +210,7 @@ class NumerAPI(base_api.Api):
         self.logger.info("getting rounds...")
 
         query = '''
-            query($tournament: Int!) {
+            query napi_getCompetitions($tournament: Int!) {
               rounds(tournament: $tournament) {
                 number
                 resolveTime
@@ -259,7 +259,7 @@ class NumerAPI(base_api.Api):
 
         """
         query = """
-          query($modelId: String) {
+          query napi_getSubmissionFilenames($modelId: String) {
             model(modelId: $modelId) {
               submissions {
                 filename
@@ -342,7 +342,7 @@ class NumerAPI(base_api.Api):
         """
         self.logger.warning("Method get_user is DEPRECATED, use get_account")
         query = """
-          query($modelId: String) {
+          query napi_getUser($modelId: String) {
             user(modelId: $modelId) {
               username
               banned
@@ -433,7 +433,7 @@ class NumerAPI(base_api.Api):
              'validationStdRating': 0.9842992879669488}
         """
         query = '''
-            query($modelId: String) {
+            query napi_getSubmissionStatus($modelId: String) {
                 model(modelId: $modelId) {
                   latestSubmission {
                     filename
@@ -507,7 +507,7 @@ class NumerAPI(base_api.Api):
             buffer_csv.name = file_path
 
         auth_query = '''
-            query($filename: String!
+            query napi_uploadAuth($filename: String!
                   $tournament: Int!
                   $modelId: String) {
                 submission_upload_auth(filename: $filename
@@ -531,7 +531,7 @@ class NumerAPI(base_api.Api):
             requests.put(
                 submission_auth['url'], data=fh.read(), headers=headers)
         create_query = '''
-            mutation($filename: String!
+            mutation napi_createSubmission($filename: String!
                      $tournament: Int!
                      $modelId: String
                      $triggerId: String) {
@@ -567,7 +567,7 @@ class NumerAPI(base_api.Api):
             False
         """
         query = '''
-            query($tournament: Int!) {
+            query napi_checkNewRound($tournament: Int!) {
               rounds(tournament: $tournament
                      number: 0) {
                 number
@@ -636,7 +636,7 @@ class NumerAPI(base_api.Api):
 
         """
         query = '''
-            query($limit: Int!
+            query napi_getLeaderboard($limit: Int!
                   $offset: Int!) {
               v2Leaderboard(limit: $limit
                             offset: $offset) {
@@ -732,7 +732,7 @@ class NumerAPI(base_api.Api):
             1.1
         """
         query = """
-          query($username: String!) {
+          query napi_getStake($username: String!) {
             v2UserProfile(username: $username) {
               dailyUserPerformances {
                 stakeValue
@@ -776,7 +776,7 @@ class NumerAPI(base_api.Api):
              'status': ''}
         """
         query = '''
-          mutation($value: String!
+          mutation napi_changeStake($value: String!
                    $type: String!
                    $tournamentNumber: Int!
                    $modelId: String) {
@@ -890,7 +890,7 @@ class NumerAPI(base_api.Api):
         return self.stake_change(nmr, 'increase', model_id, tournament)
 
     def public_user_profile(self, username: str) -> Dict:
-        """Fetch the public profile of a user.
+        """Fetch the public profile of a user. DEPRECATED
 
         Args:
             username (str)
@@ -914,8 +914,9 @@ class NumerAPI(base_api.Api):
              'username': 'integration_test'}
 
         """
+        self.logger.warning("Method public_user_profile is DEPRECATED, use public_user_profile_v2")
         query = """
-          query($username: String!) {
+          query napi_getPublicUserProfileV2($username: String!) {
             v2UserProfile(username: $username) {
               id
               startDate
@@ -931,8 +932,50 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
 
+    def public_user_profile_v2(self, username: str) -> Dict:
+        """Fetch the public profile of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            dict: user profile including the following fields:
+                * username (`str`)
+                * startDate (`datetime`)
+                * id (`string`)
+                * bio (`str`)
+                * nmrStaked (`float`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.public_user_profile("integration_test")
+            {'bio': 'The official example model. Submits example predictions.',
+             'id': '59de8728-38e5-45bd-a3d5-9d4ad649dd3f',
+             'startDate': datetime.datetime(
+                2018, 6, 6, 17, 33, 21, tzinfo=tzutc()),
+             'nmrStaked': '57.582371875005243780',
+             'username': 'integration_test'}
+
+        """
+        query = """
+          query napi_getPublicUserProfileV3($username: String!) {
+            v3UserProfile(modelName: $username) {
+              id
+              startDate
+              username
+              bio
+              nmrStaked
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
+        # convert strings to python objects
+        utils.replace(data, "startDate", utils.parse_datetime_string)
+        return data
+
     def daily_user_performances(self, username: str) -> List[Dict]:
-        """Fetch daily performance of a user.
+        """Fetch daily performance of a user. DEPRECATED
 
         Args:
             username (str)
@@ -966,8 +1009,10 @@ class NumerAPI(base_api.Api):
              ...
             ]
         """
+
+        self.logger.warning("Method daily_user_performances is DEPRECATED, use dailyModelPerformances")
         query = """
-          query($username: String!) {
+          query napi_getV2DailyUserPerformance($username: String!) {
             v2UserProfile(username: $username) {
               dailyUserPerformances {
                 corrRep
@@ -985,6 +1030,65 @@ class NumerAPI(base_api.Api):
         arguments = {'username': username}
         data = self.raw_query(query, arguments)['data']['v2UserProfile']
         performances = data['dailyUserPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
+
+    def daily_model_performances(self, username: str) -> List[Dict]:
+        """Fetch daily performance of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of daily model performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * date (`datetime`)
+                * corrRank (`int`)
+                * corrRep (`float` or None)
+                * mmcRank (`int`)
+                * mmcRep (`float` or None)
+                * fncRank (`int`)
+                * fncRep (`float` or None)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.daily_model_performances("uuazed")
+            [{
+                  "corrRank": 1550,
+                  "corrRep": 0.03522116352297695,
+                  "date": "2021-07-17T00:00:00Z",
+                  "fncRank": 774,
+                  "fncRep": 0.01958124424503465,
+                  "mmcRank": 1844,
+                  "mmcRep": -0.00010916983051246563
+                },
+             ...
+            ]
+        """
+
+        query = """
+          query napi_getDailyModelPerformance($username: String!) {
+            v3UserProfile(modelName: $username) {
+              dailyModelPerformances {
+                date
+                corrRep
+                corrRank
+                mmcRep
+                mmcRank
+                fncRep
+                fncRank
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
+        performances = data['dailyModelPerformances']
         # convert strings to python objects
         for perf in performances:
             utils.replace(perf, "date", utils.parse_datetime_string)
@@ -1016,7 +1120,7 @@ class NumerAPI(base_api.Api):
             ]
         """
         query = """
-          query($roundNumber: Int!) {
+          query napi_getRoundDetails($roundNumber: Int!) {
             v2RoundDetails(roundNumber: $roundNumber) {
               userPerformances {
                 date
@@ -1066,7 +1170,7 @@ class NumerAPI(base_api.Api):
             ]
         """
         query = """
-          query($username: String!) {
+          query napi_getDailySubmissionPerformances($username: String!) {
             v2UserProfile(username: $username) {
               dailySubmissionPerformances {
                 date

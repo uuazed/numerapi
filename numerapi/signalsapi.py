@@ -52,7 +52,7 @@ class SignalsAPI(base_api.Api):
              }]
         """
         query = '''
-            query($limit: Int!
+            query napi_getSignalsLeaderboard($limit: Int!
                   $offset: Int!) {
               signalsLeaderboard(limit: $limit
                             offset: $offset) {
@@ -108,7 +108,7 @@ class SignalsAPI(base_api.Api):
             buffer_csv.name = file_path
 
         auth_query = '''
-            query($filename: String!
+            query napi_getSignalsSubmissionUploadAuth($filename: String!
                   $modelId: String) {
               submissionUploadSignalsAuth(filename: $filename
                                         modelId: $modelId) {
@@ -130,7 +130,7 @@ class SignalsAPI(base_api.Api):
         with open(file_path, 'rb') if df is None else buffer_csv as fh:
             requests.put(auth['url'], data=fh.read(), headers=headers)
         create_query = '''
-            mutation($filename: String!
+            mutation napi_createSignalsSubmission($filename: String!
                      $modelId: String
                      $triggerId: String) {
                 createSignalsSubmission(filename: $filename
@@ -190,7 +190,7 @@ class SignalsAPI(base_api.Api):
         """
 
         query = '''
-            query($modelId: String) {
+            query napi_getSignalsSubmissionStatus($modelId: String) {
                 model(modelId: $modelId) {
                   latestSignalsSubmission {
                     id
@@ -216,7 +216,7 @@ class SignalsAPI(base_api.Api):
         return status
 
     def public_user_profile(self, username: str) -> Dict:
-        """Fetch the public Numerai Signals profile of a user.
+        """Fetch the public Numerai Signals profile of a user. DEPRECATED
 
         Args:
             username (str)
@@ -244,8 +244,9 @@ class SignalsAPI(base_api.Api):
              'totalStake': Decimal('14.630994874320760131')}
 
         """
+        self.logger.warning("Method public_user_profile is DEPRECATED, use public_user_profile_v2")
         query = """
-          query($username: String!) {
+          query napi_getSignalsPublicUserProfile($username: String!) {
             signalsUserProfile(username: $username) {
               rank
               id
@@ -262,6 +263,51 @@ class SignalsAPI(base_api.Api):
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         utils.replace(data, "totalStake", utils.parse_float_string)
+        return data
+
+    def public_user_profile_v2(self, username: str) -> Dict:
+        """Fetch the public Numerai Signals profile of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            dict: user profile including the following fields:
+
+                * username (`str`)
+                * startDate (`datetime`)
+                * id (`string`)
+                * rank (`int`)
+                * bio (`str`)
+                * sharpe (`float`)
+                * nmrStaked (`decimal.Decimal`)
+
+        Example:
+            >>> api = SignalsAPI()
+            >>> api.public_user_profile("floury_kerril_moodle")
+            {'bio': None,
+             'id': '635db2a4-bdc6-4e5d-b515-f5120392c8c9',
+             'startDate': datetime.datetime(2019, 3, 26, 0, 43),
+             'username': 'floury_kerril_moodle',
+             'nmrStaked': Decimal('14.630994874320760131')}
+
+        """
+        query = """
+          query napi_getSignalsPublicUserProfileV2($username: String!) {
+            v2SignalsProfile(modelName: $username) {
+              id
+              startDate
+              username
+              bio
+              nmrStaked
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v2SignalsProfile']
+        # convert strings to python objects
+        utils.replace(data, "startDate", utils.parse_datetime_string)
+        utils.replace(data, "nmrStaked", utils.parse_float_string)
         return data
 
     def daily_user_performances(self, username: str) -> List[Dict]:
@@ -293,8 +339,9 @@ class SignalsAPI(base_api.Api):
               },
              ...]
         """
+        self.logger.warning("Method daily_user_performances is DEPRECATED, use daily_model_performances")
         query = """
-          query($username: String!) {
+          query napi_getSignalsDailyUserPerformances($username: String!) {
             signalsUserProfile(username: $username) {
               dailyUserPerformances {
                 rank
@@ -309,6 +356,65 @@ class SignalsAPI(base_api.Api):
         arguments = {'username': username}
         data = self.raw_query(query, arguments)['data']['signalsUserProfile']
         performances = data['dailyUserPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
+
+    def daily_model_performances(self, username: str) -> List[Dict]:
+        """Fetch daily performance of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of daily model performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * date (`datetime`)
+                * corrRank (`int`)
+                * corrRep (`float` or None)
+                * mmcRank (`int`)
+                * mmcRep (`float` or None)
+                * corr_20dRank (`int`)
+                * corr_20dRep (`float` or None)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.daily_model_performances("uuazed")
+            [{
+                  "corrRank": 1550,
+                  "corrRep": 0.03522116352297695,
+                  "date": "2021-07-17T00:00:00Z",
+                  "corr_20dRank": 774,
+                  "corr_20dRep": 0.01958124424503465,
+                  "mmcRank": 1844,
+                  "mmcRep": -0.00010916983051246563
+                },
+             ...
+            ]
+        """
+
+        query = """
+          query napi_getSignalsDailyModelPerformance($username: String!) {
+            v2SignalsProfile(modelName: $username) {
+              dailyModelPerformances {
+                date
+                corrRank
+                corrRep
+                mmcRep
+                mmcRank
+                corr_20dRep
+                corr_20dRank
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
+        performances = data['dailyModelPerformances']
         # convert strings to python objects
         for perf in performances:
             utils.replace(perf, "date", utils.parse_datetime_string)
@@ -351,7 +457,7 @@ class SignalsAPI(base_api.Api):
               ]
         """
         query = """
-          query($username: String!) {
+          query napi_getSignalsDailySubmissionPerformances($username: String!) {
             signalsUserProfile(username: $username) {
               dailySubmissionPerformances {
                 date
