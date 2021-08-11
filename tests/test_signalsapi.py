@@ -90,3 +90,13 @@ def test_ticker_universe(api):
     result = api.ticker_universe()
     assert "bloomberg_ticker" not in result
     assert len(result) == 3
+
+
+def test_user_profile_v2(api):
+    profile = api.public_user_profile_v2("integration_test")
+    assert profile["username"] == "integration_test"
+
+
+def test_daily_model_performances(api):
+    performances = api.public_user_profile_v2("integration_test")
+    assert len(performances) > 0

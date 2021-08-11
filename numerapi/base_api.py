@@ -167,7 +167,7 @@ class Api:
              }
         """
         query = """
-          query {
+          query napi_getAccount{
             account {
               username
               walletAddress
@@ -218,7 +218,7 @@ class Api:
             {'uuazed': '9b157d9b-ce61-4ab5-9413-413f13a0c0a6'}
         """
         query = """
-          query {
+          query napi_getModels{
             account {
               models {
                 id
@@ -255,7 +255,7 @@ class Api:
             tournament = self.tournament_id
         # zero is an alias for the current round!
         query = '''
-            query($tournament: Int!) {
+            query napi_getCurrentRound($tournament: Int!) {
               rounds(tournament: $tournament
                      number: 0) {
                 number
@@ -317,7 +317,7 @@ class Api:
                  .. ]}
         """
         query = """
-          query {
+          query napi_getAccountTransactions{
             account {
               nmrDeposits {
                 from
@@ -426,7 +426,7 @@ class Api:
         self.logger.warning(
             "get_transactions is DEPRECATED, use get_account_transactions")
         query = """
-          query($modelId: String) {
+          query napi_getTransactions($modelId: String) {
             user(modelId: $modelId) {
               nmrDeposits {
                 from
@@ -495,7 +495,7 @@ class Api:
             True
         """
         query = '''
-          mutation (
+          mutation napi_setSubmissionWebhook (
             $modelId: String!
             $newSubmissionWebhook: String
           ) {

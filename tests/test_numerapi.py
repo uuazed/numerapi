@@ -140,3 +140,13 @@ def test_check_new_round(api):
     assert api.check_new_round()
     # second
     assert not api.check_new_round()
+
+
+def test_user_profile_v2(api):
+    profile = api.public_user_profile_v2("integration_test")
+    assert profile["username"] == "integration_test"
+
+
+def test_daily_model_performances(api):
+    performances = api.public_user_profile_v2("integration_test")
+    assert len(performances) > 0
