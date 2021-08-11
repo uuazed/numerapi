@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- adding `fncPercentile`, `mmcPercentile` & `corrPercentile` to `daily_submissions_performances`
+
 ## [2.6.0] - 2021-07-12
 - cli: remove deprecated 'payments' and 'user-activities' commands (#51)
 - cli: converting the output to JSON (#52)

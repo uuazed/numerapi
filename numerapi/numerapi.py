@@ -1048,9 +1048,12 @@ class NumerAPI(base_api.Api):
 
                 * date (`datetime`)
                 * correlation (`float`)
+                * corrPercentile (`float`)
                 * roundNumber (`int`)
                 * mmc (`float`): metamodel contribution
+                * mmcPercentile (`float`)
                 * fnc (`float`): feature neutral correlation
+                * fncPercentile (`float`)
                 * correlationWithMetamodel (`float`)
 
         Example:
@@ -1058,9 +1061,12 @@ class NumerAPI(base_api.Api):
             >>> api.daily_user_performances("uuazed")
             [{'roundNumber': 181,
               'correlation': -0.011765912,
+              'corrPercentile': 0.8,
               'date': datetime.datetime(2019, 10, 16, 0, 0),
               'mmc': 0.3,
+              'mmcPercentile': 0.8,
               'fnc': 0.1,
+              'fncPercentile': 0.8,
               'correlationWithMetamodel': 0.87},
               ...
             ]
@@ -1071,9 +1077,12 @@ class NumerAPI(base_api.Api):
               dailySubmissionPerformances {
                 date
                 correlation
+                corrPercentile
                 roundNumber
                 mmc
+                mmcPercentile
                 fnc
+                fncPercentile
                 correlationWithMetamodel
               }
             }
