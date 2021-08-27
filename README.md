@@ -102,32 +102,32 @@ To get started with the cli interface, let's take a look at the help page:
 
       Wrapper around the Numerai API
 
-    Options:
-      --help  Show this message and exit.
+      Options:
+        --help  Show this message and exit.
 
-    Commands:
-      account                         Get all information about your account!
-      check-new-round                 Check if a new round has started within...
-      competitions                    Retrieves information about all...
-      current-round                   Get number of the current active round.
-      daily-submissions-performances  Fetch daily performance of a user's...
-      daily-user-performances         Fetch daily performance of a user.
-      dataset-url                     Fetch url of the current dataset.
-      download-dataset                Download dataset for the current active...
-      leaderboard                     Get the leaderboard.
-      models                          Get map of account models!
-      profile                         Fetch the public profile of a user.
-      stake-decrease                  Decrease your stake by `value` NMR.
-      stake-drain                     Completely remove your stake.
-      stake-get                       Get stake value of a user.
-      stake-increase                  Increase your stake by `value` NMR.
-      stakes                          List all your stakes.
-      submission-filenames            Get filenames of your submissions
-      submission-status               checks the submission status
-      submit                          Upload predictions from file.
-      transactions                    List all your deposits and withdrawals.
-      user                            Get all information about you! DEPRECATED...
-      version                         Installed numerapi version.
+      Commands:
+        account                         Get all information about your account!
+        check-new-round                 Check if a new round has started within...
+        competitions                    Retrieves information about all...
+        current-round                   Get number of the current active round.
+        daily-submissions-performances  Fetch daily performance of a user's...
+        daily-user-performances         Fetch daily performance of a user.
+        dataset-url                     Fetch url of the current dataset.
+        download-dataset                Download dataset for the current active...
+        leaderboard                     Get the leaderboard.
+        models                          Get map of account models!
+        profile                         Fetch the public profile of a user.
+        stake-decrease                  Decrease your stake by `value` NMR.
+        stake-drain                     Completely remove your stake.
+        stake-get                       Get stake value of a user.
+        stake-increase                  Increase your stake by `value` NMR.
+        stakes                          List all your stakes.
+        submission-filenames            Get filenames of your submissions
+        submission-status               checks the submission status
+        submit                          Upload predictions from file.
+        transactions                    List all your deposits and withdrawals.
+        user                            Get all information about you! DEPRECATED...
+        version                         Installed numerapi version.
 
 
 Each command has it's own help page, for example:

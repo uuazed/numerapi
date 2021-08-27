@@ -14,13 +14,12 @@ class CommonJSONEncoder(json.JSONEncoder):
     json.dumps(jsonString, cls=CommonJSONEncoder)
     """
     def default(self, obj):
-        """Encode: Decimal"""
+        # Encode: Decimal
         if isinstance(obj, decimal.Decimal):
             return str(obj)
-        """Encode: Date & Datetime"""
+        # Encode: Date & Datetime
         if isinstance(obj, (datetime.date, datetime.datetime)):
             return obj.isoformat()
-        pass
 
 
 def prettify(stuff):
@@ -30,7 +29,6 @@ def prettify(stuff):
 @click.group()
 def cli():
     """Wrapper around the Numerai API"""
-    pass
 
 
 @cli.command()
@@ -134,9 +132,9 @@ def profile(username):
 
 @cli.command()
 @click.argument("username")
-def daily_user_performances(username):
-    """Fetch daily performance of a user."""
-    click.echo(prettify(napi.daily_user_performances(username)))
+def daily_model_performances(username):
+    """Fetch daily performance of a model."""
+    click.echo(prettify(napi.daily_model_performances(username)))
 
 
 @cli.command()
@@ -153,15 +151,6 @@ def daily_submissions_performances(username):
 def transactions(model_id):
     """List all your deposits and withdrawals."""
     click.echo(prettify(napi.get_transactions(model_id)))
-
-
-@cli.command()
-@click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
-def stakes(model_id):
-    """List all your stakes."""
-    click.echo(prettify(napi.get_stakes(model_id)))
 
 
 @cli.command()
