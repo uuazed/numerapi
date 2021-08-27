@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/uuazed/numerapi.png)](https://travis-ci.com/uuazed/numerapi)
+[![Build Status](https://app.travis-ci.com/uuazed/numerapi.svg)](https://app.travis-ci.com/uuazed/numerapi)
 [![codecov](https://codecov.io/gh/uuazed/numerapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uuazed/numerapi)
 [![PyPI](https://img.shields.io/pypi/v/numerapi.svg)](https://pypi.python.org/pypi/numerapi)
 [![Docs](https://readthedocs.org/projects/numerapi/badge/?version=stable)](http://numerapi.readthedocs.io/en/stable/?badge=stable)
