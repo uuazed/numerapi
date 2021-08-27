@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.7.0] - 2021-08-27
 - adding `fncPercentile`, `mmcPercentile` & `corrPercentile` to `daily_submissions_performances`
 - replace deprecated GraphQL `v2UserProfile` call with `v3UserProfile`
 - replace deprecated GraphQL `signalsUserProfile` call with `v2SignalsProfile`
