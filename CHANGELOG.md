@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - adding `fncPercentile`, `mmcPercentile` & `corrPercentile` to `daily_submissions_performances`
+- replace deprecated GraphQL `v2UserProfile` call with `v3UserProfile`
 
 ## [2.6.0] - 2021-07-12
 - cli: remove deprecated 'payments' and 'user-activities' commands (#51)

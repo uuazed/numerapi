@@ -901,7 +901,7 @@ class NumerAPI(base_api.Api):
                 * startDate (`datetime`)
                 * id (`string`)
                 * bio (`str`)
-                * totalStake (`float`)
+                * nmrStaked (`float`)
 
         Example:
             >>> api = NumerAPI()
@@ -910,23 +910,23 @@ class NumerAPI(base_api.Api):
              'id': '59de8728-38e5-45bd-a3d5-9d4ad649dd3f',
              'startDate': datetime.datetime(
                 2018, 6, 6, 17, 33, 21, tzinfo=tzutc()),
-             'totalStake': '57.582371875005243780',
+             'nmrStaked': '57.582371875005243780',
              'username': 'integration_test'}
 
         """
         query = """
-          query($username: String!) {
-            v2UserProfile(username: $username) {
+          query($model_name: String!) {
+            v3UserProfile(model_name: $model_name) {
               id
               startDate
               username
               bio
-              totalStake
+              nmrStaked
             }
           }
         """
-        arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['v2UserProfile']
+        arguments = {'model_name': username}
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
