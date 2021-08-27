@@ -932,29 +932,35 @@ class NumerAPI(base_api.Api):
         return data
 
     def daily_user_performances(self, username: str) -> List[Dict]:
+        """DEPRECATED"""
+        self.logger.warning("Method daily_user_performances is DEPRECATED, "
+                            "use daily_model_performances")
+        return self.daily_model_performances(username)
+
+    def daily_model_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user.
 
         Args:
             username (str)
 
         Returns:
-            list of dicts: list of daily user performance entries
+            list of dicts: list of daily model performance entries
 
             For each entry in the list, there is a dict with the following
             content:
 
-                * stakeValue (`float` or none)
                 * rank (`int`)
                 * date (`datetime`)
-                * payoutPending (`float` or None)
-                * payoutSettled (`float` or None)
                 * corrRep (`float` or None)
+                * corrRank (`int`)
                 * mmcRep (`float` or None)
+                * mmcRank (`int`)
                 * fncRep (`float` or None)
+                * fncRank (`int`)
 
         Example:
             >>> api = NumerAPI()
-            >>> api.daily_user_performances("uuazed")
+            >>> api.daily_model_performances("uuazed")
             [{'corrRep': 0.04989791277211584,
              'date': datetime.datetime(2021, 6, 29, 0, 0, tzinfo=tzutc()),
              'fncRep': 0.013364783709176759,
@@ -968,23 +974,22 @@ class NumerAPI(base_api.Api):
         """
         query = """
           query($username: String!) {
-            v2UserProfile(username: $username) {
-              dailyUserPerformances {
-                corrRep
+            v3UserProfile(modelName: $username) {
+              dailyModelPerformances {
                 date
-                fncRep
+                corrRep
+                corrRank
                 mmcRep
-                payoutPending
-                payoutSettled
-                rank
-                stakeValue
+                mmcRank
+                fncRep
+                fncRank
               }
             }
           }
         """
         arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['v2UserProfile']
-        performances = data['dailyUserPerformances']
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
+        performances = data['dailyModelPerformances']
         # convert strings to python objects
         for perf in performances:
             utils.replace(perf, "date", utils.parse_datetime_string)
