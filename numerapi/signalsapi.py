@@ -227,41 +227,35 @@ class SignalsAPI(base_api.Api):
                 * username (`str`)
                 * startDate (`datetime`)
                 * id (`string`)
-                * rank (`int`)
                 * bio (`str`)
-                * sharpe (`float`)
-                * totalStake (`decimal.Decimal`)
+                * nmrStaked (`decimal.Decimal`)
 
         Example:
             >>> api = SignalsAPI()
             >>> api.public_user_profile("floury_kerril_moodle")
             {'bio': None,
              'id': '635db2a4-bdc6-4e5d-b515-f5120392c8c9',
-             'rank': 1,
-             'sharpe': 2.35,
              'startDate': datetime.datetime(2019, 3, 26, 0, 43),
              'username': 'floury_kerril_moodle',
-             'totalStake': Decimal('14.630994874320760131')}
+             'nmrStaked': Decimal('14.630994874320760131')}
 
         """
         query = """
           query($username: String!) {
-            signalsUserProfile(username: $username) {
-              rank
+            v2SignalsProfile(modelName: $username) {
               id
               startDate
               username
               bio
-              sharpe
-              totalStake
+              nmrStaked
             }
           }
         """
         arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['signalsUserProfile']
+        data = self.raw_query(query, arguments)['data']['v2SignalsProfile']
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
-        utils.replace(data, "totalStake", utils.parse_float_string)
+        utils.replace(data, "nmrStaked", utils.parse_float_string)
         return data
 
     def daily_user_performances(self, username: str) -> List[Dict]:
