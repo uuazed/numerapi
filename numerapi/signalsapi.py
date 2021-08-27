@@ -258,8 +258,64 @@ class SignalsAPI(base_api.Api):
         utils.replace(data, "nmrStaked", utils.parse_float_string)
         return data
 
+    def daily_model_performances(self, username: str) -> List[Dict]:
+        """Fetch daily Numerai Signals performance of a model.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of daily user performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * date (`datetime`)
+                * corrRank (`int`)
+                * corrRep (`float` or None)
+                * mmcRank (`int`)
+                * mmcRep (`float` or None)
+                * corr_20dRank (`int`)
+                * corr_20dRep (`float` or None)
+
+        Example:
+            >>> api = SignalsAPI()
+            >>> api.daily_model_performances("floury_kerril_moodle")
+            [{'corrRank': 45,
+              'corrRep': -0.00010935616731632354,
+              'corr_20dRank': None,
+              'corr_20dRep': None,
+              'date': datetime.datetime(2020, 9, 18, 0, 0, tzinfo=tzutc()),
+              'mmcRank': 6,
+              'mmcRep': 0.0},
+              ...
+              ]
+        """
+        query = """
+          query($username: String!) {
+            v2SignalsProfile(modelName: $username) {
+              dailyModelPerformances {
+                date
+                corrRank
+                corrRep
+                mmcRep
+                mmcRank
+                corr_20dRep
+                corr_20dRank
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v2SignalsProfile']
+        performances = data['dailyModelPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "date", utils.parse_datetime_string)
+        return performances
+
     def daily_user_performances(self, username: str) -> List[Dict]:
-        """Fetch daily Numerai Signals performance of a user.
+        """DEPRECATED Fetch daily Numerai Signals performance of a user.
 
         Args:
             username (str)
@@ -300,6 +356,8 @@ class SignalsAPI(base_api.Api):
             }
           }
         """
+        self.logger.warning("Method daily_user_performances is DEPRECATED, "
+                            "use daily_model_performances")
         arguments = {'username': username}
         data = self.raw_query(query, arguments)['data']['signalsUserProfile']
         performances = data['dailyUserPerformances']

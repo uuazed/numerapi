@@ -6,6 +6,7 @@ Notable changes to this project.
 - replace deprecated GraphQL `v2UserProfile` call with `v3UserProfile`
 - replace deprecated GraphQL `signalsUserProfile` call with `v2SignalsProfile`
 - new `daily_model_performances`, replacing `daily_user_performances`
+- signals: new `daily_model_performances`, replacing `daily_user_performances`
 
 ## [2.6.0] - 2021-07-12
 - cli: remove deprecated 'payments' and 'user-activities' commands (#51)
