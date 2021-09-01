@@ -275,16 +275,20 @@ class SignalsAPI(base_api.Api):
                 * corrRep (`float` or None)
                 * mmcRank (`int`)
                 * mmcRep (`float` or None)
-                * corr_20dRank (`int`)
-                * corr_20dRep (`float` or None)
+                * corr20dRank (`int`)
+                * corr20dRep (`float` or None)
+                * mmc20dRank (`int`)
+                * mmc20dRep (`float` or None)
 
         Example:
             >>> api = SignalsAPI()
             >>> api.daily_model_performances("floury_kerril_moodle")
             [{'corrRank': 45,
               'corrRep': -0.00010935616731632354,
-              'corr_20dRank': None,
-              'corr_20dRep': None,
+              'corr20dRank': None,
+              'corr20dRep': None,
+              'mmc20dRank': None,
+              'mmc20dRep': None,
               'date': datetime.datetime(2020, 9, 18, 0, 0, tzinfo=tzutc()),
               'mmcRank': 6,
               'mmcRep': 0.0},
@@ -300,8 +304,10 @@ class SignalsAPI(base_api.Api):
                 corrRep
                 mmcRep
                 mmcRank
-                corr_20dRep
-                corr_20dRank
+                corr20dRep
+                corr20dRank
+                mmc20dRep
+                mmc20dRank
               }
             }
           }
