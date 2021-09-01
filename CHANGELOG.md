@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- Add mmc20d rep and rank to SignalsAPI daily_model_performances
+- rename `corr_20d*` to `corr20d*` since Numerai's GraphQL adapter now handles numbers in fields without underscores
+
 ## [2.7.0] - 2021-08-27
 - adding `fncPercentile`, `mmcPercentile` & `corrPercentile` to `daily_submissions_performances`
 - replace deprecated GraphQL `v2UserProfile` call with `v3UserProfile`
