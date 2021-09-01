@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.7.1] - 2021-09-01
 - Add mmc20d rep and rank to SignalsAPI daily_model_performances
 - rename `corr_20d*` to `corr20d*` since Numerai's GraphQL adapter now handles numbers in fields without underscores
 
