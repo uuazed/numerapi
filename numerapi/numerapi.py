@@ -1103,3 +1103,19 @@ class NumerAPI(base_api.Api):
         performances = [p for p in performances
                         if any([p['correlation'], p['fnc'], p['mmc']])]
         return performances
+
+    def get_dataset_list(self):
+        query = """
+            query { listDatasets }
+        """
+        return self.raw_query(query)['data']['listDatasets']
+
+    def download_dataset(self, filename: str, dest_path: str):
+        query = """
+        query ($filename: String!) {
+            dataset(filename: $filename)
+        }
+        """
+        dataset_url = self.raw_query(query, {'filename': filename}, authorization=True)['data']['dataset']
+        utils.download_file(dataset_url, dest_path, show_progress_bars=True)
+        return dataset_url
