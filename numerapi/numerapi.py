@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# System
 import zipfile
 import os
 import datetime
@@ -8,7 +7,6 @@ import decimal
 from typing import List, Dict
 from io import BytesIO
 
-# Third Party
 import requests
 import pytz
 import pandas as pd
@@ -50,7 +48,7 @@ class NumerAPI(base_api.Api):
 
         return True
 
-    def list_datasets(self):
+    def list_datasets(self) -> List[str]:
         """List of available data files
 
         Returns:
@@ -68,10 +66,31 @@ class NumerAPI(base_api.Api):
         query = "query {listDatasets}"
         return self.raw_query(query)['data']['listDatasets']
 
+    def download_dataset(self, filename: str, dest_path: str) -> None:
+        """ Download specified file for the current active round.
+
+        Args:
+            filename (str): file to be downloaded
+            dest_path (str): complate path where the file should be stored
+
+        Example:
+            >>> filenames = NumerAPI().list_datasets()
+            >>> NumerAPI().download_dataset(filenames[0], f"data/{filename}")
+        """
+        query = """
+        query ($filename: String!) {
+            dataset(filename: $filename)
+        }
+        """
+        args = {'filename': filename}
+        dataset_url = self.raw_query(
+            query, args, authorization=True)['data']['dataset']
+        utils.download_file(dataset_url, dest_path, self.show_progress_bars)
+
     def get_dataset_url(self, tournament=8):
         """Fetch url of the current dataset.
 
-        to be DEPRECATED with the new data release on 2021-09-09
+        to be DEPRECATED sometime after the new data release on 2021-09-09
 
         Args:
             tournament (int, optional): ID of the tournament, defaults to 8
@@ -96,7 +115,7 @@ class NumerAPI(base_api.Api):
                                  unzip=True, tournament=8):
         """Download dataset for the current active round.
 
-        to be DEPRECATED with the new data release on 2021-09-09
+        to be DEPRECATED sometime after the new data release on 2021-09-09
 
         Args:
             dest_path (str, optional): destination folder, defaults to `.`
@@ -145,7 +164,7 @@ class NumerAPI(base_api.Api):
                             extension: str = "csv") -> str:
         """Fetch url of the latest data url for a specified data type
 
-        to be DEPRECATED with the new data release on 2021-09-09
+        to be DEPRECATED sometime after the new data release on 2021-09-09
 
         Args:
             data_type (str): type of data to return
