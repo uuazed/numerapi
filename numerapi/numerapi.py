@@ -71,6 +71,8 @@ class NumerAPI(base_api.Api):
     def get_dataset_url(self, tournament=8):
         """Fetch url of the current dataset.
 
+        to be DEPRECATED with the new data release on 2021-09-09
+
         Args:
             tournament (int, optional): ID of the tournament, defaults to 8
               -- DEPRECATED there is only one tournament nowadays
@@ -93,6 +95,8 @@ class NumerAPI(base_api.Api):
     def download_current_dataset(self, dest_path=".", dest_filename=None,
                                  unzip=True, tournament=8):
         """Download dataset for the current active round.
+
+        to be DEPRECATED with the new data release on 2021-09-09
 
         Args:
             dest_path (str, optional): destination folder, defaults to `.`
@@ -141,6 +145,8 @@ class NumerAPI(base_api.Api):
                             extension: str = "csv") -> str:
         """Fetch url of the latest data url for a specified data type
 
+        to be DEPRECATED with the new data release on 2021-09-09
+
         Args:
             data_type (str): type of data to return
             extension (str): file extension to get (optional, defaults to csv)
@@ -183,6 +189,20 @@ class NumerAPI(base_api.Api):
 
     def download_latest_data(self, data_type: str, extension: str = "csv",
                              dest_path: str = ".", dest_filename: str = None):
+        """ Download specified dataset for the current active round.
+
+        to be DEPRECATED with the new data release on 2021-09-09
+
+        Args:
+            data_type (str): type of data to return
+            extension (str): file extension to get (optional, defaults to csv)
+            dest_path (str): folder where the file should be stored
+            dest_filename (str): target filename
+
+        Example:
+            >>> url = NumerAPI().download_latest_data("live", "csv")
+        """
+
         # set up download path
         if dest_filename is None:
             dest_filename = f"latest_numerai_{data_type}_data.{extension}"

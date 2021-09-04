@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - added `list_datasets` to fetch the list of available data files
+- add missing documentation and deprecation warnings
 
 ## [2.7.1] - 2021-09-01
 - Add mmc20d rep and rank to SignalsAPI daily_model_performances
