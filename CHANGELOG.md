@@ -2,7 +2,8 @@
 Notable changes to this project.
 
 ## dev
-- added `list_datasets` to fetch the list of available data files
+- added `list_datasets` to fetch the list of available data files 
+- added `download_dataset` to download files from the new data api
 - add missing documentation and deprecation warnings
 
 ## [2.7.1] - 2021-09-01
