@@ -50,6 +50,24 @@ class NumerAPI(base_api.Api):
 
         return True
 
+    def list_datasets(self):
+        """List of available data files
+
+        Returns:
+            list of str: filenames
+        Example:
+            >>> NumerAPI().list_datasets()
+            [
+              "numerai_datasets.zip",
+              "numerai_training_data.csv",
+              "numerai_training_data.parquet",
+              "numerai_validation_data.csv",
+              "numerai_validation_data.parquet"
+            ]
+        """
+        query = "query {listDatasets}"
+        return self.raw_query(query)['data']['listDatasets']
+
     def get_dataset_url(self, tournament=8):
         """Fetch url of the current dataset.
 
