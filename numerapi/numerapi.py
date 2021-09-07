@@ -83,8 +83,7 @@ class NumerAPI(base_api.Api):
         }
         """
         args = {'filename': filename}
-        dataset_url = self.raw_query(
-            query, args, authorization=True)['data']['dataset']
+        dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
 
     def get_dataset_url(self, tournament=8):
