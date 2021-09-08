@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.8.1] - 2021-09-08
+-  Add version arg to upload_predictions (#59)
+
 ## [2.8.0] - 2021-09-07 - "new data api"
 - added `list_datasets` to fetch the list of available data files
 - added `download_dataset` to download files from the new data api
