@@ -472,7 +472,8 @@ class NumerAPI(base_api.Api):
     def upload_predictions(self, file_path: str = "predictions.csv",
                            tournament: int = 8,
                            model_id: str = None,
-                           df: pd.DataFrame = None) -> str:
+                           df: pd.DataFrame = None,
+                           version: int = 1) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -485,6 +486,10 @@ class NumerAPI(base_api.Api):
                 multiple models)
             df (pandas.DataFrame): pandas DataFrame to upload, if function is
                 given df and file_path, df will be uploaded.
+            version (int): Version of create_submissions to use (optional,
+                defaults to 1)
+                Set to 1 to submit predictions for the 310 features dataset
+                Set to 2 to submit predictions for the 1050+ features dataset
 
         Returns:
             str: submission_id
@@ -533,10 +538,12 @@ class NumerAPI(base_api.Api):
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
+                     $version: Int!
                      $modelId: String
                      $triggerId: String) {
                 create_submission(filename: $filename
                                   tournament: $tournament
+                                  version: $version
                                   modelId: $modelId
                                   triggerId: $triggerId) {
                     id
@@ -545,6 +552,7 @@ class NumerAPI(base_api.Api):
             '''
         arguments = {'filename': submission_auth['filename'],
                      'tournament': tournament,
+                     'version': version,
                      'modelId': model_id,
                      'triggerId': os.getenv('TRIGGER_ID', None)}
         create = self.raw_query(create_query, arguments, authorization=True)
