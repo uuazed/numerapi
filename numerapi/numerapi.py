@@ -48,9 +48,12 @@ class NumerAPI(base_api.Api):
 
         return True
 
-    def list_datasets(self) -> List[str]:
+    def list_datasets(self, round_num: int = None) -> List[str]:
         """List of available data files
 
+        Args:
+            round_num (int): tournament round you are interested in. defaults
+                             to the current round
         Returns:
             list of str: filenames
         Example:
@@ -63,8 +66,16 @@ class NumerAPI(base_api.Api):
               "numerai_validation_data.parquet"
             ]
         """
-        query = "query {listDatasets}"
-        return self.raw_query(query)['data']['listDatasets']
+        if round_num is None:
+            query = "query {listDatasets}"
+            args = None
+        else:
+            query = """
+            query ($round: Int) {
+                listDatasets(round: $round)
+            }"""
+            args = {'round': round_num}
+        return self.raw_query(query, args)['data']['listDatasets']
 
     def download_dataset(self, filename: str, dest_path: str) -> None:
         """ Download specified file for the current active round.
@@ -86,7 +97,7 @@ class NumerAPI(base_api.Api):
         dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
 
-    def get_dataset_url(self, tournament=8):
+    def get_dataset_url(self, tournament: int = 8) -> str:
         """Fetch url of the current dataset.
 
         to be DEPRECATED sometime after the new data release on 2021-09-09
@@ -111,7 +122,7 @@ class NumerAPI(base_api.Api):
         return url
 
     def download_current_dataset(self, dest_path=".", dest_filename=None,
-                                 unzip=True, tournament=8):
+                                 unzip=True, tournament=8) -> str:
         """Download dataset for the current active round.
 
         to be DEPRECATED sometime after the new data release on 2021-09-09
