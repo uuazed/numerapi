@@ -52,8 +52,8 @@ class NumerAPI(base_api.Api):
         """List of available data files
 
         Args:
-            round_num (int): tournament round you are interested in. defaults
-                             to the current round
+            round_num (int, optional): tournament round you are interested in.
+                defaults to the current round
         Returns:
             list of str: filenames
         Example:
@@ -77,13 +77,18 @@ class NumerAPI(base_api.Api):
             args = {'round': round_num}
         return self.raw_query(query, args)['data']['listDatasets']
 
-    def download_dataset(self, filename: str, dest_path: str = None) -> None:
+    def download_dataset(self, filename: str, dest_path: str = None,
+                         round_num: int = None,
+                         tournament: int = 8) -> None:
         """ Download specified file for the current active round.
 
         Args:
             filename (str): file to be downloaded
-            dest_path (str): complate path where the file should be stored,
-                             defaults to the same name as the source file
+            dest_path (str, optional): complate path where the file should be
+                stored, defaults to the same name as the source file
+            round_num (int, optional): tournament round you are interested in.
+                defaults to the current round
+            tournament (int, optional): ID of the tournament, defaults to 8
 
         Example:
             >>> filenames = NumerAPI().list_datasets()
@@ -91,12 +96,23 @@ class NumerAPI(base_api.Api):
         """
         if dest_path is None:
             dest_path = filename
-        query = """
-        query ($filename: String!) {
-            dataset(filename: $filename)
-        }
-        """
-        args = {'filename': filename}
+        if round_num is None:
+            query = """
+            query ($filename: String!) {
+                dataset(filename: $filename)
+            }
+            """
+            args = {'filename': filename}
+        else:
+            query = """
+            query ($filename: String!
+                   $round: Int) {
+                dataset(filename: $filename
+                        round: $round)
+            }
+            """
+            args = {'filename': filename, "round": round_num}
+
         dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
 

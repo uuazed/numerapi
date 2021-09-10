@@ -3,7 +3,8 @@ Notable changes to this project.
 
 ## dev
 - support passing `round_num` to `list_datasets`, to get available files from past rounds
-- `download_dataset` no longer requires a dstination path, it defaults to the source file name
+- `download_dataset` no longer requires a destination path, it defaults to the source file name
+- `download_dataset` now accepts a `round_num` argument, to download old files
 
 ## [2.8.1] - 2021-09-08
 -  Add version arg to upload_predictions (#59)
