@@ -77,17 +77,20 @@ class NumerAPI(base_api.Api):
             args = {'round': round_num}
         return self.raw_query(query, args)['data']['listDatasets']
 
-    def download_dataset(self, filename: str, dest_path: str) -> None:
+    def download_dataset(self, filename: str, dest_path: str = None) -> None:
         """ Download specified file for the current active round.
 
         Args:
             filename (str): file to be downloaded
-            dest_path (str): complate path where the file should be stored
+            dest_path (str): complate path where the file should be stored,
+                             defaults to the same name as the source file
 
         Example:
             >>> filenames = NumerAPI().list_datasets()
-            >>> NumerAPI().download_dataset(filenames[0], f"data/{filename}")
+            >>> NumerAPI().download_dataset(filenames[0]}")
         """
+        if dest_path is None:
+            dest_path = filename
         query = """
         query ($filename: String!) {
             dataset(filename: $filename)
