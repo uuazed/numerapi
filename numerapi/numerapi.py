@@ -66,15 +66,11 @@ class NumerAPI(base_api.Api):
               "numerai_validation_data.parquet"
             ]
         """
-        if round_num is None:
-            query = "query {listDatasets}"
-            args = None
-        else:
-            query = """
-            query ($round: Int) {
-                listDatasets(round: $round)
-            }"""
-            args = {'round': round_num}
+        query = """
+        query ($round: Int) {
+            listDatasets(round: $round)
+        }"""
+        args = {'round': round_num}
         return self.raw_query(query, args)['data']['listDatasets']
 
     def download_dataset(self, filename: str, dest_path: str = None,
@@ -96,22 +92,15 @@ class NumerAPI(base_api.Api):
         """
         if dest_path is None:
             dest_path = filename
-        if round_num is None:
-            query = """
-            query ($filename: String!) {
-                dataset(filename: $filename)
-            }
-            """
-            args = {'filename': filename}
-        else:
-            query = """
-            query ($filename: String!
-                   $round: Int) {
-                dataset(filename: $filename
-                        round: $round)
-            }
-            """
-            args = {'filename': filename, "round": round_num}
+
+        query = """
+        query ($filename: String!
+               $round: Int) {
+            dataset(filename: $filename
+                    round: $round)
+        }
+        """
+        args = {'filename': filename, "round": round_num}
 
         dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
