@@ -634,6 +634,81 @@ class NumerAPI(base_api.Api):
         submission_id = create['data']['create_submission']['id']
         return submission_id
 
+    def upload_diagnostics(self, file_path: str = "predictions.csv",
+                           tournament: int = 8,
+                           model_id: str = None,
+                           df: pd.DataFrame = None) -> str:
+        """Upload predictions to diagnostics from file.
+
+        Args:
+            file_path (str): CSV file with predictions that will get uploaded
+            tournament (int): ID of the tournament (optional, defaults to 8)
+                -- DEPRECATED there is only one tournament nowadays
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
+            df (pandas.DataFrame): pandas DataFrame to upload, if function is
+                given df and file_path, df will be uploaded.
+
+        Returns:
+            str: diagnostics_id
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.upload_diagnostics("prediction.cvs", model_id=model_id)
+            '93c46857-fed9-4594-981e-82db2b358daf'
+            >>> # upload from pandas DataFrame directly:
+            >>> api.upload_predictions(df=predictions_df, model_id=model_id)
+        """
+        self.logger.info("uploading diagnostics...")
+
+        # write the pandas DataFrame as a binary buffer if provided
+        buffer_csv = None
+
+        if df is not None:
+            buffer_csv = BytesIO(df.to_csv(index=False).encode())
+            buffer_csv.name = file_path
+
+        auth_query = '''
+            query($filename: String!
+                  $tournament: Int!
+                  $modelId: String) {
+                diagnosticsUploadAuth(filename: $filename
+                                      tournament: $tournament
+                                      modelId: $modelId) {
+                    filename
+                    url
+                }
+            }
+            '''
+        args = {'filename': os.path.basename(file_path),
+                'tournament': tournament,
+                'modelId': model_id}
+        upload_resp = self.raw_query(auth_query, args, authorization=True)
+        upload_auth = upload_resp['data']['submission_upload_auth']
+
+        with open(file_path, 'rb') if df is None else buffer_csv as fh:
+            requests.put(upload_auth['url'], data=fh.read())
+        create_query = '''
+            mutation($filename: String!
+                     $tournament: Int!
+                     $version: Int!
+                     $modelId: String) {
+                createDiagnostics(filename: $filename
+                                  tournament: $tournament
+                                  version: $version
+                                  modelId: $modelId
+                                  triggerId: $triggerId) {
+                    id
+                }
+            }'''
+        arguments = {'filename': upload_auth['filename'],
+                     'tournament': tournament,
+                     'modelId': model_id}
+        create = self.raw_query(create_query, arguments, authorization=True)
+        diagnostics_id = create['data']['createDiagnostics']['id']
+        return diagnostics_id
+
     def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
         """Check if a new round has started within the last `hours`.
 
