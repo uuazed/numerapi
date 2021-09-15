@@ -685,20 +685,17 @@ class NumerAPI(base_api.Api):
                 'tournament': tournament,
                 'modelId': model_id}
         upload_resp = self.raw_query(auth_query, args, authorization=True)
-        upload_auth = upload_resp['data']['submission_upload_auth']
+        upload_auth = upload_resp['data']['diagnosticsUploadAuth']
 
         with open(file_path, 'rb') if df is None else buffer_csv as fh:
             requests.put(upload_auth['url'], data=fh.read())
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
-                     $version: Int!
                      $modelId: String) {
                 createDiagnostics(filename: $filename
                                   tournament: $tournament
-                                  version: $version
-                                  modelId: $modelId
-                                  triggerId: $triggerId) {
+                                  modelId: $modelId) {
                     id
                 }
             }'''
@@ -706,8 +703,131 @@ class NumerAPI(base_api.Api):
                      'tournament': tournament,
                      'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
-        diagnostics_id = create['data']['createDiagnostics']['id']
-        return diagnostics_id
+        self.diagnostics_id = create['data']['createDiagnostics']['id']
+        return self.diagnostics_id
+
+    def diagnostics(self, model_id: str, diagnostics_id: str = None) -> Dict:
+        """
+        Fetch results of diagnostics run
+
+        Args:
+            model_id (str): number of items to skip (optional, defaults to 0)
+            diagnostics_id (str): id returned by "upload_diagnostics", defaults
+                to last diagnostic upload done within the same session
+
+        Returns:
+            dict: diagnostic results with the following content:
+
+                * validationCorrMean (`float`)
+                * validationCorrSharpe (`float`)
+                * examplePredsCorrMean (`float`)
+                * validationMmcStd (`float`)
+                * validationMmcSharpe (`float`)
+                * validationCorrPlusMmcSharpeDiff (`float`)
+                * validationMmcStdRating (`float`)
+                * validationMmcMeanRating (`float`)
+                * validationCorrPlusMmcSharpeDiffRating (`float`)
+                * perEraDiagnostics (`list`) each with the following fields:
+                    * era (`int`)
+                    * examplePredsCorr (`float`)
+                    * validationCorr (`float`)
+                    * validationFeatureCorrMax (`float`)
+                    * validationFeatureNeutralCorr (`float`)
+                    * validationMmc (`float`)
+                * validationCorrPlusMmcStd (`float`)
+                * validationMmcMean (`float`)
+                * validationCorrStdRating (`float`)
+                * validationCorrPlusMmcSharpe (`float`)
+                * validationMaxDrawdownRating (`float`)
+                * validationFeatureNeutralCorrMean (`float`)
+                * validationCorrPlusMmcMean (`float`)
+                * validationFeatureCorrMax (`float`)
+                * status (`string`),
+                * validationCorrMeanRating (`float`)
+                * validationFeatureNeutralCorrMeanRating (`float`)
+                * validationCorrSharpeRating (`float`)
+                * validationCorrPlusMmcMeanRating (`float`)
+                * message (`string`)
+                * validationMmcSharpeRating (`float`)
+                * updatedAt (`datetime`)
+                * validationFeatureCorrMaxRating (`float`)
+                * validationCorrPlusMmcSharpeRating (`float`)
+                * trainedOnVal (`bool`)
+                * validationCorrStd (`float`)
+                * erasAcceptedCount (`int`)
+                * validationMaxDrawdown (`float`)
+                * validationCorrPlusMmcStdRating (`float`)
+
+        Example:
+            >>> napi = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = napi.get_models()['uuazed']
+            >>> api.upload_diagnostics("prediction.cvs", model_id=model_id)
+            '93c46857-fed9-4594-981e-82db2b358daf'
+            >>> napi.diagnostic(model_id)
+            {"validationCorrMean": 0.53231,
+            ...
+            }
+
+        """
+        if diagnostics_id is None and self.diagnostics_id is None:
+            raise ValueError("You need to provide a 'diagnostics_id'",
+                             " or upload to diagnostics again.")
+        if diagnostics_id is None:
+            diagnostics_id = self.diagnostics_id
+
+        query = '''
+            query($id: String!
+                  $modelId: String) {
+              diagnostics(id: $id
+                          modelId: $modelId) {
+                erasAcceptedCount
+                examplePredsCorrMean
+                message
+                perEraDiagnostics {
+                    era
+                    examplePredsCorr
+                    validationCorr
+                    validationFeatureCorrMax
+                    validationFeatureNeutralCorr
+                    validationMmc
+                }
+                status
+                trainedOnVal
+                updatedAt
+                validationCorrMean
+                validationCorrMeanRating
+                validationCorrPlusMmcMean
+                validationCorrPlusMmcMeanRating
+                validationCorrPlusMmcSharpe
+                validationCorrPlusMmcSharpeDiff
+                validationCorrPlusMmcSharpeDiffRating
+                validationCorrPlusMmcSharpeRating
+                validationCorrPlusMmcStd
+                validationCorrPlusMmcStdRating
+                validationCorrSharpe
+                validationCorrSharpeRating
+                validationCorrStd
+                validationCorrStdRating
+                validationFeatureCorrMax
+                validationFeatureCorrMaxRating
+                validationFeatureNeutralCorrMean
+                validationFeatureNeutralCorrMeanRating
+                validationMaxDrawdown
+                validationMaxDrawdownRating
+                validationMmcMean
+                validationMmcMeanRating
+                validationMmcSharpe
+                validationMmcSharpeRating
+                validationMmcStd
+                validationMmcStdRating
+              }
+            }
+        '''
+        args = {'modelId': model_id, 'id': diagnostics_id}
+        results = self.raw_query(
+            query, args, authorization=True)['data']['diagnostics']
+        utils.replace(results, "updatedAt", utils.parse_datetime_string)
+        return results
 
     def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
         """Check if a new round has started within the last `hours`.
