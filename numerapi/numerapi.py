@@ -1227,7 +1227,6 @@ class NumerAPI(base_api.Api):
             For each entry in the list, there is a dict with the following
             content:
 
-                * rank (`int`)
                 * date (`datetime`)
                 * corrRep (`float` or None)
                 * corrRank (`int`)
@@ -1239,14 +1238,13 @@ class NumerAPI(base_api.Api):
         Example:
             >>> api = NumerAPI()
             >>> api.daily_model_performances("uuazed")
-            [{'corrRep': 0.04989791277211584,
-             'date': datetime.datetime(2021, 6, 29, 0, 0, tzinfo=tzutc()),
-             'fncRep': 0.013364783709176759,
-             'mmcRep': 0.006799019156483222,
-             'payoutPending': '5.979926674348371782',
-             'payoutSettled': None,
-             'rank': 559,
-             'stakeValue': '226.746596100340180000'},
+            [{'corrRank': 485,
+             'corrRep': 0.027951873730771848,
+             'date': datetime.datetime(2021, 9, 14, 0, 0, tzinfo=tzutc()),
+             'fncRank': 1708,
+             'fncRep': 0.014548700790462122,
+             'mmcRank': 508,
+             'mmcRep': 0.005321406467445256},
              ...
             ]
         """
@@ -1380,4 +1378,106 @@ class NumerAPI(base_api.Api):
         # remove useless items
         performances = [p for p in performances
                         if any([p['correlation'], p['fnc'], p['mmc']])]
+        return performances
+
+    def round_model_performances(self, username: str) -> List[Dict]:
+        """Fetch round model performance of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of round model performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * corr (`float`)
+                * corr20d (`float` or None)
+                * corr20dPercentile (`float` or None)
+                * corrMultiplier (`float`)
+                * corrPercentile (`float`)
+                * corrWMetamodel (`float`)
+                * fnc (`float`)
+                * fncPercentile (`float`)
+                * mmc (`float`)
+                * mmc20d (`float` or None)
+                * mmc20dPercentile (`float` or None)
+                * mmcMultiplier (`float`)
+                * mmcPercentile (`float`)
+                * payout (`decimal`)
+                * roundNumber (`int`)
+                * roundOpenTime (`datetime`)
+                * roundPayoutFactor (`decimal`)
+                * roundResolveTime (`datetime`)
+                * roundResolved (`bool`)
+                * roundTarget (`str` or None)
+                * selectedStakeValue (`decimal`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.round_model_performances("uuazed")
+            [{'corr': -0.01296840448965,
+             'corr20d': None,
+             'corr20dPercentile': None,
+             'corrMultiplier': 1.0,
+             'corrPercentile': 0.0411107104219257,
+             'corrWMetamodel': 0.51542251407092,
+             'fnc': 0.000437631996046271,
+             'fncPercentile': 0.115398485394879,
+             'mmc': -0.0152125841680981,
+             'mmc20d': None,
+             'mmc20dPercentile': None,
+             'mmcMultiplier': 2.0,
+             'mmcPercentile': 0.0443562928236567,
+             'payout': Decimal('-5.687406578133045'),
+             'roundNumber': 281,
+             'roundOpenTime': datetime.datetime(2021, 9, 11, 18, 0, tzinfo=tzutc()),
+             'roundPayoutFactor': Decimal('0.578065736524773470'),
+             'roundResolveTime': datetime.datetime(2021, 10, 13, 20, 0, tzinfo=tzutc()),
+             'roundResolved': False,
+             'roundTarget': None,
+             'selectedStakeValue': Decimal('226.73138356930343')},
+             ...
+            ]
+        """
+        query = """
+          query($username: String!) {
+            v3UserProfile(modelName: $username) {
+              roundModelPerformances {
+                corr
+                corr20d
+                corr20dPercentile
+                corrMultiplier
+                corrPercentile
+                corrWMetamodel
+                fnc
+                fncPercentile
+                mmc
+                mmc20d
+                mmc20dPercentile
+                mmcMultiplier
+                mmcPercentile
+                payout
+                roundNumber
+                roundOpenTime
+                roundPayoutFactor
+                roundResolveTime
+                roundResolved
+                roundTarget
+                selectedStakeValue
+              }
+            }
+          }
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
+        performances = data['roundModelPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "roundOpenTime", utils.parse_datetime_string)
+            utils.replace(perf, "roundResolveTime", utils.parse_datetime_string)
+            utils.replace(perf, "payout", utils.parse_float_string)
+            utils.replace(perf, "roundPayoutFactor", utils.parse_float_string)
+            utils.replace(perf, "selectedStakeValue", utils.parse_float_string)
         return performances
