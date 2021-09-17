@@ -22,7 +22,7 @@ class NumerAPI(base_api.Api):
     competition.
 
     This library is a Python client to the Numerai API. The interface is
-    implemented in Python and allows downloading the training data, uploading
+    implemented in Python and tournamentallows downloading the training data, uploading
     predictions, accessing user, submission and competitions information and
     much more.
     """
@@ -1405,14 +1405,14 @@ class NumerAPI(base_api.Api):
                 * mmc20dPercentile (`float` or None)
                 * mmcMultiplier (`float`)
                 * mmcPercentile (`float`)
-                * payout (`decimal`)
+                * payout (`Decimal`)
                 * roundNumber (`int`)
                 * roundOpenTime (`datetime`)
-                * roundPayoutFactor (`decimal`)
+                * roundPayoutFactor (`Decimal`)
                 * roundResolveTime (`datetime`)
                 * roundResolved (`bool`)
                 * roundTarget (`str` or None)
-                * selectedStakeValue (`decimal`)
+                * selectedStakeValue (`Decimal`)
 
         Example:
             >>> api = NumerAPI()
@@ -1432,9 +1432,9 @@ class NumerAPI(base_api.Api):
              'mmcPercentile': 0.0443562928236567,
              'payout': Decimal('-5.687406578133045'),
              'roundNumber': 281,
-             'roundOpenTime': datetime.datetime(2021, 9, 11, 18, 0, tzinfo=tzutc()),
+             'roundOpenTime': datetime.datetime(2021, 9, 11, 18, 0),
              'roundPayoutFactor': Decimal('0.578065736524773470'),
-             'roundResolveTime': datetime.datetime(2021, 10, 13, 20, 0, tzinfo=tzutc()),
+             'roundResolveTime': datetime.datetime(2021, 10, 13, 20, 0),
              'roundResolved': False,
              'roundTarget': None,
              'selectedStakeValue': Decimal('226.73138356930343')},
