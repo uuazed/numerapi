@@ -483,9 +483,9 @@ class NumerAPI(base_api.Api):
                 * validationCorrPlusMmcSharpeDiffRating (`float`)
 
         Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model_id = api.get_models()['uuazed']
-            >>> api.submission_status(model_id)
+            >>> napi = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = napi.get_models()['uuazed']
+            >>> napi.submission_status(model_id)
             {'corrWithExamplePreds': 0.7217288907243551,
              'filename': 'model57-HPzOyr56TPaD.csv',
              'validationCorrPlusMmcSharpe': 1.0583461013814541,
@@ -511,7 +511,7 @@ class NumerAPI(base_api.Api):
         query = '''
             query($modelId: String) {
                 model(modelId: $modelId) {
-                  latestSubmission {
+                  latestSubmissionV2 {
                     filename
                     corrWithExamplePreds
                     validationCorrelation
@@ -542,7 +542,7 @@ class NumerAPI(base_api.Api):
 
         args = {'modelId': model_id}
         data = self.raw_query(query, args, authorization=True)
-        status = data['data']['model']['latestSubmission'][0]
+        status = data['data']['model']['latestSubmissionV2']
         return status
 
     def upload_predictions(self, file_path: str = "predictions.csv",

@@ -3,6 +3,8 @@ Notable changes to this project.
 
 ## dev
 - add query `round_model_performances` (#60)
+- fix documentation
+- upgrade from `latestSubmission` to `latestSubmissionV2`
 
 ## [2.9.0] - 2021-09-15
 - support passing `round_num` to `list_datasets`, to get available files from past rounds
