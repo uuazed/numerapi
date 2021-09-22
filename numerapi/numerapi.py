@@ -455,7 +455,8 @@ class NumerAPI(base_api.Api):
         """submission status of the last submission associated with the account
 
         Args:
-            model_id (str)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
 
         Returns:
             dict: submission status with the following content:
@@ -711,7 +712,8 @@ class NumerAPI(base_api.Api):
         Fetch results of diagnostics run
 
         Args:
-            model_id (str): number of items to skip (optional, defaults to 0)
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
             diagnostics_id (str): id returned by "upload_diagnostics", defaults
                 to last diagnostic upload done within the same session
 
