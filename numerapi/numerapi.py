@@ -621,7 +621,8 @@ class NumerAPI(base_api.Api):
                                   tournament: $tournament
                                   version: $version
                                   modelId: $modelId
-                                  triggerId: $triggerId) {
+                                  triggerId: $triggerId
+                                  source: "numerapi") {
                     id
                 }
             }

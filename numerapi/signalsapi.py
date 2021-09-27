@@ -135,7 +135,8 @@ class SignalsAPI(base_api.Api):
                      $triggerId: String) {
                 createSignalsSubmission(filename: $filename
                                         modelId: $modelId
-                                        triggerId: $triggerId) {
+                                        triggerId: $triggerId
+                                        source: "numerapi") {
                     id
                     firstEffectiveDate
                 }
