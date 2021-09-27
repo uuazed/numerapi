@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.9.1] - 2021-09-27
 - add query `round_model_performances` (#60)
 - fix documentation
 - upgrade from `latestSubmission` to `latestSubmissionV2`
