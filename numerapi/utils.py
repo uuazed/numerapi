@@ -53,7 +53,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
         if file_size < total_size:
             # Download incomplete
             logger.info("resuming download")
-            resume_header = {'Range': 'bytes=%d-' % file_size}
+            resume_header = {'Range': f'bytes={file_size}-'}
             req = requests.get(url, headers=resume_header, stream=True,
                                verify=False, allow_redirects=True)
         elif file_size == total_size:
