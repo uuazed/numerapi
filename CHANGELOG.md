@@ -5,6 +5,10 @@ Notable changes to this project.
 - add query `round_model_performances` (#60)
 - fix documentation
 - upgrade from `latestSubmission` to `latestSubmissionV2`
+- Indicate source `numerapi` when uploading submissions
+- Deprecate `get_account_transactions` - data no longer available
+- Deprecate `get_transactions` - data no longer available
+- Add `wallet_transactions`, fetches all transactions to / from your wallet
 
 ## [2.9.0] - 2021-09-15
 - support passing `round_num` to `list_datasets`, to get available files from past rounds

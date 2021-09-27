@@ -1,6 +1,6 @@
-import pytest
-import os
 import decimal
+import os
+import pytest
 import responses
 
 from numerapi import base_api
@@ -101,54 +101,6 @@ def test_get_models(api):
     assert sorted(models.keys()) == ['model_x', 'model_y']
     assert sorted(models.values()) == ['2c6d63a4-013f-42d1-bbaf-bf35725d29f7',
                                        '95b0d9e2-c901-4f2b-9c98-24138b0bd706']
-
-
-@responses.activate
-def test_get_account_transactions(api):
-    api.token = ("", "")
-    nmr = {"from": "-",
-           "posted": "2018-01-01 11:11:11",
-           "status": "-",
-           "to": "-",
-           "txHash": "-",
-           "value": "0.4"}
-    data = {'data': {'account':
-            {'nmrDeposits': [nmr], 'nmrWithdrawals': [nmr]}}}
-    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    txs = api.get_account_transactions()
-    for txtype in ['nmrDeposits', 'nmrWithdrawals']:
-        assert len(txs[txtype]) == 1
-        assert txs[txtype][0]["value"] == decimal.Decimal("0.4")
-
-
-@responses.activate
-def test_get_transactions(api):
-    api.token = ("", "")
-    nmr = {"from": "-",
-           "posted": "2018-01-01 11:11:11",
-           "status": "-",
-           "to": "-",
-           "txHash": "-",
-           "value": "0.4"}
-    usd = {"ethAmount": "0.4",
-           "confirmTime": "2018-01-01 11:11:11",
-           "from": "-",
-           "posted": "2018-01-01 11:11:11",
-           "sendTime": "2018-01-01 11:11:11",
-           "status": "-",
-           "to": "-",
-           "txHash": "",
-           "usdAmount": "0.4"}
-    data = {'data': {'user': {'nmrDeposits': [nmr],
-                              'nmrWithdrawals': [nmr],
-                              'usdWithdrawals': [usd]}}}
-    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    txs = api.get_transactions()
-    for txtype in ['nmrDeposits', 'nmrWithdrawals']:
-        assert len(txs[txtype]) == 1
-        assert txs[txtype][0]["value"] == decimal.Decimal("0.4")
-    assert len(txs['usdWithdrawals']) == 1
-    assert txs['usdWithdrawals'][0]['usdAmount'] == decimal.Decimal("0.4")
 
 
 @responses.activate

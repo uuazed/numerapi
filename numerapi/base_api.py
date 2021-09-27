@@ -3,7 +3,7 @@
 # System
 import os
 import logging
-from typing import Dict
+from typing import Dict, List
 
 from numerapi import utils
 
@@ -269,211 +269,67 @@ class Api:
         round_num = data["number"]
         return round_num
 
-    def get_account_transactions(self) -> Dict:
+    def get_account_transactions(self) -> List:
         """Get all your account deposits and withdrawals.
 
+        DEPRECATED - please use `wallet_transactions` instead"
+        """
+        self.logger.warning(
+            "DEPRECATED - please use `wallet_transactions` instead")
+        return self.wallet_transactions()
+
+    def wallet_transactions(self) -> List:
+        """Get all transactions in your wallet.
+
         Returns:
-            dict: lists of your tournament wallet NMR transactions
+            list: List of dicts with the following structure:
 
-            The returned dict has the following structure:
-
-                * nmrDeposits (`list`) contains items with fields:
                  * from (`str`)
                  * posted (`bool`)
                  * status (`str`)
                  * to (`str`)
                  * txHash (`str`)
-                 * value (`decimal.Decimal`)
-                 * insertedAt (`datetime`)
-                * nmrWithdrawals"` (`list`) contains items with fields:
-                 * from"` (`str`)
-                 * posted"` (`bool`)
-                 * status"` (`str`)
-                 * to"` (`str`)
-                 * txHash"` (`str`)
-                 * value"` (`decimal.Decimal`)
-                  * insertedAt (`datetime`)
+                 * amount (`decimal.Decimal`)
+                 * time (`datetime`)
+                 * tournament (`int`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> api.get_account_transactions()
-            {'nmrDeposits': [
-                {'from': '0x54479..9ec897a',
-                 'posted': True,
-                 'status': 'confirmed',
-                 'to': '0x0000000000000000000001',
-                 'txHash': '0x52..e2056ab',
-                 'value': Decimal('9.0'),
-                 'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},
-                 .. ],
-             'nmrWithdrawals': [
-                {'from': '0x0000000000000000..002',
-                 'posted': True,
-                 'status': 'confirmed',
-                 'to': '0x00000000000..001',
-                 'txHash': '0x1278..266c',
-                 'value': Decimal('2.0'),
-                 'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},},
-                 .. ]}
+            >>> api.wallet_transactions()
+            [{'amount': Decimal('1.000000000000000000'),
+              'from': '0x000000000000000000000000000000000000313bc',
+              'status': 'confirmed',
+              'time': datetime.datetime(2023, 4, 19, 13, 28, 45),
+              'to': '0x000000000000000000000000000000000006621',
+              'tournament': None,
+              'txHash': '0xeasdfkjaskljf314451234',
+              'type': 'withdrawal'},
+
+              ...
+              ]
         """
         query = """
           query {
             account {
-              nmrDeposits {
+              walletTxns {
+                amount
                 from
-                posted
                 status
                 to
+                time
+                tournament
                 txHash
-                value
-                insertedAt
-              }
-              nmrWithdrawals {
-                from
-                posted
-                status
-                to
-                txHash
-                value
-                insertedAt
+                type
               }
             }
           }
         """
-        txs = self.raw_query(query, authorization=True)['data']['account']
-        # convert strings to python objects
-        for t in txs["nmrWithdrawals"]:
-            utils.replace(t, "value", utils.parse_float_string)
-            utils.replace(t, "insertedAt", utils.parse_datetime_string)
-        for t in txs["nmrDeposits"]:
-            utils.replace(t, "value", utils.parse_float_string)
-            utils.replace(t, "insertedAt", utils.parse_datetime_string)
-        return txs
-
-    def get_transactions(self, model_id: str = None) -> Dict:
-        """Get all your deposits and withdrawals.
-
-        Args:
-            model_id (str): Target model UUID (required for accounts
-                            with multiple models)
-
-        Returns:
-            dict: lists of your NMR and USD transactions
-
-            The returned dict has the following structure:
-
-                * nmrDeposits (`list`) contains items with fields:
-                 * from (`str`)
-                 * posted (`bool`)
-                 * status (`str`)
-                 * to (`str`)
-                 * txHash (`str`)
-                 * value (`decimal.Decimal`)
-                 * insertedAt (`datetime`)
-                * nmrWithdrawals"` (`list`) contains items with fields:
-                 * from"` (`str`)
-                 * posted"` (`bool`)
-                 * status"` (`str`)
-                 * to"` (`str`)
-                 * txHash"` (`str`)
-                 * value"` (`decimal.Decimal`)
-                  * insertedAt (`datetime`)
-                * usdWithdrawals"` (`list`) contains items with fields:
-                 * confirmTime"` (`datetime` or `None`)
-                 * ethAmount"` (`str`)
-                 * from"` (`str`)
-                 * posted"` (`bool`)
-                 * sendTime"` (`datetime`)
-                 * status"` (`str`)
-                 * to (`str`)
-                 * txHash (`str`)
-                 * usdAmount (`decimal.Decimal`)
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model = api.get_models()['uuazed']
-            >>> api.get_transactions(model)
-            {'nmrDeposits': [
-                {'from': '0x54479..9ec897a',
-                 'posted': True,
-                 'status': 'confirmed',
-                 'to': '0x0000000000000000000001',
-                 'txHash': '0x52..e2056ab',
-                 'value': Decimal('9.0'),
-                 'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},
-                 .. ],
-             'nmrWithdrawals': [
-                {'from': '0x0000000000000000..002',
-                 'posted': True,
-                 'status': 'confirmed',
-                 'to': '0x00000000000..001',
-                 'txHash': '0x1278..266c',
-                 'value': Decimal('2.0'),
-                 'insertedAt: datetime.datetime((2018, 2, 11, 17, 54, 2)},},
-                 .. ],
-             'usdWithdrawals': [
-                {'confirmTime': datetime.datetime(2018, 2, 11, 17, 54, 2),
-                 'ethAmount': '0.295780674909307710',
-                 'from': '0x11.....',
-                 'posted': True,
-                 'sendTime': datetime.datetime(2018, 2, 11, 17, 53, 25),
-                 'status': 'confirmed',
-                 'to': '0x81.....',
-                 'txHash': '0x3c....',
-                 'usdAmount': Decimal('10.07')},
-                 ..]}
-        """
-        self.logger.warning(
-            "get_transactions is DEPRECATED, use get_account_transactions")
-        query = """
-          query($modelId: String) {
-            user(modelId: $modelId) {
-              nmrDeposits {
-                from
-                posted
-                status
-                to
-                txHash
-                value
-                insertedAt
-              }
-              nmrWithdrawals {
-                from
-                posted
-                status
-                to
-                txHash
-                value
-                insertedAt
-              }
-              usdWithdrawals {
-                ethAmount
-                confirmTime
-                from
-                posted
-                sendTime
-                status
-                to
-                txHash
-                usdAmount
-              }
-            }
-          }
-        """
-        arguments = {'modelId': model_id}
         txs = self.raw_query(
-            query, arguments, authorization=True)['data']['user']
+            query, authorization=True)['data']['account']['walletTxns']
         # convert strings to python objects
-        for t in txs['usdWithdrawals']:
-            utils.replace(t, "confirmTime", utils.parse_datetime_string)
-            utils.replace(t, "sendTime", utils.parse_datetime_string)
-            utils.replace(t, "usdAmount", utils.parse_float_string)
-        for t in txs["nmrWithdrawals"]:
-            utils.replace(t, "value", utils.parse_float_string)
-            utils.replace(t, "insertedAt", utils.parse_datetime_string)
-        for t in txs["nmrDeposits"]:
-            utils.replace(t, "value", utils.parse_float_string)
-            utils.replace(t, "insertedAt", utils.parse_datetime_string)
+        for t in txs:
+            utils.replace(t, "time", utils.parse_datetime_string)
+            utils.replace(t, "amount", utils.parse_float_string)
         return txs
 
     def set_submission_webhook(self, model_id: str,
