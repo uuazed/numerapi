@@ -9,6 +9,7 @@ Notable changes to this project.
 - Deprecate `get_account_transactions` - data no longer available
 - Deprecate `get_transactions` - data no longer available
 - Add `wallet_transactions`, fetches all transactions to / from your wallet
+- Code style improvements
 
 ## [2.9.0] - 2021-09-15
 - support passing `round_num` to `list_datasets`, to get available files from past rounds
