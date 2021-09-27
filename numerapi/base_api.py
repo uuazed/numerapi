@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
+"""Parts of the API that is shared between Signals and Classic"""
 
-# System
 import os
 import logging
 from typing import Dict, List
@@ -327,9 +326,9 @@ class Api:
         txs = self.raw_query(
             query, authorization=True)['data']['account']['walletTxns']
         # convert strings to python objects
-        for t in txs:
-            utils.replace(t, "time", utils.parse_datetime_string)
-            utils.replace(t, "amount", utils.parse_float_string)
+        for transaction in txs:
+            utils.replace(transaction, "time", utils.parse_datetime_string)
+            utils.replace(transaction, "amount", utils.parse_float_string)
         return txs
 
     def set_submission_webhook(self, model_id: str,

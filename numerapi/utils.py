@@ -1,10 +1,12 @@
+""" collection of utility functions"""
+
 import os
-import errno
 import decimal
 import logging
 import datetime
 import json
 from typing import Optional, Dict
+
 import dateutil.parser
 import requests
 import tqdm
@@ -12,28 +14,32 @@ import tqdm
 logger = logging.getLogger(__name__)
 
 
-def parse_datetime_string(s: str) -> datetime.datetime:
-    if s is None:
+def parse_datetime_string(string: str) -> Optional[datetime.datetime]:
+    """try to parse string to datetime object"""
+    if string is None:
         return None
-    return dateutil.parser.parse(s)
+    return dateutil.parser.parse(string)
 
 
-def parse_float_string(s: str) -> Optional[float]:
-    if s is None:
+def parse_float_string(string: str) -> Optional[float]:
+    """try to parse string to decimal.Decimal object"""
+    if string is None:
         return None
     try:
-        val = decimal.Decimal(s.replace(",", ""))
+        val = decimal.Decimal(string.replace(",", ""))
     except decimal.InvalidOperation:
         val = None
     return val
 
 
 def replace(dictionary: Dict, key: str, function):
+    """apply a function to dict item"""
     if dictionary is not None and key in dictionary:
         dictionary[key] = function(dictionary[key])
 
 
 def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
+    """downloads a file and shows a progress bar. allow resuming a download"""
     file_size = 0
     req = requests.get(url, stream=True)
     req.raise_for_status()
@@ -53,7 +59,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
         elif file_size == total_size:
             # Download complete
             logger.info("download complete")
-            return
+            return dest_path
         else:
             # Error, delete file and restart download
             logger.error("deleting file and restarting")
@@ -72,22 +78,15 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
         for chunk in req.iter_content(1024):
             dest_file.write(chunk)
             pbar.update(1024)
-
-
-def ensure_directory_exists(path: str):
-    try:
-        # `exist_ok` option is only available in Python 3.2+
-        os.makedirs(path)
-    except OSError as exception:
-        if exception.errno != errno.EEXIST:
-            raise
+    return dest_path
 
 
 def post_with_err_handling(url: str, body: str, headers: Dict,
-                           timeout: Optional[int] = None):
+                           timeout: Optional[int] = None) -> Dict:
+    """send `post` request and handle (some) errors that might occur"""
     try:
-        r = requests.post(url, json=body, headers=headers, timeout=timeout)
-        r.raise_for_status()
+        resp = requests.post(url, json=body, headers=headers, timeout=timeout)
+        resp.raise_for_status()
     except requests.exceptions.HTTPError as err:
         logger.error(f"Http Error: {err}")
     except requests.exceptions.ConnectionError as err:
@@ -98,10 +97,11 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
         logger.error(f"Oops, something went wrong: {err}")
 
     try:
-        return r.json()
+        return resp.json()
     except UnboundLocalError:
         # `r` isn't available, probably because the try/except above failed
         pass
     except json.decoder.JSONDecodeError as err:
         logger.error(f"Did not receive a valid JSON: {err}")
-        return {}
+
+    return {}

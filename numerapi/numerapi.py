@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""API for Numerai Classic"""
 
 import zipfile
 import os
@@ -33,6 +33,7 @@ class NumerAPI(base_api.Api):
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 8
+        self.diagnostics_id = None
 
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
@@ -40,11 +41,11 @@ class NumerAPI(base_api.Api):
 
         # construct full path (including file name) for unzipping
         unzip_path = os.path.join(dest_path, filename)
-        utils.ensure_directory_exists(unzip_path)
+        os.makedirs(unzip_path, exist_ok=True)
 
         # extract data
-        with zipfile.ZipFile(src_path, "r") as z:
-            z.extractall(unzip_path)
+        with zipfile.ZipFile(src_path, "r") as file:
+            file.extractall(unzip_path)
 
         return True
 
@@ -74,8 +75,7 @@ class NumerAPI(base_api.Api):
         return self.raw_query(query, args)['data']['listDatasets']
 
     def download_dataset(self, filename: str, dest_path: str = None,
-                         round_num: int = None,
-                         tournament: int = 8) -> None:
+                         round_num: int = None) -> None:
         """ Download specified file for the current active round.
 
         Args:
@@ -84,7 +84,6 @@ class NumerAPI(base_api.Api):
                 stored, defaults to the same name as the source file
             round_num (int, optional): tournament round you are interested in.
                 defaults to the current round
-            tournament (int, optional): ID of the tournament, defaults to 8
 
         Example:
             >>> filenames = NumerAPI().list_datasets()
@@ -165,7 +164,7 @@ class NumerAPI(base_api.Api):
         dataset_path = os.path.join(dest_path, dest_filename)
 
         # create parent folder if necessary
-        utils.ensure_directory_exists(dest_path)
+        os.makedirs(dest_path, exist_ok=True)
 
         url = self.get_dataset_url(tournament)
         utils.download_file(url, dataset_path, self.show_progress_bars)
@@ -247,7 +246,7 @@ class NumerAPI(base_api.Api):
         dataset_path = os.path.join(dest_path, dest_filename)
 
         # create parent folder if necessary
-        utils.ensure_directory_exists(dest_path)
+        os.makedirs(dest_path, exist_ok=True)
 
         url = self.get_latest_data_url(data_type, extension)
         utils.download_file(url, dataset_path, self.show_progress_bars)
@@ -299,9 +298,9 @@ class NumerAPI(base_api.Api):
         result = self.raw_query(query, arguments)
         rounds = result['data']['rounds']
         # convert datetime strings to datetime.datetime objects
-        for r in rounds:
-            utils.replace(r, "openTime", utils.parse_datetime_string)
-            utils.replace(r, "resolveTime", utils.parse_datetime_string)
+        for rnd in rounds:
+            utils.replace(rnd, "openTime", utils.parse_datetime_string)
+            utils.replace(rnd, "resolveTime", utils.parse_datetime_string)
         return rounds
 
     def get_submission_filenames(self, tournament=None, round_num=None,
@@ -602,15 +601,15 @@ class NumerAPI(base_api.Api):
         arguments = {'filename': os.path.basename(file_path),
                      'tournament': tournament,
                      'modelId': model_id}
-        submission_resp = self.raw_query(auth_query, arguments,
-                                         authorization=True)
-        submission_auth = submission_resp['data']['submission_upload_auth']
+        submission_auth = self.raw_query(
+            auth_query, arguments,
+            authorization=True)['data']['submission_upload_auth']
 
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
-        with open(file_path, 'rb') if df is None else buffer_csv as fh:
+        with open(file_path, 'rb') if df is None else buffer_csv as file:
             requests.put(
-                submission_auth['url'], data=fh.read(), headers=headers)
+                submission_auth['url'], data=file.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
@@ -689,8 +688,8 @@ class NumerAPI(base_api.Api):
         upload_resp = self.raw_query(auth_query, args, authorization=True)
         upload_auth = upload_resp['data']['diagnosticsUploadAuth']
 
-        with open(file_path, 'rb') if df is None else buffer_csv as fh:
-            requests.put(upload_auth['url'], data=fh.read())
+        with open(file_path, 'rb') if df is None else buffer_csv as file:
+            requests.put(upload_auth['url'], data=file.read())
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
@@ -989,13 +988,12 @@ class NumerAPI(base_api.Api):
         if not isinstance(nmr, decimal.Decimal):
             nmr = decimal.Decimal(str(nmr))
         # update stake!
-        if nmr == current:
-            self.logger.info("Stake already at desired value. Nothing to do.")
-            return None
-        elif nmr < current:
+        if nmr < current:
             return self.stake_decrease(current - nmr)
-        elif nmr > current:
+        if nmr > current:
             return self.stake_increase(nmr - current)
+        self.logger.info("Stake already at desired value. Nothing to do.")
+        return None
 
     def stake_get(self, username: str) -> float:
         """Get your current stake amount.

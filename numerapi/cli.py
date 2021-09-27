@@ -1,7 +1,10 @@
-import click
+""" Access the numerai API via command line"""
+
 import json
 import datetime
 import decimal
+
+import click
 
 import numerapi
 
@@ -13,16 +16,19 @@ class CommonJSONEncoder(json.JSONEncoder):
     Common JSON Encoder
     json.dumps(jsonString, cls=CommonJSONEncoder)
     """
-    def default(self, obj):
+    def default(self, o):
         # Encode: Decimal
-        if isinstance(obj, decimal.Decimal):
-            return str(obj)
+        if isinstance(o, decimal.Decimal):
+            return str(o)
         # Encode: Date & Datetime
-        if isinstance(obj, (datetime.date, datetime.datetime)):
-            return obj.isoformat()
+        if isinstance(o, (datetime.date, datetime.datetime)):
+            return o.isoformat()
+
+        return None
 
 
 def prettify(stuff):
+    """prettify json"""
     return json.dumps(stuff, cls=CommonJSONEncoder, indent=4)
 
 
@@ -145,12 +151,9 @@ def daily_submissions_performances(username):
 
 
 @cli.command()
-@click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
-def transactions(model_id):
+def transactions():
     """List all your deposits and withdrawals."""
-    click.echo(prettify(napi.get_transactions(model_id)))
+    click.echo(prettify(napi.wallet_transactions()))
 
 
 @cli.command()

@@ -1,11 +1,11 @@
-# System
+"""API for Numerai Signals"""
+
 from typing import List, Dict
 import os
 import codecs
 import decimal
 from io import BytesIO
 
-# Third Party
 import requests
 import pandas as pd
 
@@ -16,6 +16,7 @@ SIGNALS_DOM = "https://numerai-signals-public-data.s3-us-west-2.amazonaws.com"
 
 
 class SignalsAPI(base_api.Api):
+    """"API for Numerai Signals"""
     TICKER_UNIVERSE_URL = f"{SIGNALS_DOM}/latest_universe.csv"
     HISTORICAL_DATA_URL = f"{SIGNALS_DOM}/signals_train_val_bbg.csv"
 
@@ -127,8 +128,8 @@ class SignalsAPI(base_api.Api):
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
 
-        with open(file_path, 'rb') if df is None else buffer_csv as fh:
-            requests.put(auth['url'], data=fh.read(), headers=headers)
+        with open(file_path, 'rb') if df is None else buffer_csv as file:
+            requests.put(auth['url'], data=file.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $modelId: String
@@ -467,7 +468,7 @@ class SignalsAPI(base_api.Api):
         path = os.path.join(dest_path, dest_filename)
 
         # create parent folder if necessary
-        utils.ensure_directory_exists(dest_path)
+        os.makedirs(dest_path, exist_ok=True)
         utils.download_file(
             self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
         return path

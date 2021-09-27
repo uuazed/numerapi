@@ -1,3 +1,5 @@
+""" Numerai Python API"""
+
 import pkg_resources
 
 try:
@@ -6,5 +8,7 @@ except pkg_resources.DistributionNotFound:
     __version__ = 'unknown'
 
 
-from numerapi.numerapi import NumerAPI  # noqa
-from numerapi.signalsapi import SignalsAPI  # noqa
+# pylint: disable=wrong-import-position
+from numerapi.numerapi import NumerAPI
+from numerapi.signalsapi import SignalsAPI
+# pylint: enable=wrong-import-position
