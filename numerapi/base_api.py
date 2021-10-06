@@ -3,6 +3,10 @@
 import os
 import logging
 from typing import Dict, List
+from io import BytesIO
+
+import pandas as pd
+import requests
 
 from numerapi import utils
 
@@ -102,6 +106,7 @@ class Api:
         """
         body = {'query': query,
                 'variables': variables}
+        self.logger.debug(body)
         headers = {'Content-type': 'application/json',
                    'Accept': 'application/json'}
         if authorization:
@@ -363,3 +368,200 @@ class Api:
         arguments = {'modelId': model_id, 'newSubmissionWebhook': webhook}
         res = self.raw_query(query, arguments, authorization=True)
         return res['data']['setSubmissionWebhook'] == "true"
+
+    def upload_diagnostics(self, file_path: str = "predictions.csv",
+                           tournament: int = None,
+                           model_id: str = None,
+                           df: pd.DataFrame = None) -> str:
+        """Upload predictions to diagnostics from file.
+
+        Args:
+            file_path (str): CSV file with predictions that will get uploaded
+            tournament (int): ID of the tournament (optional, defaults to None)
+                -- DEPRECATED there is only one tournament nowadays
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
+            df (pandas.DataFrame): pandas DataFrame to upload, if function is
+                given df and file_path, df will be uploaded.
+
+        Returns:
+            str: diagnostics_id
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.upload_diagnostics("prediction.cvs", model_id=model_id)
+            '93c46857-fed9-4594-981e-82db2b358daf'
+            >>> # upload from pandas DataFrame directly:
+            >>> api.upload_diagnostics(df=predictions_df, model_id=model_id)
+        """
+        self.logger.info("uploading diagnostics...")
+
+        # write the pandas DataFrame as a binary buffer if provided
+        buffer_csv = None
+        if tournament is None:
+            tournament = self.tournament_id
+
+        if df is not None:
+            buffer_csv = BytesIO(df.to_csv(index=False).encode())
+            buffer_csv.name = file_path
+
+        auth_query = '''
+            query($filename: String!
+                  $tournament: Int!
+                  $modelId: String) {
+                diagnosticsUploadAuth(filename: $filename
+                                      tournament: $tournament
+                                      modelId: $modelId) {
+                    filename
+                    url
+                }
+            }
+            '''
+        args = {'filename': os.path.basename(file_path),
+                'tournament': tournament,
+                'modelId': model_id}
+        upload_resp = self.raw_query(auth_query, args, authorization=True)
+        upload_auth = upload_resp['data']['diagnosticsUploadAuth']
+
+        with open(file_path, 'rb') if df is None else buffer_csv as file:
+            requests.put(upload_auth['url'], data=file.read())
+        create_query = '''
+            mutation($filename: String!
+                     $tournament: Int!
+                     $modelId: String) {
+                createDiagnostics(filename: $filename
+                                  tournament: $tournament
+                                  modelId: $modelId) {
+                    id
+                }
+            }'''
+        arguments = {'filename': upload_auth['filename'],
+                     'tournament': tournament,
+                     'modelId': model_id}
+        create = self.raw_query(create_query, arguments, authorization=True)
+        self.diagnostics_id = create['data']['createDiagnostics']['id']
+        return self.diagnostics_id
+
+    def diagnostics(self, model_id: str, diagnostics_id: str = None) -> Dict:
+        """Fetch results of diagnostics run
+
+        Args:
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
+            diagnostics_id (str): id returned by "upload_diagnostics", defaults
+                to last diagnostic upload done within the same session
+
+        Returns:
+            dict: diagnostic results with the following content:
+
+                * validationCorrMean (`float`)
+                * validationCorrSharpe (`float`)
+                * examplePredsCorrMean (`float`)
+                * validationMmcStd (`float`)
+                * validationMmcSharpe (`float`)
+                * validationCorrPlusMmcSharpeDiff (`float`)
+                * validationMmcStdRating (`float`)
+                * validationMmcMeanRating (`float`)
+                * validationCorrPlusMmcSharpeDiffRating (`float`)
+                * perEraDiagnostics (`list`) each with the following fields:
+                    * era (`int`)
+                    * examplePredsCorr (`float`)
+                    * validationCorr (`float`)
+                    * validationFeatureCorrMax (`float`)
+                    * validationFeatureNeutralCorr (`float`)
+                    * validationMmc (`float`)
+                * validationCorrPlusMmcStd (`float`)
+                * validationMmcMean (`float`)
+                * validationCorrStdRating (`float`)
+                * validationCorrPlusMmcSharpe (`float`)
+                * validationMaxDrawdownRating (`float`)
+                * validationFeatureNeutralCorrMean (`float`)
+                * validationCorrPlusMmcMean (`float`)
+                * validationFeatureCorrMax (`float`)
+                * status (`string`),
+                * validationCorrMeanRating (`float`)
+                * validationFeatureNeutralCorrMeanRating (`float`)
+                * validationCorrSharpeRating (`float`)
+                * validationCorrPlusMmcMeanRating (`float`)
+                * message (`string`)
+                * validationMmcSharpeRating (`float`)
+                * updatedAt (`datetime`)
+                * validationFeatureCorrMaxRating (`float`)
+                * validationCorrPlusMmcSharpeRating (`float`)
+                * trainedOnVal (`bool`)
+                * validationCorrStd (`float`)
+                * erasAcceptedCount (`int`)
+                * validationMaxDrawdown (`float`)
+                * validationCorrPlusMmcStdRating (`float`)
+
+        Example:
+            >>> napi = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = napi.get_models()['uuazed']
+            >>> api.upload_diagnostics("prediction.cvs", model_id=model_id)
+            '93c46857-fed9-4594-981e-82db2b358daf'
+            >>> napi.diagnostic(model_id)
+            {"validationCorrMean": 0.53231,
+            ...
+            }
+
+        """
+        if diagnostics_id is None and self.diagnostics_id is None:
+            raise ValueError("You need to provide a 'diagnostics_id'",
+                             " or upload to diagnostics again.")
+        if diagnostics_id is None:
+            diagnostics_id = self.diagnostics_id
+
+        query = '''
+            query($id: String!
+                  $modelId: String) {
+              diagnostics(id: $id
+                          modelId: $modelId) {
+                erasAcceptedCount
+                examplePredsCorrMean
+                message
+                perEraDiagnostics {
+                    era
+                    examplePredsCorr
+                    validationCorr
+                    validationFeatureCorrMax
+                    validationFeatureNeutralCorr
+                    validationMmc
+                }
+                status
+                trainedOnVal
+                updatedAt
+                validationCorrMean
+                validationCorrMeanRating
+                validationCorrPlusMmcMean
+                validationCorrPlusMmcMeanRating
+                validationCorrPlusMmcSharpe
+                validationCorrPlusMmcSharpeDiff
+                validationCorrPlusMmcSharpeDiffRating
+                validationCorrPlusMmcSharpeRating
+                validationCorrPlusMmcStd
+                validationCorrPlusMmcStdRating
+                validationCorrSharpe
+                validationCorrSharpeRating
+                validationCorrStd
+                validationCorrStdRating
+                validationFeatureCorrMax
+                validationFeatureCorrMaxRating
+                validationFeatureNeutralCorrMean
+                validationFeatureNeutralCorrMeanRating
+                validationMaxDrawdown
+                validationMaxDrawdownRating
+                validationMmcMean
+                validationMmcMeanRating
+                validationMmcSharpe
+                validationMmcSharpeRating
+                validationMmcStd
+                validationMmcStdRating
+              }
+            }
+        '''
+        args = {'modelId': model_id, 'id': diagnostics_id}
+        results = self.raw_query(
+            query, args, authorization=True)['data']['diagnostics']
+        utils.replace(results, "updatedAt", utils.parse_datetime_string)
+        return results
