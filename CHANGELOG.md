@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - signals: support upload to diagnostic tool
+- cli: added `list-datasets`
 - some code cleanup
 
 ## [2.9.1] - 2021-09-27

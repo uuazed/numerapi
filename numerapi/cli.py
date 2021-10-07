@@ -38,6 +38,14 @@ def cli():
 
 
 @cli.command()
+@click.option('--round_num',
+              help='round you are interested in.defaults to the current round')
+def list_datasets(round_num):
+    """List of available data files"""
+    click.echo(prettify(napi.list_datasets(round_num=round_num)))
+
+
+@cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
 @click.option('--unzip', is_flag=True, default=True,

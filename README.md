@@ -110,18 +110,18 @@ To get started with the cli interface, let's take a look at the help page:
         check-new-round                 Check if a new round has started within...
         competitions                    Retrieves information about all...
         current-round                   Get number of the current active round.
+        daily-model-performances        Fetch daily performance of a model.
         daily-submissions-performances  Fetch daily performance of a user's...
-        daily-user-performances         Fetch daily performance of a user.
         dataset-url                     Fetch url of the current dataset.
         download-dataset                Download dataset for the current active...
         leaderboard                     Get the leaderboard.
+        list-datasets                   List of available data files
         models                          Get map of account models!
         profile                         Fetch the public profile of a user.
         stake-decrease                  Decrease your stake by `value` NMR.
         stake-drain                     Completely remove your stake.
         stake-get                       Get stake value of a user.
         stake-increase                  Increase your stake by `value` NMR.
-        stakes                          List all your stakes.
         submission-filenames            Get filenames of your submissions
         submission-status               checks the submission status
         submit                          Upload predictions from file.
