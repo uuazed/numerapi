@@ -43,6 +43,7 @@ class Api:
         self.submission_id = None
         self.show_progress_bars = show_progress_bars
         self.tournament_id = 0
+        self.diagnostics_id = None
 
     def _login(self, public_id=None, secret_key=None):
         # check env variables if not set
@@ -369,6 +370,27 @@ class Api:
         res = self.raw_query(query, arguments, authorization=True)
         return res['data']['setSubmissionWebhook'] == "true"
 
+    def _upload_auth(self, endpoint: str, file_path: str, tournament: int,
+                     model_id: str) -> Dict[str, str]:
+        auth_query = f'''
+            query($filename: String!
+                  $tournament: Int!
+                  $modelId: String) {{
+                {endpoint}(filename: $filename
+                                       tournament: $tournament
+                                       modelId: $modelId) {{
+                    filename
+                    url
+                }}
+            }}
+        '''
+        arguments = {'filename': os.path.basename(file_path),
+                     'tournament': tournament,
+                     'modelId': model_id}
+        return self.raw_query(
+            auth_query, arguments,
+            authorization=True)['data'][endpoint]
+
     def upload_diagnostics(self, file_path: str = "predictions.csv",
                            tournament: int = None,
                            model_id: str = None,
@@ -406,23 +428,8 @@ class Api:
             buffer_csv = BytesIO(df.to_csv(index=False).encode())
             buffer_csv.name = file_path
 
-        auth_query = '''
-            query($filename: String!
-                  $tournament: Int!
-                  $modelId: String) {
-                diagnosticsUploadAuth(filename: $filename
-                                      tournament: $tournament
-                                      modelId: $modelId) {
-                    filename
-                    url
-                }
-            }
-            '''
-        args = {'filename': os.path.basename(file_path),
-                'tournament': tournament,
-                'modelId': model_id}
-        upload_resp = self.raw_query(auth_query, args, authorization=True)
-        upload_auth = upload_resp['data']['diagnosticsUploadAuth']
+        upload_auth = self._upload_auth(
+            'diagnosticsUploadAuth', file_path, tournament, model_id)
 
         with open(file_path, 'rb') if df is None else buffer_csv as file:
             requests.put(upload_auth['url'], data=file.read())

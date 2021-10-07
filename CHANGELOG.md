@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - signals: support upload to diagnostic tool
+- some code cleanup
 
 ## [2.9.1] - 2021-09-27
 - add query `round_model_performances` (#60)

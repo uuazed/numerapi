@@ -22,9 +22,9 @@ class NumerAPI(base_api.Api):
     competition.
 
     This library is a Python client to the Numerai API. The interface is
-    implemented in Python and tournamentallows downloading the training data, uploading
-    predictions, accessing user, submission and competitions information and
-    much more.
+    implemented in Python and tournamentallows downloading the training data,
+    uploading predictions, accessing user, submission and competitions
+    information and much more.
     """
 
     PUBLIC_DATASETS_URL = \
@@ -33,7 +33,6 @@ class NumerAPI(base_api.Api):
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 8
-        self.diagnostics_id = None
 
     def _unzip_file(self, src_path, dest_path, filename):
         """unzips file located at src_path into destination_path"""
@@ -586,30 +585,14 @@ class NumerAPI(base_api.Api):
             buffer_csv = BytesIO(df.to_csv(index=False).encode())
             buffer_csv.name = file_path
 
-        auth_query = '''
-            query($filename: String!
-                  $tournament: Int!
-                  $modelId: String) {
-                submission_upload_auth(filename: $filename
-                                       tournament: $tournament
-                                       modelId: $modelId) {
-                    filename
-                    url
-                }
-            }
-            '''
-        arguments = {'filename': os.path.basename(file_path),
-                     'tournament': tournament,
-                     'modelId': model_id}
-        submission_auth = self.raw_query(
-            auth_query, arguments,
-            authorization=True)['data']['submission_upload_auth']
+        upload_auth = self._upload_auth(
+            'submission_upload_auth', file_path, tournament, model_id)
 
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
         with open(file_path, 'rb') if df is None else buffer_csv as file:
             requests.put(
-                submission_auth['url'], data=file.read(), headers=headers)
+                upload_auth['url'], data=file.read(), headers=headers)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
@@ -626,7 +609,7 @@ class NumerAPI(base_api.Api):
                 }
             }
             '''
-        arguments = {'filename': submission_auth['filename'],
+        arguments = {'filename': upload_auth['filename'],
                      'tournament': tournament,
                      'version': version,
                      'modelId': model_id,
