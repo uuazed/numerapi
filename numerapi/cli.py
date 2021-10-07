@@ -50,10 +50,26 @@ def list_datasets(round_num):
               help='The ID of the tournament, defaults to 8')
 @click.option('--unzip', is_flag=True, default=True,
               help='indication of whether the data should be unzipped')
-def download_dataset(tournament, unzip):
+def download_dataset_old(tournament, unzip):
     """Download dataset for the current active round."""
     click.echo(napi.download_current_dataset(
         tournament=tournament, unzip=unzip))
+
+
+@cli.command()
+@click.option(
+    '--round_num',
+    help='round you are interested in.defaults to the current round')
+@click.option(
+    '--filename', help='file to be downloaded')
+@click.option(
+    '--dest_path',
+    help='complate destination path, defaults to the name of the source file')
+def download_dataset(round_num, filename, dest_path):
+    """Download specified file for the given round"""
+    click.echo("WARNING to download the old data use `download_dataset_old`")
+    click.echo(napi.download_dataset(
+        round_num=round_num, filename=filename, dest_path=dest_path))
 
 
 @cli.command()
