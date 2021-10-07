@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.9.2] - 2021-10-07
 - signals: support upload to diagnostic tool
 - cli: added `list-datasets`
 - cli: implement downloading of the new dataset
