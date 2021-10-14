@@ -193,10 +193,15 @@ def submission_status(model_id):
 @click.option(
     '--model_id', type=str, default=None,
     help="An account model UUID (required for accounts with multiple models")
+@click.option(
+    '--version', type=int, default=1,
+    help="""Version of create_submissions to use (optional, defaults to 1)
+Set to 1 to submit predictions for the 310 features dataset
+Set to 2 to submit predictions for the 1050+ features dataset""")
 @click.argument('path', type=click.Path(exists=True))
-def submit(path, tournament, model_id):
+def submit(path, tournament, model_id, version):
     """Upload predictions from file."""
-    click.echo(napi.upload_predictions(path, tournament, model_id))
+    click.echo(napi.upload_predictions(path, tournament, model_id, version))
 
 
 @cli.command()

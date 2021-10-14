@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- cli: support uploading predictions generated with the new dataset (needs `--version 2`)
+
+
 ## [2.9.2] - 2021-10-07
 - signals: support upload to diagnostic tool
 - cli: added `list-datasets`
