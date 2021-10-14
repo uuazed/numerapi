@@ -6,7 +6,7 @@ def load(path):
     return open(path, 'r').read()
 
 
-numerapi_version = 'v2.9.2'
+numerapi_version = 'dev'
 
 
 classifiers = [
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         package_data={'numerai': ['LICENSE', 'README.md']},
         packages=find_packages(exclude=['tests']),
         install_requires=["requests", "pytz", "python-dateutil",
-                          "tqdm>=4.29.1", "click>=7.0","pandas>=1.1.0"],
+                          "tqdm>=4.29.1", "click>=7.0", "pandas>=1.1.0"],
         entry_points={
           'console_scripts': [
               'numerapi = numerapi.cli:cli'

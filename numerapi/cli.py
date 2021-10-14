@@ -67,7 +67,7 @@ def download_dataset_old(tournament, unzip):
     help='complate destination path, defaults to the name of the source file')
 def download_dataset(round_num, filename, dest_path):
     """Download specified file for the given round"""
-    click.echo("WARNING to download the old data use `download_dataset_old`")
+    click.echo("WARNING to download the old data use `download-dataset-old`")
     click.echo(napi.download_dataset(
         round_num=round_num, filename=filename, dest_path=dest_path))
 
