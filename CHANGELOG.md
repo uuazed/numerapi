@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 ## dev
-- cli: support uploading predictions generated with the new dataset (needs `--version 2`)
+- cli: support uploading predictions generated with the new dataset (needs `--new_data`)
 
 
 ## [2.9.2] - 2021-10-07
