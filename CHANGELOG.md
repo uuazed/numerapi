@@ -3,7 +3,7 @@ Notable changes to this project.
 
 ## dev
 - cli: support uploading predictions generated with the new dataset (needs `--new_data`)
-
+- signals: make `round_model_performances` available
 
 ## [2.9.2] - 2021-10-07
 - signals: support upload to diagnostic tool

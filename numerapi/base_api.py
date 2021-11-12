@@ -572,3 +572,113 @@ class Api:
             query, args, authorization=True)['data']['diagnostics']
         utils.replace(results, "updatedAt", utils.parse_datetime_string)
         return results
+
+    def round_model_performances(self, username: str) -> List[Dict]:
+        """Fetch round model performance of a user.
+
+        Args:
+            username (str)
+
+        Returns:
+            list of dicts: list of round model performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * corr (`float`)
+                * corr20d (`float` or None)
+                * corr20dPercentile (`float` or None)
+                * corrMultiplier (`float`)
+                * corrPercentile (`float`)
+                * corrWMetamodel (`float`)
+                * fnc (`float`)
+                * fncPercentile (`float`)
+                * mmc (`float`)
+                * mmc20d (`float` or None)
+                * mmc20dPercentile (`float` or None)
+                * mmcMultiplier (`float`)
+                * mmcPercentile (`float`)
+                * payout (`Decimal`)
+                * roundNumber (`int`)
+                * roundOpenTime (`datetime`)
+                * roundPayoutFactor (`Decimal`)
+                * roundResolveTime (`datetime`)
+                * roundResolved (`bool`)
+                * roundTarget (`str` or None)
+                * selectedStakeValue (`Decimal`)
+
+        Example:
+            >>> api = NumerAPI()
+            >>> api.round_model_performances("uuazed")
+            [{'corr': -0.01296840448965,
+             'corr20d': None,
+             'corr20dPercentile': None,
+             'corrMultiplier': 1.0,
+             'corrPercentile': 0.0411107104219257,
+             'corrWMetamodel': 0.51542251407092,
+             'fnc': 0.000437631996046271,
+             'fncPercentile': 0.115398485394879,
+             'mmc': -0.0152125841680981,
+             'mmc20d': None,
+             'mmc20dPercentile': None,
+             'mmcMultiplier': 2.0,
+             'mmcPercentile': 0.0443562928236567,
+             'payout': Decimal('-5.687406578133045'),
+             'roundNumber': 281,
+             'roundOpenTime': datetime.datetime(2021, 9, 11, 18, 0),
+             'roundPayoutFactor': Decimal('0.578065736524773470'),
+             'roundResolveTime': datetime.datetime(2021, 10, 13, 20, 0),
+             'roundResolved': False,
+             'roundTarget': None,
+             'selectedStakeValue': Decimal('226.73138356930343')},
+             ...
+            ]
+        """
+        if self.tournament_id == 8:
+            endpoint = "v3UserProfile"
+        elif self.tournament_id == 11:
+            endpoint = "v2SignalsProfile"
+        else:
+            raise ValueError("round_model_performances is not available for ",
+                             f"tournament {tournament_id}")
+
+        query = f"""
+          query($username: String!) {{
+            {endpoint}(modelName: $username) {{
+              roundModelPerformances {{
+                corr
+                corr20d
+                corr20dPercentile
+                corrMultiplier
+                corrPercentile
+                corrWMetamodel
+                fnc
+                fncPercentile
+                mmc
+                mmc20d
+                mmc20dPercentile
+                mmcMultiplier
+                mmcPercentile
+                payout
+                roundNumber
+                roundOpenTime
+                roundPayoutFactor
+                roundResolveTime
+                roundResolved
+                roundTarget
+                selectedStakeValue
+              }}
+            }}
+          }}
+        """
+        arguments = {'username': username}
+        data = self.raw_query(query, arguments)['data'][endpoint]
+        performances = data['roundModelPerformances']
+        # convert strings to python objects
+        for perf in performances:
+            utils.replace(perf, "roundOpenTime", utils.parse_datetime_string)
+            utils.replace(perf, "roundResolveTime", utils.parse_datetime_string)
+            utils.replace(perf, "payout", utils.parse_float_string)
+            utils.replace(perf, "roundPayoutFactor", utils.parse_float_string)
+            utils.replace(perf, "selectedStakeValue", utils.parse_float_string)
+        return performances
