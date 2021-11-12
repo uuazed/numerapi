@@ -640,7 +640,7 @@ class Api:
             endpoint = "v2SignalsProfile"
         else:
             raise ValueError("round_model_performances is not available for ",
-                             f"tournament {tournament_id}")
+                             f"tournament {self.tournament_id}")
 
         query = f"""
           query($username: String!) {{

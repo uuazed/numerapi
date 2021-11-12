@@ -1168,5 +1168,3 @@ class NumerAPI(base_api.Api):
         performances = [p for p in performances
                         if any([p['correlation'], p['fnc'], p['mmc']])]
         return performances
-
-    
