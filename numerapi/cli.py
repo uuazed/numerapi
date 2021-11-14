@@ -201,7 +201,7 @@ def submit(path, tournament, model_id, new_data):
     """Upload predictions from file."""
     data_version = 2 if new_data else 1
     click.echo(napi.upload_predictions(
-        path, tournament, model_id, data_version))
+        path, tournament, model_id, version=data_version))
 
 
 @cli.command()

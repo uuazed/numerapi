@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.9.4] - 2021-11-14
+- cli: fix predictions upload
+
 ## [2.9.3] - 2021-11-12
 - cli: support uploading predictions generated with the new dataset (needs `--new_data`)
 - signals: make `round_model_performances` available
