@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- added `set_bio` to programmatically update the bio field for some model
+
 ## [2.9.4] - 2021-11-14
 - cli: fix predictions upload
 

@@ -283,6 +283,33 @@ class Api:
             "DEPRECATED - please use `wallet_transactions` instead")
         return self.wallet_transactions()
 
+    def set_bio(self, model_id: str, bio: str) -> bool:
+        """Set bio field for a model id.
+
+        Args:
+            model_id (str): Target model UUID
+            bio (str)
+
+        Returns:
+            bool: if the bio was changed successfully
+
+        Example:
+            >>> napi = numerapi.NumerAPI()
+            >>> model_id = napi.get_models()["uuazed"]
+            >>> napi.set_bio(model_id, "This model stinks.")
+            True
+        """
+        mutation = '''
+            mutation($value: String!
+                  $modelId: String) {
+                setUserBio(value: $value
+                           modelId: $modelId)
+            }
+        '''
+        arguments = {'value': bio, 'modelId': model_id}
+        res = self.raw_query(mutation, arguments, authorization=True)
+        return res["data"]["setUserBio"]
+
     def wallet_transactions(self) -> List:
         """Get all transactions in your wallet.
 
