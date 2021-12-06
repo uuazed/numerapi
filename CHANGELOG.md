@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## dev
 - added `set_bio` to programmatically update the bio field for some model
+- added `set_link` to programmatically update the user link field 
 
 ## [2.9.4] - 2021-11-14
 - cli: fix predictions upload

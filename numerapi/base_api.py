@@ -310,6 +310,36 @@ class Api:
         res = self.raw_query(mutation, arguments, authorization=True)
         return res["data"]["setUserBio"]
 
+    def set_link(self, model_id: str, link_text: str, link: str) -> bool:
+        """Set link field for a model id.
+
+        Args:
+            model_id (str): Target model UUID
+            link_test (str)
+            link (str)
+
+        Returns:
+            bool: if the bio was changed successfully
+
+        Example:
+            >>> napi = numerapi.NumerAPI()
+            >>> model_id = napi.get_models()["uuazed"]
+            >>> napi.set_link(model_id, "buy my predictions", "numerbay.ai")
+            True
+        """
+        mutation = '''
+            mutation($linkUrl: String!
+                     $linkText: String
+                     $modelId: String) {
+                setUserLink(linkText: $linkText
+                            linkUrl: $linkUrl
+                            modelId: $modelId)
+            }
+        '''
+        args = {'linkUrl': link, "linkText": link_text, 'modelId': model_id}
+        res = self.raw_query(mutation, args, authorization=True)
+        return res["data"]["setUserLink"]
+
     def wallet_transactions(self) -> List:
         """Get all transactions in your wallet.
 
