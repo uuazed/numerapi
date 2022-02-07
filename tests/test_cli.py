@@ -16,7 +16,7 @@ def login():
     del os.environ["NUMERAI_SECRET_KEY"]
 
 
-@patch('numerapi.NumerAPI.download_current_dataset')
+@patch('numerapi.NumerAPI.download_dataset')
 def test_download_dataset(mocked):
     result = CliRunner().invoke(cli.download_dataset)
     # just testing if calling works fine
@@ -101,11 +101,9 @@ def test_submission_status(mocked, login):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_transactions')
+@patch('numerapi.NumerAPI.wallet_transactions')
 def test_transactions(mocked):
-    result = CliRunner().invoke(
-        cli.transactions,
-        ['--model_id', '31a42870-38b6-4435-ad49-18b987ff4148'])
+    result = CliRunner().invoke(cli.transactions)
     # just testing if calling works fine
     assert result.exit_code == 0
 
