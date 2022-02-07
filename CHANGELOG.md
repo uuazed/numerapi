@@ -1,10 +1,11 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.10.0] - 2022-02-07
 - added `set_bio` to programmatically update the bio field for some model
 - added `set_link` to programmatically update the user link field
 - enable stake changes for Numerai Signals (#68 Thx @habakan)
+- run tests via github actions and disable travis integration
 
 ## [2.9.4] - 2021-11-14
 - cli: fix predictions upload
