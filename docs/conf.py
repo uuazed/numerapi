@@ -74,7 +74,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'numerapi'
-copyright = '2018, uuazed'
+copyright = '2022, uuazed'
 author = 'uuazed'
 
 # The version info for the project you're documenting, acts as replacement for
