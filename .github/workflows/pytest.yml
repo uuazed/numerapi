@@ -26,3 +26,4 @@ jobs:
         directory: ./coverage/reports/
         fail_ci_if_error: true
         verbose: true
+        files: ./coverage.xml
