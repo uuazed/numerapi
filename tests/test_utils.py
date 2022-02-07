@@ -47,15 +47,6 @@ def test_download_file(tmpdir):
     assert os.path.exists(path)
 
 
-def test_ensure_directory_exists(tmpdir):
-    path = str(tmpdir.join("somedirectory"))
-    utils.ensure_directory_exists(path)
-    assert os.path.exists(path)
-    # doing it again with the same (existing) path
-    utils.ensure_directory_exists(path)
-    assert os.path.exists(path)
-
-
 @responses.activate
 def test_post_with_err_handling(caplog):
     # unreachable
