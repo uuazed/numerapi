@@ -80,7 +80,7 @@ class NumerAPI(base_api.Api):
 
         Args:
             filename (str): file to be downloaded, defaults to live data
-            dest_path (str, optional): complate path where the file should be
+            dest_path (str, optional): complete path where the file should be
                 stored, defaults to the same name as the source file
             round_num (int, optional): tournament round you are interested in.
                 defaults to the current round
