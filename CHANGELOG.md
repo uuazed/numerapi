@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- make `stake_set` work with multi model accounts
+
 ## [2.10.0] - 2022-02-07
 - added `set_bio` to programmatically update the bio field for some model
 - added `set_link` to programmatically update the user link field

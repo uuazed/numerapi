@@ -734,7 +734,7 @@ class NumerAPI(base_api.Api):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr, model_id) -> Dict:
+    def stake_set(self, nmr, model_id: str) -> Dict:
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
