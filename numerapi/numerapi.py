@@ -734,12 +734,12 @@ class NumerAPI(base_api.Api):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr, username: str = None) -> Dict:
+    def stake_set(self, nmr, model_id) -> Dict:
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
             nmr (float or str): amount of NMR you want to stake
-            username (str): username or model_id for where you want to stake
+            model_id (str): model_id for where you want to stake
 
         Returns:
             dict: stake information with the following content:
@@ -765,11 +765,8 @@ class NumerAPI(base_api.Api):
              'posted': True,
              'value': '10'}
         """
-        # get username of logged in user
-        if not username:
-            username = self.get_account()['username']
         # fetch current stake
-        current = self.stake_get(username)
+        current = self.stake_get(model_id)
         # convert everything to decimals
         if current is None:
             current = decimal.Decimal(0)
