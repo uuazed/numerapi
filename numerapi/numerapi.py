@@ -776,9 +776,9 @@ class NumerAPI(base_api.Api):
             nmr = decimal.Decimal(str(nmr))
         # update stake!
         if nmr < current:
-            return self.stake_decrease(current - nmr, username)
+            return self.stake_decrease(current - nmr, model_id)
         if nmr > current:
-            return self.stake_increase(nmr - current, username)
+            return self.stake_increase(nmr - current, model_id)
         self.logger.info("Stake already at desired value. Nothing to do.")
         return None
 
