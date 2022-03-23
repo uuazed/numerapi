@@ -648,6 +648,7 @@ class Api:
                 * corrMultiplier (`float`)
                 * corrPercentile (`float`)
                 * corrWMetamodel (`float`)
+                * tc (`float`)
                 * fnc (`float`)
                 * fncPercentile (`float`)
                 * mmc (`float`)
@@ -673,6 +674,7 @@ class Api:
              'corrMultiplier': 1.0,
              'corrPercentile': 0.0411107104219257,
              'corrWMetamodel': 0.51542251407092,
+             'tc': 0.1415973344,
              'fnc': 0.000437631996046271,
              'fncPercentile': 0.115398485394879,
              'mmc': -0.0152125841680981,
@@ -709,6 +711,7 @@ class Api:
                 corrMultiplier
                 corrPercentile
                 corrWMetamodel
+                tc
                 fnc
                 fncPercentile
                 mmc
