@@ -3,6 +3,8 @@ Notable changes to this project.
 
 ## [dev]
 - make `stake_set` work with multi model accounts
+- add tc to the round_model_performances method (PR #74)
+- add tcPercentile, ic, icPercentile, fncV3, fncV3Percentile to round_model_performances
 
 ## [2.10.0] - 2022-02-07
 - added `set_bio` to programmatically update the bio field for some model

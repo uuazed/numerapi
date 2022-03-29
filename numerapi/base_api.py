@@ -712,8 +712,13 @@ class Api:
                 corrPercentile
                 corrWMetamodel
                 tc
+                tcPercentile
+                ic
+                icPercentile
                 fnc
                 fncPercentile
+                fncV3
+                fncV3Percentile
                 mmc
                 mmc20d
                 mmc20dPercentile
