@@ -193,7 +193,7 @@ def submission_status(model_id):
               help='The ID of the tournament, defaults to 8')
 @click.option(
     '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")=
+    help="An account model UUID (required for accounts with multiple models")
 @click.argument('path', type=click.Path(exists=True))
 def submit(path, tournament, model_id):
     """Upload predictions from file."""
