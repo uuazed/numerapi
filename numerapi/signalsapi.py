@@ -39,6 +39,8 @@ class SignalsAPI(base_api.Api):
                 * today (`float`)
                 * mmc (`float`)
                 * mmcRank (`int`)
+                * ic (`float`)
+                * icRank (`int`)
                 * nmrStaked (`float`)
         Example:
             >>> numerapi.SignalsAPI().get_leaderboard(1)
@@ -50,6 +52,8 @@ class SignalsAPI(base_api.Api):
               'mmc': -0.0101202715,
               'mmcRank': 30,
               'nmrStaked': 13.0,
+              'ic': -0.0101202715,
+              'icRank': 30,
              }]
         """
         query = '''
@@ -65,6 +69,8 @@ class SignalsAPI(base_api.Api):
                 mmc
                 mmcRank
                 nmrStaked
+                icRank
+                icRep
               }
             }
         '''
@@ -397,6 +403,7 @@ class SignalsAPI(base_api.Api):
                 * submission_time (`datetime`)
                 * correlation (`float`)
                 * mmc (`float`)
+                * ic (`float`)
                 * roundNumber (`int`)
                 * corrRep (`float`)
                 * mmcRep (`float`)
@@ -410,6 +417,7 @@ class SignalsAPI(base_api.Api):
               'submissionTime': datetime.datetime(2020, 5, 12, 1, 23)},
               'corrRep': None,
               'mmc': None,
+              'ic': 0.11,
               'mmcRep': None,
               'roundNumber': 226,
               'correlation': 0.03}
@@ -428,6 +436,7 @@ class SignalsAPI(base_api.Api):
                 roundNumber
                 corrRep
                 mmcRep
+                ic
               }
             }
           }
