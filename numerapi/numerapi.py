@@ -668,7 +668,6 @@ class NumerAPI(base_api.Api):
 
                 * username (`str`)
                 * tier (`str`)
-                * reputation (`float`) -- DEPRECATED since 2020-04-05
                 * rolling_score_rep (`float`)
                 * rank (`int`)
                 * prevRank (`int`)
@@ -682,12 +681,19 @@ class NumerAPI(base_api.Api):
                 * payoutSettled (`decimal.Decimal`)
                 * bonusPerc (`float`)
                 * badges (`list of str`)
+                * corrRep (`float`)
+                * corrRank (`int`)
+                * fncRep (`float`)
+                * fncRank (`int`)
+                * fncV3Rep (`float`)
+                * fncV3Rank (`int`)
+                * tcRep (`float`)
+                * tcRank (`int`)
 
         Example:
             >>> numerapi.NumerAPI().get_leaderboard(1)
             [{'username': 'anton',
               'tier': 'C',
-              'reputation': -0.00499721,
               'rolling_score_rep': -0.00499721,
               'rank': 143,
               'prevRank': 116,
@@ -700,7 +706,9 @@ class NumerAPI(base_api.Api):
               `payoutPending`: Decimal('0.1')
               `payoutSettled`: Decimal('0.1')
               'bonusPerc': 0.5,
-              'badges': ['submission-streak_1', 'burned_2']}]
+              'badges': ['submission-streak_1', 'burned_2']
+              ...
+              }]
 
         """
         query = '''
@@ -715,7 +723,6 @@ class NumerAPI(base_api.Api):
                 prevStakedRank
                 rank
                 stakedRank
-                reputation
                 rolling_score_rep
                 tier
                 username
@@ -724,6 +731,14 @@ class NumerAPI(base_api.Api):
                 payoutPending
                 payoutSettled
                 badges
+                corrRep
+                corrRank
+                fncRep
+                fncRank
+                fncV3Rep
+                fncV3Rank
+                tcRep
+                tcRank
               }
             }
         '''

@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- add tc, fnc, fncV3 to get_leaderboard
 - add icRank, icRep to SignalsAPI.get_leaderboard
 - add tcRank, tcRep, fncV3Rep and fncV3Rank to daily_model_performances
 - add icRep and icRank to SignalsAPI.daily_model_performances
