@@ -277,6 +277,8 @@ class SignalsAPI(base_api.Api):
                 * corrRep (`float` or None)
                 * mmcRank (`int`)
                 * mmcRep (`float` or None)
+                * icRank (`int`)
+                * icRep (`float` or None)
                 * corr20dRank (`int`)
                 * corr20dRep (`float` or None)
                 * mmc20dRank (`int`)
@@ -293,7 +295,9 @@ class SignalsAPI(base_api.Api):
               'mmc20dRep': None,
               'date': datetime.datetime(2020, 9, 18, 0, 0, tzinfo=tzutc()),
               'mmcRank': 6,
-              'mmcRep': 0.0},
+              'mmcRep': 0.0,
+              'icRank': 6,
+              'icRep': 0.0},
               ...
               ]
         """
@@ -308,6 +312,8 @@ class SignalsAPI(base_api.Api):
                 mmcRank
                 corr20dRep
                 corr20dRank
+                icRep
+                icRank
                 mmc20dRep
                 mmc20dRank
               }
