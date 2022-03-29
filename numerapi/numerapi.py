@@ -879,6 +879,10 @@ class NumerAPI(base_api.Api):
                 * mmcRank (`int`)
                 * fncRep (`float` or None)
                 * fncRank (`int`)
+                * fncV3Rep (`float` or None)
+                * fncV3Rank (`int`)
+                * tcRep (`float` or None)
+                * tcRank (`int`)
 
         Example:
             >>> api = NumerAPI()
@@ -888,6 +892,10 @@ class NumerAPI(base_api.Api):
              'date': datetime.datetime(2021, 9, 14, 0, 0, tzinfo=tzutc()),
              'fncRank': 1708,
              'fncRep': 0.014548700790462122,
+             'tcRank': 1708,
+             'tcRep': 0.014548700790462122,
+             'fncV3Rank': 1708,
+             'fncV3Rep': 0.014548700790462122,
              'mmcRank': 508,
              'mmcRep': 0.005321406467445256},
              ...
@@ -904,6 +912,10 @@ class NumerAPI(base_api.Api):
                 mmcRank
                 fncRep
                 fncRank
+                fncV3Rep
+                fncV3Rank
+                tcRep
+                tcRank
               }
             }
           }
@@ -980,6 +992,8 @@ class NumerAPI(base_api.Api):
                 * mmcPercentile (`float`)
                 * fnc (`float`): feature neutral correlation
                 * fncPercentile (`float`)
+                * tc (`float`): true contribution
+                * tcPercentile (`float`)
                 * correlationWithMetamodel (`float`)
 
         Example:
@@ -993,6 +1007,8 @@ class NumerAPI(base_api.Api):
               'mmcPercentile': 0.8,
               'fnc': 0.1,
               'fncPercentile': 0.8,
+              'tc': 0.1,
+              'tcPercentile': 0.8,
               'correlationWithMetamodel': 0.87},
               ...
             ]
@@ -1009,6 +1025,8 @@ class NumerAPI(base_api.Api):
                 mmcPercentile
                 fnc
                 fncPercentile
+                tc
+                tcPercentile
                 correlationWithMetamodel
               }
             }

@@ -2,6 +2,8 @@
 Notable changes to this project.
 
 ## [dev]
+- add tcRank, tcRep, fncV3Rep and fncV3Rank to daily_model_performances
+- add tc and tcPercentile to daily_submissions_performances
 - make `stake_set` work with multi model accounts
 - add tc to the round_model_performances method (PR #74)
 - add tcPercentile, ic, icPercentile, fncV3, fncV3Percentile to round_model_performances
