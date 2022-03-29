@@ -649,8 +649,13 @@ class Api:
                 * corrPercentile (`float`)
                 * corrWMetamodel (`float`)
                 * tc (`float`)
+                * tcPercentile (`float`)
+                * ic (`float`)
+                * icPercentile (`float`)
                 * fnc (`float`)
                 * fncPercentile (`float`)
+                * fncV3 (`float`)
+                * fncV3Percentile (`float`)
                 * mmc (`float`)
                 * mmc20d (`float` or None)
                 * mmc20dPercentile (`float` or None)
@@ -675,8 +680,13 @@ class Api:
              'corrPercentile': 0.0411107104219257,
              'corrWMetamodel': 0.51542251407092,
              'tc': 0.1415973344,
+             'tcPercentile': 0.115398485394879,
+             'ic': 0.1415973344,
+             'icPercentile': 0.115398485394879,
              'fnc': 0.000437631996046271,
              'fncPercentile': 0.115398485394879,
+             'fncV3': 0.000437631996046271,
+             'fncV3Percentile': 0.115398485394879,
              'mmc': -0.0152125841680981,
              'mmc20d': None,
              'mmc20dPercentile': None,
