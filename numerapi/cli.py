@@ -194,15 +194,11 @@ def submission_status(model_id):
 @click.option(
     '--model_id', type=str, default=None,
     help="An account model UUID (required for accounts with multiple models")
-@click.option(
-    '--new_data', is_flag=True, default=False,
-    help="set this flag if you are using the new data")
 @click.argument('path', type=click.Path(exists=True))
-def submit(path, tournament, model_id, new_data):
+def submit(path, tournament, model_id):
     """Upload predictions from file."""
-    data_version = 2 if new_data else 1
     click.echo(napi.upload_predictions(
-        path, tournament, model_id, version=data_version))
+        path, tournament, model_id))
 
 
 @cli.command()
