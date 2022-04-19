@@ -76,8 +76,7 @@ class SignalsAPI(base_api.Api):
         '''
 
         arguments = {'limit': limit, 'offset': offset}
-        data = self.raw_query(query, arguments)['data']['signalsLeaderboard']
-        return data
+        return self.raw_query(query, arguments)['data']['signalsLeaderboard']
 
     def upload_predictions(self, file_path: str = "predictions.csv",
                            model_id: str = None,
@@ -220,8 +219,7 @@ class SignalsAPI(base_api.Api):
             '''
         arguments = {'modelId': model_id}
         data = self.raw_query(query, arguments, authorization=True)
-        status = data['data']['model']['latestSignalsSubmission']
-        return status
+        return data['data']['model']['latestSignalsSubmission']
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public Numerai Signals profile of a user.
@@ -462,8 +460,7 @@ class SignalsAPI(base_api.Api):
         """
         result = requests.get(self.TICKER_UNIVERSE_URL, stream=True)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
-        tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
-        return tickers
+        return [t.strip() for t in iterator if t != 'bloomberg_ticker']
 
     def download_validation_data(self, dest_path: str = ".",
                                  dest_filename: str = None) -> str:

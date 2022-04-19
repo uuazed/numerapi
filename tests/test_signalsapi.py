@@ -10,8 +10,7 @@ from numerapi import base_api
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
-    api = numerapi.SignalsAPI(verbosity='DEBUG')
-    return api
+    return numerapi.SignalsAPI(verbosity='DEBUG')
 
 
 def test_get_leaderboard(api):

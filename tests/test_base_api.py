@@ -8,8 +8,7 @@ from numerapi import base_api
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
-    api = base_api.Api(verbosity='DEBUG')
-    return api
+    return base_api.Api(verbosity='DEBUG')
 
 
 def test_NumerAPI():

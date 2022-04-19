@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 
 def parse_datetime_string(string: str) -> Optional[datetime.datetime]:
     """try to parse string to datetime object"""
-    if string is None:
-        return None
-    return dateutil.parser.parse(string)
+    return None if string is None else dateutil.parser.parse(string)
 
 
 def parse_float_string(string: str) -> Optional[float]:

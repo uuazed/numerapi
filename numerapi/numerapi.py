@@ -125,8 +125,7 @@ class NumerAPI(base_api.Api):
                 dataset(tournament: $tournament)
             }"""
         arguments = {'tournament': tournament}
-        url = self.raw_query(query, arguments)['data']['dataset']
-        return url
+        return self.raw_query(query, arguments)['data']['dataset']
 
     def download_current_dataset(self, dest_path=".", dest_filename=None,
                                  unzip=True, tournament=8) -> str:
@@ -157,10 +156,8 @@ class NumerAPI(base_api.Api):
             except ValueError:
                 round_number = "x"
             dest_filename = f"numerai_dataset_{round_number}.zip"
-        else:
-            # ensure it ends with ".zip"
-            if unzip and not dest_filename.endswith(".zip"):
-                dest_filename += ".zip"
+        elif unzip and not dest_filename.endswith(".zip"):
+            dest_filename += ".zip"
         dataset_path = os.path.join(dest_path, dest_filename)
 
         # create parent folder if necessary
@@ -541,8 +538,7 @@ class NumerAPI(base_api.Api):
 
         args = {'modelId': model_id}
         data = self.raw_query(query, args, authorization=True)
-        status = data['data']['model']['latestSubmissionV2']
-        return status
+        return data['data']['model']['latestSubmissionV2']
 
     def upload_predictions(self, file_path: str = "predictions.csv",
                            tournament: int = 8,
@@ -608,8 +604,7 @@ class NumerAPI(base_api.Api):
                      'modelId': model_id,
                      'triggerId': os.getenv('TRIGGER_ID', None)}
         create = self.raw_query(create_query, arguments, authorization=True)
-        submission_id = create['data']['create_submission']['id']
-        return submission_id
+        return create['data']['create_submission']['id']
 
     def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
         """Check if a new round has started within the last `hours`.
@@ -641,8 +636,7 @@ class NumerAPI(base_api.Api):
             return False
         open_time = utils.parse_datetime_string(raw['openTime'])
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        is_new_round = open_time > now - datetime.timedelta(hours=hours)
-        return is_new_round
+        return open_time > now - datetime.timedelta(hours=hours)
 
     #  ################# V2 #####################################
 
@@ -815,9 +809,7 @@ class NumerAPI(base_api.Api):
         """
         arguments = {'username': username}
         data = self.raw_query(query, arguments)['data']['v2UserProfile']
-        # be convention, the first is the latest one
-        stake = data['dailyUserPerformances'][0]['stakeValue']
-        return stake
+        return data['dailyUserPerformances'][0]['stakeValue']
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public profile of a user.

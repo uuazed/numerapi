@@ -12,8 +12,7 @@ from numerapi import base_api
 
 @pytest.fixture(scope='function', name="api")
 def api_fixture():
-    api = numerapi.NumerAPI(verbosity='DEBUG')
-    return api
+    return numerapi.NumerAPI(verbosity='DEBUG')
 
 
 def test_get_competitions(api):
