@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- make downloads more robust and prevent broken files by downloading to temporary files
 - simple retry mechanism for failed API requests (5xx error codes only)
 - Remove submission `version` parameter (PR #75)
 
