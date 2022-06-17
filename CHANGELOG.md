@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- simple retry mechanism for failed API requests (5xx error codes only)
 - Remove submission `version` parameter (PR #75)
 
 ## [2.11.0] - 2022-03-29

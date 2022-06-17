@@ -73,7 +73,9 @@ class Api:
                 self.logger.error(msg)
         return msg
 
-    def raw_query(self, query, variables=None, authorization=False):
+    def raw_query(self, query: str, variables: Dict = None,
+                  authorization: bool = False,
+                  retries: int = 3, delay: int = 5, backoff: int = 2):
         """Send a raw request to the Numerai's GraphQL API.
 
         This function allows to build your own queries and fetch results from
@@ -87,6 +89,9 @@ class Api:
             variables (dict, optional): dict of variables
             authorization (bool, optional): does the request require
                 authorization, defaults to `False`
+            retries (int): for 5XX errors, how often should numerapi retry
+            delay (int): in case of retries, how many seconds to wait between tries
+            backoff (int): in case of retries, multiplier to increase the delay between retries
 
         Returns:
             dict: Result of the request
@@ -118,7 +123,7 @@ class Api:
                 raise ValueError("API keys required for this action.")
 
         result = utils.post_with_err_handling(
-            API_TOURNAMENT_URL, body, headers)
+            API_TOURNAMENT_URL, body, headers, retries, delay, backoff)
 
         if result and "errors" in result:
             err = self._handle_call_error(result['errors'])
