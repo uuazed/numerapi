@@ -123,7 +123,8 @@ class Api:
                 raise ValueError("API keys required for this action.")
 
         result = utils.post_with_err_handling(
-            API_TOURNAMENT_URL, body, headers, retries, delay, backoff)
+            API_TOURNAMENT_URL, body, headers,
+            retries=retries, delay=delay, backoff=backoff)
 
         if result and "errors" in result:
             err = self._handle_call_error(result['errors'])
