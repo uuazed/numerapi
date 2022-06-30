@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.12.2] - 2022-06-30
 - `diagnostics` now returns all diagnostics results, if no diagnostics_id is specified
 - `download_dataset`: in case the destination path contains a directory, ensure it exists
 
