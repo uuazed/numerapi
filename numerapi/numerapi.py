@@ -92,6 +92,11 @@ class NumerAPI(base_api.Api):
         if dest_path is None:
             dest_path = filename
 
+        # if directories are used, ensure they exist
+        if "/" in dest_path:
+            dirs = dest_path.rsplit("/")[0]
+            os.makedirs(dirs, exist_ok=True)
+
         query = """
         query ($filename: String!
                $round: Int) {

@@ -2,7 +2,8 @@
 Notable changes to this project.
 
 ## [dev]
-- 'diagnostics' now returns all diagnostics results, if no diagnostics_id is specified
+- `diagnostics` now returns all diagnostics results, if no diagnostics_id is specified
+- `download_dataset`: in case the destination path contains a directory, ensure it exists
 
 ## [2.12.1] - 2022-06-20
 - bugfix, timeout for http requests was accidently set to 3 seconds.
