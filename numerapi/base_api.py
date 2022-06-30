@@ -40,10 +40,8 @@ class Api:
 
         self._login(public_id, secret_key)
 
-        self.submission_id = None
         self.show_progress_bars = show_progress_bars
         self.tournament_id = 0
-        self.diagnostics_id = None
 
     def _login(self, public_id=None, secret_key=None):
         # check env variables if not set
@@ -510,8 +508,8 @@ class Api:
                      'tournament': tournament,
                      'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
-        self.diagnostics_id = create['data']['createDiagnostics']['id']
-        return self.diagnostics_id
+        diagnostics_id = create['data']['createDiagnostics']['id']
+        return diagnostics_id
 
     def diagnostics(self, model_id: str, diagnostics_id: str = None) -> Dict:
         """Fetch results of diagnostics run
@@ -519,8 +517,7 @@ class Api:
         Args:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
-            diagnostics_id (str): id returned by "upload_diagnostics", defaults
-                to last diagnostic upload done within the same session
+            diagnostics_id (str, optional): id returned by "upload_diagnostics"
 
         Returns:
             dict: diagnostic results with the following content:
@@ -576,15 +573,9 @@ class Api:
             }
 
         """
-        if diagnostics_id is None and self.diagnostics_id is None:
-            raise ValueError("You need to provide a 'diagnostics_id'",
-                             " or upload to diagnostics again.")
-        if diagnostics_id is None:
-            diagnostics_id = self.diagnostics_id
-
         query = '''
-            query($id: String!
-                  $modelId: String) {
+            query($id: String
+                  $modelId: String!) {
               diagnostics(id: $id
                           modelId: $modelId) {
                 erasAcceptedCount

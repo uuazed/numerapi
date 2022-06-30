@@ -1,8 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- 'diagnostics' now returns all diagnostics results, if no diagnostics_id is specified
+
 ## [2.12.1] - 2022-06-20
-bugfix - timeout for http requests was accidently set to 3 seconds.
+- bugfix, timeout for http requests was accidently set to 3 seconds.
 
 ## [2.12.0] - 2022-06-17
 - make downloads more robust and prevent broken files by downloading to temporary files
