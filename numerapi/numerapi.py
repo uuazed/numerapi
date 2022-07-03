@@ -93,8 +93,8 @@ class NumerAPI(base_api.Api):
             dest_path = filename
 
         # if directories are used, ensure they exist
-        if "/" in dest_path:
-            dirs = dest_path.rsplit("/")[0]
+        dirs = os.path.dirname(dest_path)
+        if dirs:
             os.makedirs(dirs, exist_ok=True)
 
         query = """
