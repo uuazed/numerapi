@@ -114,12 +114,11 @@ class Api:
         headers = {'Content-type': 'application/json',
                    'Accept': 'application/json'}
         if authorization:
-            if self.token:
-                public_id, secret_key = self.token
-                headers['Authorization'] = f'Token {public_id}${secret_key}'
-            else:
+            if not self.token:
                 raise ValueError("API keys required for this action.")
 
+            public_id, secret_key = self.token
+            headers['Authorization'] = f'Token {public_id}${secret_key}'
         result = utils.post_with_err_handling(
             API_TOURNAMENT_URL, body, headers,
             retries=retries, delay=delay, backoff=backoff)
@@ -241,11 +240,11 @@ class Api:
             tournament = self.tournament_id
         data = self.raw_query(
             query, authorization=True)['data']['account']['models']
-        mapping = {
-            model['name']: model['id'] for model in data
+        return {
+            model['name']: model['id']
+            for model in data
             if model['tournament'] == tournament
         }
-        return mapping
 
     def get_current_round(self, tournament: int = None) -> int:
         """Get number of the current active round.
@@ -275,8 +274,7 @@ class Api:
         data = self.raw_query(query, arguments)['data']['rounds'][0]
         if data is None:
             return None
-        round_num = data["number"]
-        return round_num
+        return data["number"]
 
     def get_account_transactions(self) -> List:
         """Get all your account deposits and withdrawals.
