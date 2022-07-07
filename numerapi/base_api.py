@@ -921,11 +921,15 @@ class Api:
 
         """
         
-        if corrMultiplier not in [0,1]:
-            raise ValueError("CorrMultiplier only accepts values of 0 or 1.")
+        #update these as the tournament allows different staking configurations
+        corrM_values = [0,1]
+        tcM_values = [0, 0.5, 1, 2, 3]
         
-        if tcMultiplier not in [0, 0.5, 1, 2, 3]
-            raise ValueError("tcMultiplier only accepts values: 0, 0.5, 1, 2, or 3.")
+        if corrMultiplier not in corrM_values:
+            raise ValueError(f"CorrMultiplier only accepts the following values: {corrM_values}.")
+        
+        if tcMultiplier not in tcM_values:
+            raise ValueError(f"tcMultiplier only accepts values: {tcM_values}.")
 
         query = """mutation ($corrMultiplier: Float!
                              $modelId: String!
