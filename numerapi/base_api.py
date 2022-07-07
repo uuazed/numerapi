@@ -893,3 +893,69 @@ class Api:
              'status': ''}
         """
         return self.stake_change(nmr, 'increase', model_id)
+    
+    def set_payoutSelection(self, model_id: str = None, corrMultiplier: int = 0, 
+                            tcMultiplier: float = 0, takeProfit: bool = False, 
+                            selection: str = '', signals: bool = False) -> Dict:
+        """Change Payout Selection by Model.
+
+        Args:
+            model_id (str): Target model UUID (required for accounts with
+                multiple models)
+            corrMultiplier (int): 0 or 1
+            tcMultiplier (float): 0, 0.5, 1, 2, or 3
+            takeProfit (bool): determines whether payouts are returned to usr wallet 
+                or automatically staked to next round.
+            selection (str): tbh I have no idea what this does, empty str right now
+                doesn't seem to break anything
+            signals (bool): indicate whether model_id is for classic or signals model
+
+        Returns:
+           dict with confirmation that payout selection has been updated  
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model = api.get_models()['uuazed']
+            >>> api.set_payoutSelection(model, 1, 3)
+            {'data': {'v2ChangePayoutSelection': 'payout selection updated'}}
+
+        """
+        
+        if corrMultiplier not in [0,1]:
+            raise ValueError("CorrMultiplier only accepts values of 0 or 1.")
+        
+        if tcMultiplier not in [0, 0.5, 1, 2, 3]
+            raise ValueError("tcMultiplier only accepts values: 0, 0.5, 1, 2, or 3.")
+
+        query = """mutation ($corrMultiplier: Float!
+                             $modelId: String!
+                             $selection: String!
+                             $signals: Boolean!
+                             $takeProfit: Boolean!
+                             $tcMultiplier: Float!
+                             $tournamentNumber: Int!) {
+                        v2ChangePayoutSelection(corrMultiplier: $corrMultiplier
+                                                modelId: $modelId
+                                                selection: $selection
+                                                signals: $signals 
+                                                takeProfit: $takeProfit 
+                                                tcMultiplier: $tcMultiplier 
+                                                tournamentNumber: $tournamentNumber)}
+                 """
+        
+        
+        args = {'modelId':  model_id,
+        'corrMultiplier': corrMultiplier,
+        'tcMultiplier': tcMultiplier,
+        'takeProfit': takeProfit,
+        'tournamentNumber': self.tournament_id,
+        'selection': selection,
+        'signals' : signals,
+       }
+        
+        
+        result = self.raw_query(query, args, authorization=True)
+        
+        return result
+    
+    
