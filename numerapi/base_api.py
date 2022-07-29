@@ -895,20 +895,16 @@ class Api:
         return self.stake_change(nmr, 'increase', model_id)
     
     def set_payoutSelection(self, model_id: str = None, corrMultiplier: int = 0, 
-                            tcMultiplier: float = 0, takeProfit: bool = False, 
-                            selection: str = '', signals: bool = False) -> Dict:
+                            tcMultiplier: float = 0, takeProfit: bool = False) -> Dict:
         """Change Payout Selection by Model.
 
         Args:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
-            corrMultiplier (int): 0 or 1
-            tcMultiplier (float): 0, 0.5, 1, 2, or 3
+            corrMultiplier (int): multiplier of correlation for returns
+            tcMultiplier (float): multiplier of TC for returns
             takeProfit (bool): determines whether payouts are returned to usr wallet 
                 or automatically staked to next round.
-            selection (str): tbh I have no idea what this does, empty str right now
-                doesn't seem to break anything
-            signals (bool): indicate whether model_id is for classic or signals model
 
         Returns:
            dict with confirmation that payout selection has been updated  
@@ -920,28 +916,14 @@ class Api:
             {'data': {'v2ChangePayoutSelection': 'payout selection updated'}}
 
         """
-        
-        #update these as the tournament allows different staking configurations
-        corrM_values = [0,1]
-        tcM_values = [0, 0.5, 1, 2, 3]
-        
-        if corrMultiplier not in corrM_values:
-            raise ValueError(f"CorrMultiplier only accepts the following values: {corrM_values}.")
-        
-        if tcMultiplier not in tcM_values:
-            raise ValueError(f"tcMultiplier only accepts values: {tcM_values}.")
 
         query = """mutation ($corrMultiplier: Float!
                              $modelId: String!
-                             $selection: String!
-                             $signals: Boolean!
                              $takeProfit: Boolean!
                              $tcMultiplier: Float!
                              $tournamentNumber: Int!) {
                         v2ChangePayoutSelection(corrMultiplier: $corrMultiplier
                                                 modelId: $modelId
-                                                selection: $selection
-                                                signals: $signals 
                                                 takeProfit: $takeProfit 
                                                 tcMultiplier: $tcMultiplier 
                                                 tournamentNumber: $tournamentNumber)}
@@ -953,8 +935,6 @@ class Api:
         'tcMultiplier': tcMultiplier,
         'takeProfit': takeProfit,
         'tournamentNumber': self.tournament_id,
-        'selection': selection,
-        'signals' : signals,
        }
         
         
