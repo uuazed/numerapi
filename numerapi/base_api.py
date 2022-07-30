@@ -894,11 +894,11 @@ class Api:
         """
         return self.stake_change(nmr, 'increase', model_id)
 
-    def set_payout_selection(self, model_id: str = None,
-                             corr_multiplier: int = 0,
-                             tc_multiplier: float = 0,
-                             take_profit: bool = False) -> Dict:
-        """Change payout selection by model.
+    def set_stake_type(self, model_id: str = None,
+                       corr_multiplier: int = 0,
+                       tc_multiplier: float = 0,
+                       take_profit: bool = False) -> Dict:
+        """Change stake type by model.
 
         Args:
             model_id (str): Target model UUID (required for accounts with
@@ -914,7 +914,7 @@ class Api:
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
             >>> model = api.get_models()['uuazed']
-            >>> api.set_payoutSelection(model, 1, 3)
+            >>> api.set_stake_type(model, 1, 3)
             {'data': {'v2ChangePayoutSelection': 'payout selection updated'}}
         """
         query = """mutation ($corrMultiplier: Float!

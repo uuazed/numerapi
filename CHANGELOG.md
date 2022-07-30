@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - unreleased
+- add `set_stake_type` to change payout mode and multipliers (PR #83)
+
 ## [2.12.3] - 2022-07-03
 - fix directory check in download_dataset in the last update
 
