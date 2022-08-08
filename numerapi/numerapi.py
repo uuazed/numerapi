@@ -4,14 +4,17 @@ import zipfile
 import os
 import datetime
 import decimal
+import json
+import subprocess
 from typing import List, Dict
 from io import BytesIO
 
+import boto3
 import requests
 import pytz
 import pandas as pd
 
-from numerapi import utils
+from numerapi import utils, compute_utils
 from numerapi import base_api
 
 
@@ -87,7 +90,7 @@ class NumerAPI(base_api.Api):
 
         Example:
             >>> filenames = NumerAPI().list_datasets()
-            >>> NumerAPI().download_dataset(filenames[0]}")
+            >>> NumerAPI().download_dataset(filenames[0])
         """
         if dest_path is None:
             dest_path = filename
@@ -1054,3 +1057,109 @@ class NumerAPI(base_api.Api):
         performances = [p for p in performances
                         if any([p['correlation'], p['fnc'], p['mmc']])]
         return performances
+
+    def feature_sets(self, set_name: str) -> List:
+        features_json_path = self.maybe_download_features_json()
+        with open(features_json_path, "r") as f:
+            feature_metadata = json.load(f)
+            feature_sets = feature_metadata['feature_sets']
+            if set_name not in feature_sets:
+                raise ValueError(f'Feature set: {set_name} not found')
+
+            return feature_sets[set_name]
+
+    def available_feature_sets(self) -> List:
+        features_json_path = self.maybe_download_features_json()
+        with open(features_json_path, "r") as f:
+            feature_metadata = json.load(f)
+            return list(feature_metadata['feature_sets'].keys())
+
+    def maybe_download_features_json(self):
+        prev_progress_bar_state = self.show_progress_bars
+        self.show_progress_bars = False
+        features_json_path = 'v4/features.json'
+        self.download_dataset(features_json_path)
+
+        self.show_progress_bars = prev_progress_bar_state
+        return features_json_path
+
+    def deploy(self, model_id, model, features):
+
+        # login to store numerai api keys from environment variables
+        self._login()
+
+        # we want to deploy everything to us-west-2
+        os.environ['AWS_DEFAULT_REGION'] = 'us-west-2'
+
+        # store numerapi keys in secrets manager
+        compute_utils.maybe_create_secret(self.token[0], self.token[1])
+
+        # first get or create bucket so we can upload pickled model and feature list
+        aws_account_id = boto3.client('sts').get_caller_identity().get('Account')
+        bucket_name = compute_utils.maybe_create_bucket(aws_account_id)
+
+        pd.to_pickle(model, f"model.pkl")
+        with open('features.json', 'w') as f:
+            json.dump(features, f)
+
+        # upload model and features to s3
+        compute_utils.upload_to_s3(bucket_name, model_id, 'model.pkl')
+        compute_utils.upload_to_s3(bucket_name, model_id, 'features.json')
+
+        # generate requirements.txt file..
+
+        # TODO: better way to add numerapi to requirements..
+        with open('requirements.txt', 'w') as file:
+            subprocess.Popen(['pip', 'freeze'], stdout=file).communicate()
+            file.write("numerapi")
+
+        # TODO: only run these steps if requirements.txt file changes
+        zip_file_key = compute_utils.maybe_create_zip_file(model_id, bucket_name)
+        # TODO: need ability to not use default repo? feature not needed til later tho
+        ecr = compute_utils.maybe_create_ecr_repo()
+
+        cb_project_name = compute_utils.maybe_create_codebuild_project(
+            aws_account_id,
+            bucket_name,
+            zip_file_key,
+            ecr['repositoryName'],
+            model_id
+        )
+
+        compute_utils.maybe_build_container(cb_project_name, log=False)
+
+        query = '''query computeExternalId {
+              computeExternalId
+            }
+            '''
+        resp = self.raw_query(query, authorization=True)
+        external_id = resp['data']['computeExternalId']
+
+        query = f'''query modelName {{
+            model(modelId: "{model_id}") {{
+            name
+          }}
+        }}
+        '''
+        resp = self.raw_query(query, authorization=True)
+        model_name = resp['data']['model']['name']
+        lambda_role_arn, lambda_function_name = compute_utils.maybe_create_lambda_function(model_name, ecr, bucket_name, aws_account_id, model_id, external_id)
+        self.set_lambda_data(model_id, lambda_role_arn, lambda_function_name)
+
+        print(f'Deploy complete! Go to https://numer.ai/compute to view your deployed model')
+
+    def set_lambda_data(self, model_id, lambda_role_arn, lambda_function_name):
+        query = f'''mutation setModelLambdaArn {{
+            modelLambdaArn(
+                modelId:"{model_id}", 
+                roleArn:"{lambda_role_arn}",
+                functionName:"{lambda_function_name}") {{
+            lambdaRoleArn
+            userId
+            lambdaFunctionName
+          }}
+        }}
+        '''
+        print('registered lambda with api-tournament')
+        self.raw_query(query, authorization=True)
+

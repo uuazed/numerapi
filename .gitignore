@@ -90,3 +90,4 @@ ENV/
 .swp
 
 numerai_datasets/
+.idea
