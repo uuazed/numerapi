@@ -977,7 +977,7 @@ class NumerAPI(base_api.Api):
           }
         """
         arguments = {'roundNumber': round_num}
-        data = self.raw_query(query, arguments)['data']['v2RoundDetails']
+        data = self.raw_query(query, arguments, authorization=True)['data']['v2RoundDetails']
         performances = data['userPerformances']
         # convert strings to python objects
         for perf in performances:
