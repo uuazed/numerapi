@@ -1,8 +1,9 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] - unreleased
+## [2.12.4] - 2022-08-24
 - add `set_stake_type` to change payout mode and multipliers (PR #83)
+- add auth to `round_details` query (PR #86)
 
 ## [2.12.3] - 2022-07-03
 - fix directory check in download_dataset in the last update
