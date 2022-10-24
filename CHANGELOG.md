@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.12.5] - 2022-10-24
 - add fncV3 to `daily_submissions_performances`
 - add `TC` to `SignalsAPI.get_leaderboard`
 - add `TC` and `corr60` to `SignalsAPI.daily_model_performances`
