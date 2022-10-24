@@ -418,6 +418,7 @@ class SignalsAPI(base_api.Api):
                 * correlation (`float`)
                 * mmc (`float`)
                 * ic (`float`)
+                * tc (`float`)
                 * roundNumber (`int`)
                 * corrRep (`float`)
                 * mmcRep (`float`)
@@ -434,7 +435,8 @@ class SignalsAPI(base_api.Api):
               'ic': 0.11,
               'mmcRep': None,
               'roundNumber': 226,
-              'correlation': 0.03}
+              'correlation': 0.03,
+              `tc`: 0.3}
              ...
               ]
         """
@@ -451,6 +453,7 @@ class SignalsAPI(base_api.Api):
                 corrRep
                 mmcRep
                 ic
+                tc
               }
             }
           }
