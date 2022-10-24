@@ -1004,6 +1004,8 @@ class NumerAPI(base_api.Api):
                 * mmcPercentile (`float`)
                 * fnc (`float`): feature neutral correlation
                 * fncPercentile (`float`)
+                * fncV3 (`float`)
+                * fncV3Percentile (`float`)
                 * tc (`float`): true contribution
                 * tcPercentile (`float`)
                 * correlationWithMetamodel (`float`)
@@ -1014,15 +1016,8 @@ class NumerAPI(base_api.Api):
             [{'roundNumber': 181,
               'correlation': -0.011765912,
               'corrPercentile': 0.8,
-              'date': datetime.datetime(2019, 10, 16, 0, 0),
-              'mmc': 0.3,
-              'mmcPercentile': 0.8,
-              'fnc': 0.1,
-              'fncPercentile': 0.8,
-              'tc': 0.1,
-              'tcPercentile': 0.8,
-              'correlationWithMetamodel': 0.87},
               ...
+              }
             ]
         """
         query = """
@@ -1037,6 +1032,8 @@ class NumerAPI(base_api.Api):
                 mmcPercentile
                 fnc
                 fncPercentile
+                fncV3
+                fncV3Percentile
                 tc
                 tcPercentile
                 correlationWithMetamodel

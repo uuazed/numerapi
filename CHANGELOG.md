@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- add fncV3 to `daily_submissions_performances`
+
+
 ## [2.12.4] - 2022-08-24
 - add `set_stake_type` to change payout mode and multipliers (PR #83)
 - add auth to `round_details` query (PR #86)
