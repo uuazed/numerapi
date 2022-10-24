@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - add fncV3 to `daily_submissions_performances`
+- add `TC` to `SignalsAPI.get_leaderboard`
 
 
 ## [2.12.4] - 2022-08-24

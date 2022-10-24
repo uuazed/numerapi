@@ -39,8 +39,10 @@ class SignalsAPI(base_api.Api):
                 * today (`float`)
                 * mmc (`float`)
                 * mmcRank (`int`)
-                * ic (`float`)
+                * icRep (`float`)
                 * icRank (`int`)
+                * tcRep (`float`)
+                * tcRank (`int`)
                 * nmrStaked (`float`)
         Example:
             >>> numerapi.SignalsAPI().get_leaderboard(1)
@@ -52,8 +54,9 @@ class SignalsAPI(base_api.Api):
               'mmc': -0.0101202715,
               'mmcRank': 30,
               'nmrStaked': 13.0,
-              'ic': -0.0101202715,
+              'icRep': -0.0101202715,
               'icRank': 30,
+              ..
              }]
         """
         query = '''
@@ -71,6 +74,8 @@ class SignalsAPI(base_api.Api):
                 nmrStaked
                 icRank
                 icRep
+                tcRep
+                tcRank
               }
             }
         '''
