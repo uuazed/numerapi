@@ -290,8 +290,12 @@ class SignalsAPI(base_api.Api):
                 * mmcRep (`float` or None)
                 * icRank (`int`)
                 * icRep (`float` or None)
+                * tcRank (`int`)
+                * tcRep (`float` or None)
                 * corr20dRank (`int`)
                 * corr20dRep (`float` or None)
+                * corr60dRank (`int`)
+                * corr60dRep (`float` or None)
                 * mmc20dRank (`int`)
                 * mmc20dRep (`float` or None)
 
@@ -308,7 +312,8 @@ class SignalsAPI(base_api.Api):
               'mmcRank': 6,
               'mmcRep': 0.0,
               'icRank': 6,
-              'icRep': 0.0},
+              'icRep': 0.0,
+              ...},
               ...
               ]
         """
@@ -323,8 +328,12 @@ class SignalsAPI(base_api.Api):
                 mmcRank
                 corr20dRep
                 corr20dRank
+                corr60dRep
+                corr60dRank
                 icRep
                 icRank
+                tcRank
+                tcRep
                 mmc20dRep
                 mmc20dRank
               }
