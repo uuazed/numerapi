@@ -140,7 +140,8 @@ class SignalsAPI(base_api.Api):
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
 
         with open(file_path, 'rb') if df is None else buffer_csv as file:
-            requests.put(auth['url'], data=file.read(), headers=headers)
+            requests.put(auth['url'], data=file.read(),
+                         headers=headers, timeout=60)
         create_query = '''
             mutation($filename: String!
                      $modelId: String
@@ -477,7 +478,8 @@ class SignalsAPI(base_api.Api):
             >>> SignalsAPI().ticker_universe()
             ["MSFT", "AMZN", "APPL", ...]
         """
-        result = requests.get(self.TICKER_UNIVERSE_URL, stream=True)
+        result = requests.get(
+            self.TICKER_UNIVERSE_URL, stream=True, timeout=120)
         iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
         tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
         return tickers

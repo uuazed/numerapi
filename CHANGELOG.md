@@ -6,6 +6,7 @@ Notable changes to this project.
 - add `TC` to `SignalsAPI.get_leaderboard`
 - add `TC` and `corr60` to `SignalsAPI.daily_model_performances`
 - add `TC` to `SignalsAPI.daily_submissions_performances`
+- define timeouts for all web call made with `requests`
 
 
 ## [2.12.4] - 2022-08-24

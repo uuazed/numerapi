@@ -593,7 +593,8 @@ class NumerAPI(base_api.Api):
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
         with open(file_path, 'rb') if df is None else buffer_csv as file:
             requests.put(
-                upload_auth['url'], data=file.read(), headers=headers)
+                upload_auth['url'], data=file.read(), headers=headers,
+                timeout=600)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!

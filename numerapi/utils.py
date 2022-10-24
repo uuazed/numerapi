@@ -42,7 +42,7 @@ def replace(dictionary: Dict, key: str, function):
 def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
     """downloads a file and shows a progress bar. allow resuming a download"""
     file_size = 0
-    req = requests.get(url, stream=True)
+    req = requests.get(url, stream=True, timeout=600)
     req.raise_for_status()
 
     # Total size in bytes.
@@ -65,7 +65,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
             logger.info("resuming download")
             resume_header = {'Range': f'bytes={file_size}-'}
             req = requests.get(url, headers=resume_header, stream=True,
-                               verify=False, allow_redirects=True)
+                               verify=False, allow_redirects=True, timeout=600)
         else:
             # Error, delete file and restart download
             logger.error("deleting file and restarting")

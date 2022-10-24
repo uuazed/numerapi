@@ -493,7 +493,7 @@ class Api:
             'diagnosticsUploadAuth', file_path, tournament, model_id)
 
         with open(file_path, 'rb') if df is None else buffer_csv as file:
-            requests.put(upload_auth['url'], data=file.read())
+            requests.put(upload_auth['url'], data=file.read(), timeout=600)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
