@@ -1,9 +1,11 @@
 """Parts of the API that is shared between Signals and Classic"""
 
 import os
+import datetime
 import logging
 from typing import Dict, List
 from io import BytesIO
+import pytz
 
 import pandas as pd
 import requests
@@ -936,3 +938,33 @@ class Api:
         result = self.raw_query(query, args, authorization=True)
 
         return result
+
+    def check_round_open(self) -> bool:
+        """Check if a round is currently open.
+
+        Returns:
+            bool: True if a round is currently open for submissions, False otherwise.
+
+        Example:
+            >>> NumerAPI().check_round_open()
+            False
+        """
+        query = '''
+            query($tournament: Int!) {
+              rounds(tournament: $tournament
+              number: 0) {
+                number
+                openTime
+                closeStakingTime
+              }
+            }
+        '''
+        arguments = {'tournament': self.tournament_id}
+        raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        if raw is None:
+            return False
+        open_time = utils.parse_datetime_string(raw['openTime'])
+        deadline = utils.parse_datetime_string(raw["closeStakingTime"])
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        is_open = open_time > now and now < deadline
+        return is_open
