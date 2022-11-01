@@ -2,13 +2,11 @@
 
 import zipfile
 import os
-import datetime
 import decimal
 from typing import List, Dict
 from io import BytesIO
 
 import requests
-import pytz
 import pandas as pd
 
 from numerapi import utils
