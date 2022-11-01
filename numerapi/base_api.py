@@ -968,3 +968,37 @@ class Api:
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         is_open = open_time > now and now < deadline
         return is_open
+
+    def check_new_round(self, hours: int = 24, tournament: int = None) -> bool:
+        """Check if a new round has started within the last `hours`.
+
+        Args:
+            hours (int, optional): timeframe to consider, defaults to 24
+            tournament (int): ID of the tournament (optional)
+                -- DEPRECATED this is now automatically filled
+
+        Returns:
+            bool: True if a new round has started, False otherwise.
+
+        Example:
+            >>> NumerAPI().check_new_round()
+            False
+        """
+        query = '''
+            query($tournament: Int!) {
+              rounds(tournament: $tournament
+                     number: 0) {
+                number
+                openTime
+              }
+            }
+        '''
+        tournament = self.tournament_id if tournament is None else tournament
+        arguments = {'tournament': tournament}
+        raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        if raw is None:
+            return False
+        open_time = utils.parse_datetime_string(raw['openTime'])
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        is_new_round = open_time > now - datetime.timedelta(hours=hours)
+        return is_new_round

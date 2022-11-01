@@ -617,39 +617,6 @@ class NumerAPI(base_api.Api):
         submission_id = create['data']['create_submission']['id']
         return submission_id
 
-    def check_new_round(self, hours: int = 24, tournament: int = 8) -> bool:
-        """Check if a new round has started within the last `hours`.
-
-        Args:
-            hours (int, optional): timeframe to consider, defaults to 24
-            tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
-
-        Returns:
-            bool: True if a new round has started, False otherwise.
-
-        Example:
-            >>> NumerAPI().check_new_round()
-            False
-        """
-        query = '''
-            query($tournament: Int!) {
-              rounds(tournament: $tournament
-                     number: 0) {
-                number
-                openTime
-              }
-            }
-        '''
-        arguments = {'tournament': tournament}
-        raw = self.raw_query(query, arguments)['data']['rounds'][0]
-        if raw is None:
-            return False
-        open_time = utils.parse_datetime_string(raw['openTime'])
-        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        is_new_round = open_time > now - datetime.timedelta(hours=hours)
-        return is_new_round
-
     #  ################# V2 #####################################
 
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:

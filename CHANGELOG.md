@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - add `check_round_open` to check if there is a currently an active round
+- make `check_new_round` accessiable from `SignalsAPI`
 
 ## [2.12.5] - 2022-10-24
 - add fncV3 to `daily_submissions_performances`
