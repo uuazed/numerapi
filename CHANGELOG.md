@@ -1,7 +1,10 @@
 # Changelog
 Notable changes to this project.
 
-## [2.12.5] - 2022-11-01
+## [2.12.7] - 2022-11-02
+- fix `check_round_open`
+
+## [2.12.6] - 2022-11-01
 - add `check_round_open` to check if there is a currently an active round
 - make `check_new_round` accessiable from `SignalsAPI`
 
