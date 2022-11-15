@@ -966,7 +966,7 @@ class Api:
         open_time = utils.parse_datetime_string(raw['openTime'])
         deadline = utils.parse_datetime_string(raw["closeStakingTime"])
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-        is_open = open_time < now and now < deadline
+        is_open = open_time < now < deadline
         return is_open
 
     def check_new_round(self, hours: int = 12, tournament: int = None) -> bool:
