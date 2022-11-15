@@ -969,11 +969,11 @@ class Api:
         is_open = open_time < now and now < deadline
         return is_open
 
-    def check_new_round(self, hours: int = 24, tournament: int = None) -> bool:
+    def check_new_round(self, hours: int = 12, tournament: int = None) -> bool:
         """Check if a new round has started within the last `hours`.
 
         Args:
-            hours (int, optional): timeframe to consider, defaults to 24
+            hours (int, optional): timeframe to consider, defaults to 12
             tournament (int): ID of the tournament (optional)
                 -- DEPRECATED this is now automatically filled
 

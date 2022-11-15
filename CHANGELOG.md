@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] - unreleased
+- change default argument for `check_new_round` to 12 hours
+
 ## [2.12.7] - 2022-11-02
 - fix `check_round_open`
 
