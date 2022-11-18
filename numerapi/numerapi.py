@@ -953,67 +953,8 @@ class NumerAPI(base_api.Api):
     def daily_submissions_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user's submissions.
 
-        Args:
-            username (str)
-
-        Returns:
-            list of dicts: list of daily submission performance entries
-
-            For each entry in the list, there is a dict with the following
-            content:
-
-                * date (`datetime`)
-                * correlation (`float`)
-                * corrPercentile (`float`)
-                * roundNumber (`int`)
-                * mmc (`float`): metamodel contribution
-                * mmcPercentile (`float`)
-                * fnc (`float`): feature neutral correlation
-                * fncPercentile (`float`)
-                * fncV3 (`float`)
-                * fncV3Percentile (`float`)
-                * tc (`float`): true contribution
-                * tcPercentile (`float`)
-                * correlationWithMetamodel (`float`)
-
-        Example:
-            >>> api = NumerAPI()
-            >>> api.daily_user_performances("uuazed")
-            [{'roundNumber': 181,
-              'correlation': -0.011765912,
-              'corrPercentile': 0.8,
-              ...
-              }
-            ]
+        DEPRECATED - please use `daily_model_performances` instead"
         """
-        query = """
-          query($username: String!) {
-            v2UserProfile(username: $username) {
-              dailySubmissionPerformances {
-                date
-                correlation
-                corrPercentile
-                roundNumber
-                mmc
-                mmcPercentile
-                fnc
-                fncPercentile
-                fncV3
-                fncV3Percentile
-                tc
-                tcPercentile
-                correlationWithMetamodel
-              }
-            }
-          }
-        """
-        arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['v2UserProfile']
-        performances = data['dailySubmissionPerformances']
-        # convert strings to python objects
-        for perf in performances:
-            utils.replace(perf, "date", utils.parse_datetime_string)
-        # remove useless items
-        performances = [p for p in performances
-                        if any([p['correlation'], p['fnc'], p['mmc']])]
-        return performances
+        self.logger.warning(
+            "DEPRECATED - please use `daily_model_performances` instead")
+        return self.daily_model_performances(username)
