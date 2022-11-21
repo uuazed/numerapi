@@ -1,7 +1,5 @@
-pytest>=4.6
-pytest-cov
-codecov
+sphinx
+sphinxcontrib-napoleon
+sphinx_rtd_theme
 m2r
-responses
-flake8
-pandas>=1.1.0
+mistune==2.0.4
