@@ -1,5 +1,1 @@
-sphinx
-sphinxcontrib-napoleon
-sphinx_rtd_theme
 m2r
-mistune==2.0.4
