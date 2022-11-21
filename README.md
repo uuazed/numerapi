@@ -1,6 +1,7 @@
 [![Build Status](https://app.travis-ci.com/uuazed/numerapi.svg)](https://app.travis-ci.com/uuazed/numerapi)
 [![codecov](https://codecov.io/gh/uuazed/numerapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uuazed/numerapi)
 [![PyPI](https://img.shields.io/pypi/v/numerapi.svg)](https://pypi.python.org/pypi/numerapi)
+[![Downloads](https://pepy.tech/badge/numerapi/month)](https://pepy.tech/project/numerapi)
 [![Docs](https://readthedocs.org/projects/numerapi/badge/?version=stable)](http://numerapi.readthedocs.io/en/stable/?badge=stable)
 [![Requirements Status](https://requires.io/github/uuazed/numerapi/requirements.svg?branch=master)](https://requires.io/github/uuazed/numerapi/requirements/?branch=master)
 
