@@ -1,6 +1,5 @@
 """API for Numerai Signals"""
 
-from typing import List, Dict
 import os
 import codecs
 import decimal
@@ -24,7 +23,7 @@ class SignalsAPI(base_api.Api):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 11
 
-    def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
+    def get_leaderboard(self, limit: int = 50, offset: int = 0) -> list[dict]:
         """Get the current Numerai Signals leaderboard
         Args:
             limit (int): number of items to return (optional, defaults to 50)
@@ -161,7 +160,7 @@ class SignalsAPI(base_api.Api):
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 
-    def submission_status(self, model_id: str = None) -> Dict:
+    def submission_status(self, model_id: str = None) -> dict:
         """submission status of the last submission associated with the account
 
         Args:
@@ -229,7 +228,7 @@ class SignalsAPI(base_api.Api):
         status = data['data']['model']['latestSignalsSubmission']
         return status
 
-    def public_user_profile(self, username: str) -> Dict:
+    def public_user_profile(self, username: str) -> dict:
         """Fetch the public Numerai Signals profile of a user.
 
         Args:
@@ -272,7 +271,7 @@ class SignalsAPI(base_api.Api):
         utils.replace(data, "nmrStaked", utils.parse_float_string)
         return data
 
-    def daily_model_performances(self, username: str) -> List[Dict]:
+    def daily_model_performances(self, username: str) -> list[dict]:
         """Fetch daily Numerai Signals performance of a model.
 
         Args:
@@ -349,7 +348,7 @@ class SignalsAPI(base_api.Api):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def daily_user_performances(self, username: str) -> List[Dict]:
+    def daily_user_performances(self, username: str) -> list[dict]:
         """DEPRECATED Fetch daily Numerai Signals performance of a user.
 
         Args:
@@ -401,7 +400,7 @@ class SignalsAPI(base_api.Api):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def daily_submissions_performances(self, username: str) -> List[Dict]:
+    def daily_submissions_performances(self, username: str) -> list[dict]:
         """Fetch daily Numerai Signals performance of a user's submissions.
 
         Args:
@@ -468,7 +467,7 @@ class SignalsAPI(base_api.Api):
             utils.replace(perf, "submissionTime", utils.parse_datetime_string)
         return performances
 
-    def ticker_universe(self) -> List[str]:
+    def ticker_universe(self) -> list[str]:
         """fetch universe of accepted tickers
 
         Returns:

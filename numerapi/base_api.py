@@ -3,7 +3,6 @@
 import os
 import datetime
 import logging
-from typing import Dict, List
 from io import BytesIO
 import pytz
 
@@ -73,7 +72,7 @@ class Api:
                 self.logger.error(msg)
         return msg
 
-    def raw_query(self, query: str, variables: Dict = None,
+    def raw_query(self, query: str, variables: dict = None,
                   authorization: bool = False,
                   retries: int = 3, delay: int = 5, backoff: int = 2):
         """Send a raw request to the Numerai's GraphQL API.
@@ -132,7 +131,7 @@ class Api:
             raise ValueError(err)
         return result
 
-    def get_account(self) -> Dict:
+    def get_account(self) -> dict:
         """Get all information about your account!
 
         Returns:
@@ -214,7 +213,7 @@ class Api:
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def get_models(self, tournament: int = None) -> Dict:
+    def get_models(self, tournament: int = None) -> dict:
         """Get mapping of account model names to model ids for convenience
 
         Args:
@@ -280,7 +279,7 @@ class Api:
         round_num = data["number"]
         return round_num
 
-    def get_account_transactions(self) -> List:
+    def get_account_transactions(self) -> list:
         """Get all your account deposits and withdrawals.
 
         DEPRECATED - please use `wallet_transactions` instead"
@@ -346,7 +345,7 @@ class Api:
         res = self.raw_query(mutation, args, authorization=True)
         return res["data"]["setUserLink"]
 
-    def wallet_transactions(self) -> List:
+    def wallet_transactions(self) -> list:
         """Get all transactions in your wallet.
 
         Returns:
@@ -434,7 +433,7 @@ class Api:
         return res['data']['setSubmissionWebhook'] == "true"
 
     def _upload_auth(self, endpoint: str, file_path: str, tournament: int,
-                     model_id: str) -> Dict[str, str]:
+                     model_id: str) -> dict[str, str]:
         auth_query = f'''
             query($filename: String!
                   $tournament: Int!
@@ -513,7 +512,7 @@ class Api:
         diagnostics_id = create['data']['createDiagnostics']['id']
         return diagnostics_id
 
-    def diagnostics(self, model_id: str, diagnostics_id: str = None) -> Dict:
+    def diagnostics(self, model_id: str, diagnostics_id: str = None) -> dict:
         """Fetch results of diagnostics run
 
         Args:
@@ -629,7 +628,7 @@ class Api:
         utils.replace(results, "updatedAt", utils.parse_datetime_string)
         return results
 
-    def round_model_performances(self, username: str) -> List[Dict]:
+    def round_model_performances(self, username: str) -> list[dict]:
         """Fetch round model performance of a user.
 
         Args:
@@ -758,7 +757,7 @@ class Api:
         return performances
 
     def stake_change(self, nmr, action: str = "decrease",
-                     model_id: str = None) -> Dict:
+                     model_id: str = None) -> dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -810,7 +809,7 @@ class Api:
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
 
-    def stake_drain(self, model_id: str = None) -> Dict:
+    def stake_drain(self, model_id: str = None) -> dict:
         """Completely remove your stake.
 
         Args:
@@ -838,7 +837,7 @@ class Api:
         """
         return self.stake_decrease(11000000, model_id)
 
-    def stake_decrease(self, nmr, model_id: str = None) -> Dict:
+    def stake_decrease(self, nmr, model_id: str = None) -> dict:
         """Decrease your stake by `value` NMR.
 
         Args:
@@ -867,7 +866,7 @@ class Api:
         """
         return self.stake_change(nmr, 'decrease', model_id)
 
-    def stake_increase(self, nmr, model_id: str = None) -> Dict:
+    def stake_increase(self, nmr, model_id: str = None) -> dict:
         """Increase your stake by `value` NMR.
 
         Args:
@@ -899,7 +898,7 @@ class Api:
     def set_stake_type(self, model_id: str = None,
                        corr_multiplier: int = 0,
                        tc_multiplier: float = 0,
-                       take_profit: bool = False) -> Dict:
+                       take_profit: bool = False) -> dict:
         """Change stake type by model.
 
         Args:
