@@ -38,17 +38,15 @@ and `NUMERAI_SECRET_KEY`).
     import numerapi
     # some API calls do not require logging in
     napi = numerapi.NumerAPI(verbosity="info")
-    # download current dataset
-    napi.download_current_dataset(unzip=True)
-    # get competitions
-    all_competitions = napi.get_competitions()
+    # download current dataset => also check `https://numer.ai/data/v4`
+    napi.download_dataset("v4/train.parquet", "train.parquet")
     # get current leaderboard
     leaderboard = napi.get_leaderboard()
     # check if a new round has started
     if napi.check_new_round():
-        print("new round has started within the last 24hours!")
+        print("new round has started within the last 12hours!")
     else:
-        print("no new round within the last 24 hours")
+        print("no new round within the last 12 hours")
 
     # provide api tokens
     example_public_id = "somepublicid"

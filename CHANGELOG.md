@@ -5,6 +5,9 @@ Notable changes to this project.
 - change default argument for `check_new_round` to 12 hours
 - deprecate `daily_submissions_performances`
 - update `get_leaderboard` to reflect changes in the backend
+- add downloads per month batch
+- fix docs
+- update README
 
 ## [2.12.7] - 2022-11-02
 - fix `check_round_open`
