@@ -615,8 +615,6 @@ class NumerAPI(base_api.Api):
         submission_id = create['data']['create_submission']['id']
         return submission_id
 
-    #  ################# V2 #####################################
-
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current leaderboard
 
@@ -630,46 +628,24 @@ class NumerAPI(base_api.Api):
             Each dict contains the following items:
 
                 * username (`str`)
-                * tier (`str`)
-                * rolling_score_rep (`float`)
                 * rank (`int`)
-                * prevRank (`int`)
-                * stakedRank (`int`)
-                * prevStakedRank (`int`)
                 * nmrStaked (`decimal.Decimal`)
-                * oldStakeValue (`decimal.Decimal`)
-                * leaderboardBonus (`decimal.Decimal`)
-                * averageCorrelationPayout (`decimal.Decimal`)
-                * payoutPending (`decimal.Decimal`)
-                * payoutSettled (`decimal.Decimal`)
-                * bonusPerc (`float`)
-                * badges (`list of str`)
-                * corrRep (`float`)
-                * corrRank (`int`)
+                * corr20Rep (`float`)
+                * corj60Rep (`float`)
                 * fncRep (`float`)
-                * fncRank (`int`)
                 * fncV3Rep (`float`)
-                * fncV3Rank (`int`)
                 * tcRep (`float`)
-                * tcRank (`int`)
+                * payout_selection_tc_multiplier (`float`)
+                * team (`bool`)
+                * return_1_day (`float`)
+                * return_52_day (`float`)
+                * return_13_day (`float`)
 
         Example:
             >>> numerapi.NumerAPI().get_leaderboard(1)
             [{'username': 'anton',
-              'tier': 'C',
-              'rolling_score_rep': -0.00499721,
               'rank': 143,
-              'prevRank': 116,
-              'stakedRank': 103,
-              'prevStakedRank': 102,
               'nmrStaked': Decimal('12'),
-              'oldStakeValue': Decimal('12'),
-              `leaderboardBonus`: Decimal('0.1')
-              `averageCorrelationPayout`: Decimal('0.1')
-              `payoutPending`: Decimal('0.1')
-              `payoutSettled`: Decimal('0.1')
-              'bonusPerc': 0.5,
-              'badges': ['submission-streak_1', 'burned_2']
               ...
               }]
 
@@ -679,29 +655,19 @@ class NumerAPI(base_api.Api):
                   $offset: Int!) {
               v2Leaderboard(limit: $limit
                             offset: $offset) {
-                bonusPerc
                 nmrStaked
-                oldStakeValue
-                prevRank
-                prevStakedRank
                 rank
-                stakedRank
-                rolling_score_rep
-                tier
                 username
-                leaderboardBonus
-                averageCorrelationPayout
-                payoutPending
-                payoutSettled
-                badges
-                corrRep
-                corrRank
+                corr20Rep
+                corj60Rep
                 fncRep
-                fncRank
                 fncV3Rep
-                fncV3Rank
                 tcRep
-                tcRank
+                payout_selection_tc_multiplier
+                team
+                return_1_day
+                return_52_weeks
+                return_13_weeks
               }
             }
         '''
