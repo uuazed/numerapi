@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] - unreleased
+## [2.12.8] - 2022-11-21
 - change default argument for `check_new_round` to 12 hours
 - deprecate `daily_submissions_performances`
 - update `get_leaderboard` to reflect changes in the backend
