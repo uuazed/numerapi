@@ -6,6 +6,7 @@ import logging
 import time
 import datetime
 import json
+from typing import Optional
 
 import dateutil.parser
 import requests
@@ -14,14 +15,14 @@ import tqdm
 logger = logging.getLogger(__name__)
 
 
-def parse_datetime_string(string: str) -> datetime.datetime | None:
+def parse_datetime_string(string: str) -> Optional[datetime.datetime]:
     """try to parse string to datetime object"""
     if string is None:
         return None
     return dateutil.parser.parse(string)
 
 
-def parse_float_string(string: str) -> float | None:
+def parse_float_string(string: str) -> Optional[float]:
     """try to parse string to decimal.Decimal object"""
     if string is None:
         return None
@@ -89,7 +90,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
 
 
 def post_with_err_handling(url: str, body: str, headers: dict,
-                           timeout: int | None = None,
+                           timeout: Optional[int] = None,
                            retries: int = 3, delay: int = 1, backoff: int = 2
                            ) -> dict:
     """send `post` request and handle (some) errors that might occur"""
