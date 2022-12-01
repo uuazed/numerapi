@@ -124,11 +124,16 @@ def submission_filenames(round_num, tournament, model_id):
 @cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
-@click.option('--hours', default=24,
-              help='timeframe to consider, defaults to 24')
-def check_new_round(hours=24, tournament=8):
+@click.option('--hours', default=12,
+              help='timeframe to consider, defaults to 12')
+def check_new_round(hours=12, tournament=8):
     """Check if a new round has started within the last `hours`."""
-    click.echo(int(napi.check_new_round(hours=hours, tournament=tournament)))
+    try:
+        res = int(napi.check_new_round(hours=hours, tournament=tournament))
+    except:
+        click.echo("WARNING failed communicating with numerai's backend")
+        res = 0
+    click.echo(res)
 
 
 @cli.command()

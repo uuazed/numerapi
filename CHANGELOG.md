@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- numerapi-cli: make `check-new-round` more robust
+
 ## [2.12.8] - 2022-11-21
 - change default argument for `check_new_round` to 12 hours
 - deprecate `daily_submissions_performances`
