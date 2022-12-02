@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.12.9] - 2022-12-02
 - numerapi-cli: make `check-new-round` more robust
 - more robust `check_new_round` and `check_round_open` - working around some
   edge cases, that occur during the time without any active round.
@@ -27,7 +27,6 @@ Notable changes to this project.
 - add `TC` and `corr60` to `SignalsAPI.daily_model_performances`
 - add `TC` to `SignalsAPI.daily_submissions_performances`
 - define timeouts for all web call made with `requests`
-
 
 ## [2.12.4] - 2022-08-24
 - add `set_stake_type` to change payout mode and multipliers (PR #83)
