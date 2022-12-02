@@ -960,7 +960,13 @@ class Api:
             }
         '''
         arguments = {'tournament': self.tournament_id}
-        raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        # in some period in between rounds, "number: 0" returns Value error -
+        # "Current round not open for submissions", because there is no active
+        # round. This is catched by the try / except.
+        try:
+            raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        except ValueError:
+            return False
         if raw is None:
             return False
         open_time = utils.parse_datetime_string(raw['openTime'])
@@ -995,7 +1001,13 @@ class Api:
         '''
         tournament = self.tournament_id if tournament is None else tournament
         arguments = {'tournament': tournament}
-        raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        # in some period in between rounds, "number: 0" returns Value error -
+        # "Current round not open for submissions", because there is no active
+        # round. This is catched by the try / except.
+        try:
+            raw = self.raw_query(query, arguments)['data']['rounds'][0]
+        except ValueError:
+            return False
         if raw is None:
             return False
         open_time = utils.parse_datetime_string(raw['openTime'])

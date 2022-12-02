@@ -3,6 +3,8 @@ Notable changes to this project.
 
 ## [dev]
 - numerapi-cli: make `check-new-round` more robust
+- more robust `check_new_round` and `check_round_open` - working around some
+  edge cases, that occur during the time without any active round.
 
 ## [2.12.8] - 2022-11-21
 - change default argument for `check_new_round` to 12 hours
