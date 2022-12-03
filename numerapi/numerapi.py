@@ -3,7 +3,6 @@
 import zipfile
 import os
 import decimal
-from typing import List, Dict
 from io import BytesIO
 
 import requests
@@ -46,7 +45,7 @@ class NumerAPI(base_api.Api):
 
         return True
 
-    def list_datasets(self, round_num: int = None) -> List[str]:
+    def list_datasets(self, round_num: int = None) -> list[str]:
         """List of available data files
 
         Args:
@@ -307,7 +306,7 @@ class NumerAPI(base_api.Api):
         return rounds
 
     def get_submission_filenames(self, tournament=None, round_num=None,
-                                 model_id=None) -> List[Dict]:
+                                 model_id=None) -> list[dict]:
         """Get filenames of the submission of the user.
 
         Args:
@@ -365,7 +364,7 @@ class NumerAPI(base_api.Api):
         filenames.sort(key=lambda f: (f['round_num'], f['tournament']))
         return filenames
 
-    def get_user(self, model_id: str = None) -> Dict:
+    def get_user(self, model_id: str = None) -> dict:
         """Get all information about you! DEPRECATED
 
         Args:
@@ -453,7 +452,7 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def submission_status(self, model_id: str = None) -> Dict:
+    def submission_status(self, model_id: str = None) -> dict:
         """submission status of the last submission associated with the account
 
         Args:
@@ -615,7 +614,7 @@ class NumerAPI(base_api.Api):
         submission_id = create['data']['create_submission']['id']
         return submission_id
 
-    def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
+    def get_leaderboard(self, limit: int = 50, offset: int = 0) -> list[dict]:
         """Get the current leaderboard
 
         Args:
@@ -678,7 +677,7 @@ class NumerAPI(base_api.Api):
             utils.replace(item, "nmrStaked", utils.parse_float_string)
         return data
 
-    def stake_set(self, nmr, model_id: str) -> Dict:
+    def stake_set(self, nmr, model_id: str) -> dict:
         """Set stake to value by decreasing or increasing your current stake
 
         Args:
@@ -756,7 +755,7 @@ class NumerAPI(base_api.Api):
         stake = data['dailyUserPerformances'][0]['stakeValue']
         return stake
 
-    def public_user_profile(self, username: str) -> Dict:
+    def public_user_profile(self, username: str) -> dict:
         """Fetch the public profile of a user.
 
         Args:
@@ -798,13 +797,13 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
 
-    def daily_user_performances(self, username: str) -> List[Dict]:
+    def daily_user_performances(self, username: str) -> list[dict]:
         """DEPRECATED"""
         self.logger.warning("Method daily_user_performances is DEPRECATED, "
                             "use daily_model_performances")
         return self.daily_model_performances(username)
 
-    def daily_model_performances(self, username: str) -> List[Dict]:
+    def daily_model_performances(self, username: str) -> list[dict]:
         """Fetch daily performance of a user.
 
         Args:
@@ -872,7 +871,7 @@ class NumerAPI(base_api.Api):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def round_details(self, round_num: int) -> List[Dict]:
+    def round_details(self, round_num: int) -> list[dict]:
         """Fetch all correlation scores of a round.
 
         Args:
@@ -916,7 +915,7 @@ class NumerAPI(base_api.Api):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def daily_submissions_performances(self, username: str) -> List[Dict]:
+    def daily_submissions_performances(self, username: str) -> list[dict]:
         """Fetch daily performance of a user's submissions.
 
         DEPRECATED - please use `daily_model_performances` instead"

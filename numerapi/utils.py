@@ -6,7 +6,7 @@ import logging
 import time
 import datetime
 import json
-from typing import Optional, Dict
+from typing import Optional
 
 import dateutil.parser
 import requests
@@ -33,7 +33,7 @@ def parse_float_string(string: str) -> Optional[float]:
     return val
 
 
-def replace(dictionary: Dict, key: str, function):
+def replace(dictionary: dict, key: str, function):
     """apply a function to dict item"""
     if dictionary is not None and key in dictionary:
         dictionary[key] = function(dictionary[key])
@@ -89,10 +89,10 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
     return dest_path
 
 
-def post_with_err_handling(url: str, body: str, headers: Dict,
+def post_with_err_handling(url: str, body: str, headers: dict,
                            timeout: Optional[int] = None,
                            retries: int = 3, delay: int = 1, backoff: int = 2
-                           ) -> Dict:
+                           ) -> dict:
     """send `post` request and handle (some) errors that might occur"""
     try:
         resp = requests.post(url, json=body, headers=headers, timeout=timeout)
