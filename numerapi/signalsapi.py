@@ -349,58 +349,6 @@ class SignalsAPI(base_api.Api):
             utils.replace(perf, "date", utils.parse_datetime_string)
         return performances
 
-    def daily_user_performances(self, username: str) -> List[Dict]:
-        """DEPRECATED Fetch daily Numerai Signals performance of a user.
-
-        Args:
-            username (str)
-
-        Returns:
-            list of dicts: list of daily user performance entries
-
-            For each entry in the list, there is a dict with the following
-            content:
-
-                * rank (`int`)
-                * date (`datetime`)
-                * sharpe (`float`)
-                * mmcRep (`float`)
-                * reputation (`float`)
-
-        Example:
-            >>> api = SignalsAPI()
-            >>> api.daily_user_performances("floury_kerril_moodle")
-            [{'date': datetime.datetime(2020, 5, 16, 0, 0,
-              'rank': 1,
-              'sharpe': 2.35,
-              'mmcRep': 0.35,
-              'reputation': 1.35
-              },
-             ...]
-        """
-        query = """
-          query($username: String!) {
-            signalsUserProfile(username: $username) {
-              dailyUserPerformances {
-                rank
-                date
-                sharpe
-                mmcRep
-                reputation
-              }
-            }
-          }
-        """
-        self.logger.warning("Method daily_user_performances is DEPRECATED, "
-                            "use daily_model_performances")
-        arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['signalsUserProfile']
-        performances = data['dailyUserPerformances']
-        # convert strings to python objects
-        for perf in performances:
-            utils.replace(perf, "date", utils.parse_datetime_string)
-        return performances
-
     def daily_submissions_performances(self, username: str) -> List[Dict]:
         """Fetch daily Numerai Signals performance of a user's submissions.
 

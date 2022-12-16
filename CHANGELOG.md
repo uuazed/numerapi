@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - `stake_get` - updated to migrate away from deprecated API endpoint
+- remove deprecated `SignalsAPI.daily_user_performances`
 
 ## [2.12.9] - 2022-12-02
 - numerapi-cli: make `check-new-round` more robust
