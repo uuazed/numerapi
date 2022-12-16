@@ -169,13 +169,6 @@ def daily_model_performances(username):
 
 
 @cli.command()
-@click.argument("username")
-def daily_submissions_performances(username):
-    """Fetch daily performance of a user's submissions."""
-    click.echo(prettify(napi.daily_submissions_performances(username)))
-
-
-@cli.command()
 def transactions():
     """List all your deposits and withdrawals."""
     click.echo(prettify(napi.wallet_transactions()))
