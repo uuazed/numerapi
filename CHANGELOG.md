@@ -5,6 +5,8 @@ Notable changes to this project.
 - `stake_get` - updated to migrate away from deprecated API endpoint
 - remove deprecated `SignalsAPI.daily_user_performances`
 - remove deprecated `SignalsAPI.daily_submissions_performances`
+- remove `round_details` - no longer supported by Numerai
+- remove deprecated `daily_submissions_performances`
 
 ## [2.12.9] - 2022-12-02
 - numerapi-cli: make `check-new-round` more robust
