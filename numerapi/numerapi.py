@@ -726,11 +726,11 @@ class NumerAPI(base_api.Api):
         self.logger.info("Stake already at desired value. Nothing to do.")
         return None
 
-    def stake_get(self, username: str) -> float:
+    def stake_get(self, modelname: str) -> float:
         """Get your current stake amount.
 
         Args:
-            username (str)
+            modelname (str)
 
         Returns:
             float: current stake (including projected NMR earnings from open
@@ -742,19 +742,15 @@ class NumerAPI(base_api.Api):
             1.1
         """
         query = """
-          query($username: String!) {
-            v2UserProfile(username: $username) {
-              dailyUserPerformances {
-                stakeValue
-              }
+          query($modelname: String!) {
+            v3UserProfile(modelName: $modelname) {
+               stakeValue
             }
           }
         """
-        arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['v2UserProfile']
-        # be convention, the first is the latest one
-        stake = data['dailyUserPerformances'][0]['stakeValue']
-        return stake
+        arguments = {'modelname': modelname}
+        data = self.raw_query(query, arguments)['data']['v3UserProfile']
+        return data['stakeValue']
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public profile of a user.

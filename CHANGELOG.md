@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- `stake_get` - updated to migrate away from deprecated API endpoint
+
 ## [2.12.9] - 2022-12-02
 - numerapi-cli: make `check-new-round` more robust
 - more robust `check_new_round` and `check_round_open` - working around some
