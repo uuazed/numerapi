@@ -126,7 +126,7 @@ To get started with the cli interface, let's take a look at the help page:
         submission-status               checks the submission status
         submit                          Upload predictions from file.
         transactions                    List all your deposits and withdrawals.
-        user                            Get all information about you! DEPRECATED...
+        user                            Get all information about you!...
         version                         Installed numerapi version.
 
 

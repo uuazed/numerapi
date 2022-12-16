@@ -81,7 +81,7 @@ def test_unauthorized_requests(api, fun):
 def test_error_handling(api):
     # String instead of Int
     with pytest.raises(ValueError):
-        api.round_details("foo")
+        api.get_competitions("foo")
     # unauthendicated request
     with pytest.raises(ValueError):
         # set wrong token
