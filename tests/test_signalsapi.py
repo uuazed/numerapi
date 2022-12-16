@@ -55,32 +55,6 @@ def test_upload_predictions_df(api):
     assert submission_id == "12345"
     assert len(responses.calls) == 3
 
-@responses.activate
-def test_daily_submissions_performances(api):
-    perf = {'date': "20200516",
-            'returns': 1.256,
-            'submissionTime': "20200516"}
-    data = {'data': {'signalsUserProfile':
-            {'dailySubmissionPerformances': [perf]}}}
-    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    result = api.daily_submissions_performances("uuazed")
-    assert len(result) == 1
-    assert isinstance(result[0]["date"], datetime.datetime)
-    assert isinstance(result[0]["submissionTime"], datetime.datetime)
-
-
-@responses.activate
-def test_daily_user_performances(api):
-    perf = {'rank': 12,
-            'sharpe': 1.256,
-            'date': "20200516"}
-    data = {'data': {'signalsUserProfile':
-            {'dailyUserPerformances': [perf]}}}
-    responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
-    result = api.daily_user_performances("uuazed")
-    assert len(result) == 1
-    assert isinstance(result[0]["date"], datetime.datetime)
-
 
 @responses.activate
 def test_ticker_universe(api):
