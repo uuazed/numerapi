@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.13.0] - 2022-12-16 - "API deprecations"
 - `stake_get` - updated to migrate away from deprecated API endpoint
 - remove deprecated `SignalsAPI.daily_user_performances`
 - remove deprecated `SignalsAPI.daily_submissions_performances`
