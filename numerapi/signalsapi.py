@@ -295,8 +295,8 @@ class SignalsAPI(base_api.Api):
                 * tcRep (`float` or None)
                 * corr20dRank (`int`)
                 * corr20dRep (`float` or None)
-                * corr60dRank (`int`)
-                * corr60dRep (`float` or None)
+                * corr60Rank (`int`)
+                * corr60Rep (`float` or None)
                 * mmc20dRank (`int`)
                 * mmc20dRep (`float` or None)
 
@@ -329,8 +329,8 @@ class SignalsAPI(base_api.Api):
                 mmcRank
                 corr20dRep
                 corr20dRank
-                corr60dRep
-                corr60dRank
+                corr60Rep
+                corr60Rank
                 icRep
                 icRank
                 tcRank
