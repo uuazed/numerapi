@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.13.1] - 2023-02-15
 - fix `SignalsAPI.daily_model_performances`
 - adding all the new metrics (RIC, CorrV4, FncV4, etc) to `diagnostics`
 
