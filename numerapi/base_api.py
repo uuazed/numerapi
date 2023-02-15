@@ -537,9 +537,14 @@ class Api:
                     * era (`int`)
                     * examplePredsCorr (`float`)
                     * validationCorr (`float`)
+                    * validationCorrV4 (`float`)
                     * validationFeatureCorrMax (`float`)
                     * validationFeatureNeutralCorr (`float`)
+                    * validationFeatureNeutralCorrV3
                     * validationMmc (`float`)
+                    * validationFncV4 (`float`)
+                    * validationIcV2 (`float`)
+                    * validationRic (`float`)
                 * validationCorrPlusMmcStd (`float`)
                 * validationMmcMean (`float`)
                 * validationCorrStdRating (`float`)
@@ -563,6 +568,33 @@ class Api:
                 * erasAcceptedCount (`int`)
                 * validationMaxDrawdown (`float`)
                 * validationCorrPlusMmcStdRating (`float`)
+                * validationAdjustedSharpe (`float`)
+                * validationApy (`float`)
+                * validationAutocorr (`float`)
+                * validationCorrCorrWExamplePreds (`float`)
+                * validationCorrMaxDrawdown (`float`)
+                * validationCorrV4CorrWExamplePreds (`float`)
+                * validationCorrV4MaxDrawdown (`float`)
+                * validationCorrV4Mean (`float`)
+                * validationCorrV4Sharpe (`float`)
+                * validationCorrV4Std (`float`)
+                * validationFeatureNeutralCorrV3Mean (`float`)
+                * validationFeatureNeutralCorrV3MeanRating (`float`)
+                * validationFncV4CorrWExamplePreds (`float`)
+                * validationFncV4MaxDrawdown (`float`)
+                * validationFncV4Mean (`float`)
+                * validationFncV4Sharpe (`float`)
+                * validationFncV4Std (`float`)
+                * validationIcV2CorrWExamplePreds (`float`)
+                * validationIcV2MaxDrawdown (`float`)
+                * validationIcV2Mean (`float`)
+                * validationIcV2Sharpe (`float`)
+                * validationIcV2Std (`float`)
+                * validationRicCorrWExamplePreds (`float`)
+                * validationRicMaxDrawdown (`float`)
+                * validationRicMean (`float`)
+                * validationRicSharpe (`float`)
+                * validationRicStd (`float`)
 
         Example:
             >>> napi = NumerAPI(secret_key="..", public_id="..")
@@ -587,9 +619,14 @@ class Api:
                     era
                     examplePredsCorr
                     validationCorr
+                    validationCorrV4
                     validationFeatureCorrMax
                     validationFeatureNeutralCorr
+                    validationFeatureNeutralCorrV3
                     validationMmc
+                    validationFncV4
+                    validationIcV2
+                    validationRic
                 }
                 status
                 trainedOnVal
@@ -620,6 +657,34 @@ class Api:
                 validationMmcSharpeRating
                 validationMmcStd
                 validationMmcStdRating
+
+                validationAdjustedSharpe
+                validationApy
+                validationAutocorr
+                validationCorrCorrWExamplePreds
+                validationCorrMaxDrawdown
+                validationCorrV4CorrWExamplePreds
+                validationCorrV4MaxDrawdown
+                validationCorrV4Mean
+                validationCorrV4Sharpe
+                validationCorrV4Std
+                validationFeatureNeutralCorrV3Mean
+                validationFeatureNeutralCorrV3MeanRating
+                validationFncV4CorrWExamplePreds
+                validationFncV4MaxDrawdown
+                validationFncV4Mean
+                validationFncV4Sharpe
+                validationFncV4Std
+                validationIcV2CorrWExamplePreds
+                validationIcV2MaxDrawdown
+                validationIcV2Mean
+                validationIcV2Sharpe
+                validationIcV2Std
+                validationRicCorrWExamplePreds
+                validationRicMaxDrawdown
+                validationRicMean
+                validationRicSharpe
+                validationRicStd
               }
             }
         '''
