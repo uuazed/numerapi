@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- add `data_datestamp` argument to `upload_predictions` - this will allow
+  submitting predictions using data from a previous round.
+
 ## [2.13.1] - 2023-02-15
 - fix `SignalsAPI.daily_model_performances`
 - adding all the new metrics (RIC, CorrV4, FncV4, etc) to `diagnostics`
