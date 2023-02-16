@@ -550,7 +550,8 @@ class NumerAPI(base_api.Api):
     def upload_predictions(self, file_path: str = "predictions.csv",
                            tournament: int = 8,
                            model_id: str = None,
-                           df: pd.DataFrame = None) -> str:
+                           df: pd.DataFrame = None,
+                           data_datestamp: int = None) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -563,6 +564,8 @@ class NumerAPI(base_api.Api):
                 multiple models)
             df (pandas.DataFrame): pandas DataFrame to upload, if function is
                 given df and file_path, df will be uploaded.
+            data_datestamp (int): Data lag, in case submission is done using
+                data from the previous day(s).
 
         Returns:
             str: submission_id
@@ -597,7 +600,8 @@ class NumerAPI(base_api.Api):
             mutation($filename: String!
                      $tournament: Int!
                      $modelId: String
-                     $triggerId: String) {
+                     $triggerId: String,
+                     $dataDatestamp: Int) {
                 create_submission(filename: $filename
                                   tournament: $tournament
                                   modelId: $modelId
@@ -610,7 +614,8 @@ class NumerAPI(base_api.Api):
         arguments = {'filename': upload_auth['filename'],
                      'tournament': tournament,
                      'modelId': model_id,
-                     'triggerId': os.getenv('TRIGGER_ID', None)}
+                     'triggerId': os.getenv('TRIGGER_ID', None),
+                     'dataDatestamp': data_datestamp}
         create = self.raw_query(create_query, arguments, authorization=True)
         submission_id = create['data']['create_submission']['id']
         return submission_id
