@@ -606,7 +606,8 @@ class NumerAPI(base_api.Api):
                                   tournament: $tournament
                                   modelId: $modelId
                                   triggerId: $triggerId
-                                  source: "numerapi") {
+                                  source: "numerapi"
+                                  dataDatestamp: $dataDatestamp) {
                     id
                 }
             }
