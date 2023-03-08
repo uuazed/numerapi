@@ -3,7 +3,7 @@
 import zipfile
 import os
 import decimal
-from typing import List, Dict
+from typing import List, Dict, Tuple, Union
 from io import BytesIO
 
 import requests
@@ -551,7 +551,9 @@ class NumerAPI(base_api.Api):
                            tournament: int = 8,
                            model_id: str = None,
                            df: pd.DataFrame = None,
-                           data_datestamp: int = None) -> str:
+                           data_datestamp: int = None,
+                           timeout: Union[None, float, Tuple[float, float]] = (10, 600),
+    ) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -595,7 +597,7 @@ class NumerAPI(base_api.Api):
         with open(file_path, 'rb') if df is None else buffer_csv as file:
             requests.put(
                 upload_auth['url'], data=file.read(), headers=headers,
-                timeout=600)
+                timeout=timeout)
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
