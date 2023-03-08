@@ -99,6 +99,8 @@ class SignalsAPI(base_api.Api):
                             with multiple models)
             df (pandas.DataFrame): Pandas DataFrame to upload, if function is
                 given df and file_path, df will be uploaded
+            timeout (float|tuple(float,float)): waiting time (connection timeout,
+                read timeout)
 
         Returns:
             str: submission_id

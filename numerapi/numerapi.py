@@ -568,6 +568,8 @@ class NumerAPI(base_api.Api):
                 given df and file_path, df will be uploaded.
             data_datestamp (int): Data lag, in case submission is done using
                 data from the previous day(s).
+            timeout (float|tuple(float,float)): waiting time (connection timeout,
+                read timeout)
 
         Returns:
             str: submission_id
