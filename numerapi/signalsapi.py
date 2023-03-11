@@ -1,6 +1,6 @@
 """API for Numerai Signals"""
 
-from typing import List, Dict
+from typing import List, Dict, Tuple, Union
 import os
 import codecs
 import decimal
@@ -86,7 +86,9 @@ class SignalsAPI(base_api.Api):
 
     def upload_predictions(self, file_path: str = "predictions.csv",
                            model_id: str = None,
-                           df: pd.DataFrame = None) -> str:
+                           df: pd.DataFrame = None,
+                           timeout: Union[None, float, Tuple[float, float]] = (10, 60),
+    ) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -97,6 +99,8 @@ class SignalsAPI(base_api.Api):
                             with multiple models)
             df (pandas.DataFrame): Pandas DataFrame to upload, if function is
                 given df and file_path, df will be uploaded
+            timeout (float|tuple(float,float)): waiting time (connection timeout,
+                read timeout)
 
         Returns:
             str: submission_id
@@ -141,7 +145,7 @@ class SignalsAPI(base_api.Api):
 
         with open(file_path, 'rb') if df is None else buffer_csv as file:
             requests.put(auth['url'], data=file.read(),
-                         headers=headers, timeout=60)
+                         headers=headers, timeout=timeout)
         create_query = '''
             mutation($filename: String!
                      $modelId: String
