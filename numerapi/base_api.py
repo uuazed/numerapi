@@ -1079,3 +1079,24 @@ class Api:
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
+
+    def modelid_to_modelname(self, model_id: str) -> str:
+        """Get model name from a model_id.
+
+        Args:
+            model_id (str)
+
+        Returns:
+            str: modelname
+
+        """
+        query = """
+            query($modelid: String!) {
+                model(modelId: $modelid) {
+                    name
+                }
+            }
+        """
+        arguments = {'modelid': model_id}
+        res = self.raw_query(query, arguments, authorization=True)
+        return res['data']['model']["name"]

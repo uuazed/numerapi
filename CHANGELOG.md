@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- add `modelid_to_modelname` method
+- fix `stake_set`
+
 ## [2.13.2] - 2023-02-22
 - add `data_datestamp` argument to `upload_predictions` - this will allow
   submitting predictions using data from a previous round.

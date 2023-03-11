@@ -716,7 +716,8 @@ class NumerAPI(base_api.Api):
              'value': '10'}
         """
         # fetch current stake
-        current = self.stake_get(model_id)
+        modelname = self.modelid_to_modelname(model_id)
+        current = self.stake_get(modelname)
         # convert everything to decimals
         if current is None:
             current = decimal.Decimal(0)
