@@ -85,7 +85,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
             dest_file.write(chunk)
             pbar.update(1024)
     # move temp file to target destination
-    os.rename(temp_path, dest_path)
+    os.replace(temp_path, dest_path)
     return dest_path
 
 
