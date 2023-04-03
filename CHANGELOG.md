@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.13.4] - 2023-04-03
 - return filepath from `download_dataset`
 
 ## [2.13.3] - 2023-04-03
