@@ -5,6 +5,8 @@ Notable changes to this project.
 - add `modelid_to_modelname` method
 - fix `stake_set`
 - add option to adjust connection timeout when upload predictionions (PR #97)
+- remove deprecated `download_latest_data`
+- add `set_global_data_dir` method
 
 ## [2.13.2] - 2023-02-22
 - add `data_datestamp` argument to `upload_predictions` - this will allow

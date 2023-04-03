@@ -369,12 +369,11 @@ class SignalsAPI(base_api.Api):
         tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
         return tickers
 
-    def download_validation_data(self, dest_path: str = ".",
-                                 dest_filename: str = None) -> str:
+    def download_validation_data(self, dest_filename: str = None) -> str:
         """download CSV file with historical targets and ticker universe
 
         Returns:
-            str: path to csv file
+            str: filename
 
         Example:
             >>> SignalsAPI().download_validation_data()
@@ -384,10 +383,8 @@ class SignalsAPI(base_api.Api):
         if dest_filename is None:
             dest_filename = "numerai_signals_historical.csv"
 
-        path = os.path.join(dest_path, dest_filename)
+        path = os.path.join(self.global_data_dir, dest_filename)
 
-        # create parent folder if necessary
-        os.makedirs(dest_path, exist_ok=True)
         utils.download_file(
             self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
         return path

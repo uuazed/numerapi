@@ -90,6 +90,9 @@ class NumerAPI(base_api.Api):
         if dest_path is None:
             dest_path = filename
 
+        if self.global_data_dir != ".":
+            dest_path = os.path.join(self.global_data_dir, dest_path)
+
         # if directories are used, ensure they exist
         dirs = os.path.dirname(dest_path)
         if dirs:

@@ -44,6 +44,7 @@ class Api:
 
         self.show_progress_bars = show_progress_bars
         self.tournament_id = 0
+        self.global_data_dir = "."
 
     def _login(self, public_id=None, secret_key=None):
         # check env variables if not set
@@ -132,11 +133,21 @@ class Api:
             raise ValueError(err)
         return result
 
+    def set_global_data_dir(self, directory: str):
+        """Set directory used for downloading files
+
+        Args:
+            directory (str): directory to be used
+        """
+        self.global_data_dir = directory
+         # create folder if necessary
+        os.makedirs(directory, exist_ok=True)
+
     def get_account(self) -> Dict:
         """Get all information about your account!
 
         Returns:
-            dict: user information including the following fields:
+            dict: user information including the fields:
 
                 * assignedEthAddress (`str`)
                 * availableNmr (`decimal.Decimal`)
