@@ -83,6 +83,9 @@ class NumerAPI(base_api.Api):
             round_num (int, optional): tournament round you are interested in.
                 defaults to the current round
 
+        Returns:
+            str: path of the downloaded file
+
         Example:
             >>> filenames = NumerAPI().list_datasets()
             >>> NumerAPI().download_dataset(filenames[0]}")
@@ -109,6 +112,7 @@ class NumerAPI(base_api.Api):
 
         dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
+        return dest_path
 
     def get_dataset_url(self, tournament: int = 8) -> str:
         """Fetch url of the current dataset.

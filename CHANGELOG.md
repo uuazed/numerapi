@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- return filepath from `download_dataset`
+
 ## [2.13.3] - 2023-04-03
 - add `modelid_to_modelname` method
 - fix `stake_set`
