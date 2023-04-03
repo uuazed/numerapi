@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.13.3] - 2023-04-03
 - add `modelid_to_modelname` method
 - fix `stake_set`
 - add option to adjust connection timeout when upload predictionions (PR #97)
