@@ -91,6 +91,13 @@ and `NUMERAI_SECRET_KEY`).
     import pandas as pd
     df = pd.DataFrame(napi.daily_user_performances("uuazed"))
 
+    # using the diagnostics tool
+    napi.upload_diagnostics("preds.csv", model_id=model_id)
+    # ... or using a pandas DataFrame directly
+    napi.upload_diagnostics(df=df, model_id=model_id)
+    # fetch results
+    napi.diagnostic(model_id)
+
 
 ## Command line interface
 
