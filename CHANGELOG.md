@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.14.0] - no more submission_status
 - deprecate `SignalsAPI.submission_status`
 - deprecate `NumerAPI.submission_status`
 
