@@ -165,36 +165,19 @@ class SignalsAPI(base_api.Api):
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 
-    def submission_status(self, model_id: str = None) -> Dict:
+    def submission_status(self, *args, **kwargs) -> None:
         """submission status of the last submission associated with the account
 
-        DEPRECATED numerai no longer provides this data. This will be removed 
+        DEPRECATED numerai no longer provides this data. This will be removed
         in one of the next versions
 
         Args:
             model_id (str)
 
-        Returns:
-            dict: submission status with the following content:
-
-                * firstEffectiveDate (`datetime.datetime`):
-                * userId (`string`)
-                * filename (`string`)
-                * id (`string`)
-                * submissionIp (`string`)
-                * submittedCount (`int`)
-                * filteredCount (`int`)
-                * invalidTickers (`string`)
-                * hasHistoric (`bool`)
-                * historicMean (`float`)
-                * historicStd (`float`)
-                * historicSharpe (`float`)
-                * historicMaxDrawdown (`float`)
-
         Example:
             >>> api = SignalsAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
-            >>> api.submission_status(model_id)aa
+            >>> api.submission_status(model_id)
         """
         self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
 

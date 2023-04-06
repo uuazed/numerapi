@@ -460,99 +460,23 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def submission_status(self, model_id: str = None) -> Dict:
+    def submission_status(self, *args, **kwargs) -> None:
         """submission status of the last submission associated with the account
+
+        DEPRECATED numerai no longer provides this data. This will be removed 
+        in one of the next versions
 
         Args:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
 
-        Returns:
-            dict: submission status with the following content:
-
-                * filename (`string`)
-                * corrWithExamplePreds (`float`)
-                * validationCorrelation (`float`)
-                * validationCorrelationRating (`float`)
-                * validationSharpe (`float`)
-                * validationSharpeRating  (`float`)
-                * validationFeatureNeutralMean (`float`)
-                * validationFeatureNeutralMeanRating (`float`)
-                * validationStd (`float`)
-                * validationStdRating (`float`)
-                * validationMaxFeatureExposure (`float`)
-                * validationMaxFeatureExposureRating (`float`)
-                * validationMaxDrawdown (`float`)
-                * validationMaxDrawdownRating (`float`)
-                * validationCorrPlusMmcSharpe (`float`)
-                * validationCorrPlusMmcSharpeRating (`float`)
-                * validationMmcMean (`float`)
-                * validationMmcMeanRating (`float`)
-                * validationCorrPlusMmcSharpeDiff (`float`)
-                * validationCorrPlusMmcSharpeDiffRating (`float`)
-
         Example:
             >>> napi = NumerAPI(secret_key="..", public_id="..")
             >>> model_id = napi.get_models()['uuazed']
             >>> napi.submission_status(model_id)
-            {'corrWithExamplePreds': 0.7217288907243551,
-             'filename': 'model57-HPzOyr56TPaD.csv',
-             'validationCorrPlusMmcSharpe': 1.0583461013814541,
-             'validationCorrPlusMmcSharpeDiff': -0.23505145970149166,
-             'validationCorrPlusMmcSharpeDiffRating': 0.02989708059701668,
-             'validationCorrPlusMmcSharpeRating': 0.7123167873588739,
-             'validationCorrelation': 0.023244452475027225,
-             'validationCorrelationRating': 0.6026148514721896,
-             'validationFeatureExposure': None,
-             'validationFeatureNeutralMean': 0.019992061095211483,
-             'validationFeatureNeutralMeanRating': 0.7689254267389032,
-             'validationMaxDrawdown': -0.03710774157542396,
-             'validationMaxDrawdownRating': 0.8099139824952893,
-             'validationMaxFeatureExposure': 0.17339716040222303,
-             'validationMaxFeatureExposureRating': 0.9200079988669775,
-             'validationMmcMean': 0.0027797270044420106,
-             'validationMmcMeanRating': 0.615821958518417,
-             'validationSharpe': 1.2933975610829458,
-             'validationSharpeRating': 0.9921399536701735,
-             'validationStd': 0.017971622318171787,
-             'validationStdRating': 0.9842992879669488}
         """
-        query = '''
-            query($modelId: String) {
-                model(modelId: $modelId) {
-                  latestSubmissionV2 {
-                    filename
-                    corrWithExamplePreds
-                    validationCorrelation
-                    validationSharpe
-                    validationFeatureExposure
-                    validationCorrelation
-                    validationCorrelationRating
-                    validationSharpe
-                    validationSharpeRating
-                    validationFeatureNeutralMean
-                    validationFeatureNeutralMeanRating
-                    validationStd
-                    validationStdRating
-                    validationMaxFeatureExposure
-                    validationMaxFeatureExposureRating
-                    validationMaxDrawdown
-                    validationMaxDrawdownRating
-                    validationCorrPlusMmcSharpe
-                    validationCorrPlusMmcSharpeRating
-                    validationMmcMean
-                    validationMmcMeanRating
-                    validationCorrPlusMmcSharpeDiff
-                    validationCorrPlusMmcSharpeDiffRating
-                  }
-                }
-              }
-            '''
-
-        args = {'modelId': model_id}
-        data = self.raw_query(query, args, authorization=True)
-        status = data['data']['model']['latestSubmissionV2']
-        return status
+        self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
+        return None
 
     def upload_predictions(self, file_path: str = "predictions.csv",
                            tournament: int = 8,

@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - deprecate `SignalsAPI.submission_status`
+- deprecate `NumerAPI.submission_status`
 
 ## [2.13.4] - 2023-04-03
 - return filepath from `download_dataset`
