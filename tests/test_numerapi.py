@@ -86,7 +86,7 @@ def test_error_handling(api):
     with pytest.raises(ValueError):
         # set wrong token
         api.token = ("foo", "bar")
-        api.submission_status()
+        api.get_account()
 
 
 @responses.activate

@@ -94,13 +94,6 @@ def test_user_with_model_id(mocked, login):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.submission_status')
-def test_submission_status(mocked, login):
-    result = CliRunner().invoke(cli.submission_status, ['subm_id'])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.wallet_transactions')
 def test_transactions(mocked):
     result = CliRunner().invoke(cli.transactions)
