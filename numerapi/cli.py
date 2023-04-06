@@ -175,13 +175,6 @@ def transactions():
 
 
 @cli.command()
-@click.argument("model_id")
-def submission_status(model_id):
-    """checks the submission status"""
-    click.echo(prettify(napi.submission_status(model_id)))
-
-
-@cli.command()
 @click.option('--tournament', default=8,
               help='The ID of the tournament, defaults to 8')
 @click.option(
