@@ -460,10 +460,10 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def submission_status(self, model_id: str = None) -> None:  # noqa
+    def submission_status(self, model_id: str = None) -> None:
         """submission status of the last submission associated with the account
 
-        DEPRECATED numerai no longer provides this data. This will be removed 
+        DEPRECATED numerai no longer provides this data. This will be removed
         in one of the next versions
 
         Args:
@@ -475,8 +475,8 @@ class NumerAPI(base_api.Api):
             >>> model_id = napi.get_models()['uuazed']
             >>> napi.submission_status(model_id)
         """
+        _ = model_id
         self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
-        return None
 
     def upload_predictions(self, file_path: str = "predictions.csv",
                            tournament: int = 8,
