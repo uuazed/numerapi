@@ -460,7 +460,7 @@ class NumerAPI(base_api.Api):
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
-    def submission_status(self, *args, **kwargs) -> None:
+    def submission_status(self, model_id: str = None) -> None:  # noqa
         """submission status of the last submission associated with the account
 
         DEPRECATED numerai no longer provides this data. This will be removed 

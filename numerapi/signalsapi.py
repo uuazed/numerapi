@@ -165,7 +165,7 @@ class SignalsAPI(base_api.Api):
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 
-    def submission_status(self, *args, **kwargs) -> None:
+    def submission_status(self, model_id: str = None) -> None:  # noqa
         """submission status of the last submission associated with the account
 
         DEPRECATED numerai no longer provides this data. This will be removed
