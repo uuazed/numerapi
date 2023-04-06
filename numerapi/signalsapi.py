@@ -168,6 +168,9 @@ class SignalsAPI(base_api.Api):
     def submission_status(self, model_id: str = None) -> Dict:
         """submission status of the last submission associated with the account
 
+        DEPRECATED numerai no longer provides this data. This will be removed 
+        in one of the next versions
+
         Args:
             model_id (str)
 
@@ -191,47 +194,11 @@ class SignalsAPI(base_api.Api):
         Example:
             >>> api = SignalsAPI(secret_key="..", public_id="..")
             >>> model_id = api.get_models()['uuazed']
-            >>> api.submission_status(model_id)
-            {'firstEffectiveDate': datetime.datetime(2020, 5, 12, 1, 23),
-             'userId': "slyfox",
-             'filename': 'model57-HPzOyr56TPaD.csv',
-             'id': '1234'
-             'submissionIp': "102.142.12.12",
-             'submittedCount': 112,
-             'filteredCount': 12,
-             'invalidTickers': 'AAAPL,GOOOG',
-             'hasHistoric': true,
-             'historicMean': 1.23,
-             'historicStd': 2.34,
-             'historicSharpe': 3.45,
-             'historicMaxDrawdown': 4.56}
+            >>> api.submission_status(model_id)aa
         """
+        self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
 
-        query = '''
-            query($modelId: String) {
-                model(modelId: $modelId) {
-                  latestSignalsSubmission {
-                    id
-                    filename
-                    firstEffectiveDate
-                    userId
-                    submissionIp
-                    submittedCount
-                    filteredCount
-                    invalidTickers
-                    hasHistoric
-                    historicMean
-                    historicStd
-                    historicSharpe
-                    historicMaxDrawdown
-                  }
-                }
-              }
-            '''
-        arguments = {'modelId': model_id}
-        data = self.raw_query(query, arguments, authorization=True)
-        status = data['data']['model']['latestSignalsSubmission']
-        return status
+        return None
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public Numerai Signals profile of a user.
