@@ -56,8 +56,6 @@ and `NUMERAI_SECRET_KEY`).
     # upload predictions
     model_id = napi.get_models()['uuazed']
     napi.upload_predictions("preds.csv", model_id=model_id)
-    # check submission status
-    napi.submission_status(model_id)
     # increase your stake by 1.2 NMR
     napi.stake_increase(1.2)
 
@@ -82,10 +80,6 @@ and `NUMERAI_SECRET_KEY`).
     # upload predictions
     model_id = napi.get_models()['uuazed']
     napi.upload_predictions("preds.csv", model_id=model_id)
-
-    # get submission status and invalid tickers
-    status = napi.submission_status(model_id)
-    invalid_tickers = status['invalidTickers']
 
     # get daily performance as pandas dataframe
     import pandas as pd
@@ -130,7 +124,6 @@ To get started with the cli interface, let's take a look at the help page:
         stake-get                       Get stake value of a user.
         stake-increase                  Increase your stake by `value` NMR.
         submission-filenames            Get filenames of your submissions
-        submission-status               checks the submission status
         submit                          Upload predictions from file.
         transactions                    List all your deposits and withdrawals.
         user                            Get all information about you!...
