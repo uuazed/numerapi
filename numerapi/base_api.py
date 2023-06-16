@@ -727,6 +727,7 @@ class Api:
                 * corrWMetamodel (`float`)
                 * tc (`float`)
                 * tcPercentile (`float`)
+                * tcMultiplier (`float`)
                 * ic (`float`)
                 * icPercentile (`float`)
                 * fnc (`float`)
@@ -823,6 +824,7 @@ class Api:
                 roundResolved
                 roundTarget
                 selectedStakeValue
+                tcMultiplier
               }}
             }}
           }}

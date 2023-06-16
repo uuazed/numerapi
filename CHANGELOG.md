@@ -1,6 +1,11 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- add corr20V2 into round_model_performances (PR #100)
+- add tcMultiplier into round_model_performances
+
+
 ## [2.14.0] - no more submission_status
 - deprecate `SignalsAPI.submission_status`
 - deprecate `NumerAPI.submission_status`
