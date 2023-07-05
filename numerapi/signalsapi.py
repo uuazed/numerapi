@@ -353,3 +353,35 @@ class SignalsAPI(base_api.Api):
         """
         data = self.public_user_profile(username)
         return data['totalStake']
+
+    def get_submissions(self, model_id: str, fields: str = None) -> list[dict[str,str]]:
+        """Get submissions of a model.
+        
+        Args:
+            fields (str): use to select only a subset of fields in query format. If not provided, returns id, round number and insertedAt.
+            
+        Returns:
+            list[dict[str,str]]: list of submissions of a model.
+        """
+        
+        fields = """
+        id
+        insertedAt
+        round{
+            number
+        }""" if fields is None else fields
+        
+        query = f"""
+            query($modelid: String!) {{
+                    submissions(modelId: $modelid) {{
+                        {fields}
+                }}
+            }}
+        """
+        
+        arguments = {'modelid': model_id}
+        data = self.raw_query(query, arguments)['data']['submissions']
+        
+        return data
+        
+        
