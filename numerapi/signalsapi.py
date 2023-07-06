@@ -380,7 +380,7 @@ class SignalsAPI(base_api.Api):
         """
         
         arguments = {'modelid': model_id}
-        data = self.raw_query(query, arguments)['data']['submissions']
+        data = self.raw_query(query, arguments, authorization=True)['data']['submissions']
         
         return data
         
