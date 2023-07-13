@@ -1,12 +1,12 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.15.0] - 2023-07-13 - model uploads!
 - add corr20V2 into round_model_performances (PR #100)
 - add tcMultiplier into round_model_performances
 - add `model_upload` feature, to allow uploading pickled models to numerai
 
-## [2.14.0] - no more submission_status
+## [2.14.0] - 2023-04-06 - no more submission_status
 - deprecate `SignalsAPI.submission_status`
 - deprecate `NumerAPI.submission_status`
 
