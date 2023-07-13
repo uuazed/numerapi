@@ -1119,3 +1119,56 @@ class Api:
         arguments = {'modelid': model_id}
         res = self.raw_query(query, arguments, authorization=True)
         return res['data']['model']["name"]
+
+    def model_upload(self, file_path: str,
+                 tournament: int = None,
+                 model_id: str = None) -> str:
+        """Upload pickled model to numerai.
+
+        Args:
+            file_path (str): pickle file, needs to endwith .pkl
+            tournament (int): ID of the tournament (optional)
+            model_id (str): Target model UUID
+
+        Returns:
+            str: model_upload_id
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.model_upload("example.pkl", model_id=model_id)
+            '93c46857-fed9-4594-981e-82db2b358daf'
+        """
+        auth_query = '''
+            query($filename: String! $modelId: String) {
+                computePickleUploadAuth(filename: $filename
+                                        modelId: $modelId) {
+                    filename
+                    url
+                }
+            }
+        '''
+        arguments = {'filename': os.path.basename(file_path),
+                     'modelId': model_id}
+        upload_auth =  self.raw_query(
+            auth_query, arguments,
+            authorization=True)['data']["computePickleUploadAuth"]
+
+        with open(file_path, 'rb') as file:
+            requests.put(upload_auth['url'], data=file.read(), timeout=600)
+        create_query = '''
+            mutation($filename: String!
+                     $tournament: Int!
+                     $modelId: String) {
+                createComputePickleUpload(filename: $filename
+                                          tournament: $tournament
+                                          modelId: $modelId) {
+                    id
+                }
+            }'''
+        tournament = self.tournament_id if tournament is None else tournament
+        arguments = {'filename': upload_auth['filename'],
+                     'tournament': tournament,
+                     'modelId': model_id}
+        create = self.raw_query(create_query, arguments, authorization=True)
+        return create['data']['createComputePickleUpload']['id']
