@@ -705,6 +705,76 @@ class Api:
         utils.replace(results, "updatedAt", utils.parse_datetime_string)
         return results
 
+    def round_model_performances_v2(self, model_id: str):
+        """Fetch round model performance of a user.
+
+        Args:
+            model_id (str)
+
+        Returns:
+            list of dicts: list of round model performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * atRisk (`float`)
+                * corrMultiplier (`float` or None)
+                * tcMultiplier (`float` or None)
+                * roundNumber (`int`)
+                * roundOpenTime (`datetime`)
+                * roundResolveTime (`datetime`)
+                * roundResolved (`bool`)
+                * roundTarget (`str`)
+                * submissionScores (`dict`)
+                    * date (`datetime`)
+                    * day (`int`)
+                    * displayName (`str`): name of the metric
+                    * payoutPending (`float`)
+                    * payoutSettled (`float`)
+                    * percentile (`float`)
+                    * value (`float`): value of the metric
+        """
+
+        query = """
+          query($modelId: String!
+                $tournament: Int!) {
+            v2RoundModelPerformances(modelId: $modelId
+                                     tournament: $tournament) {
+                atRisk
+                corrMultiplier
+                tcMultiplier
+                roundNumber,
+                roundOpenTime,
+                roundResolveTime,
+                roundResolved,
+                roundTarget,
+                submissionScores {
+                    date,
+                    day,
+                    displayName,
+                    payoutPending,
+                    payoutSettled,
+                    percentile,
+                    value
+                }
+            }
+          }
+        """
+        arguments = {'modelId': model_id, 'tournament': self.tournament_id}
+        data = self.raw_query(query, arguments)['data']
+        performances = data['v2RoundModelPerformances']
+        for perf in performances:
+            utils.replace(perf, "roundOpenTime", utils.parse_datetime_string)
+            utils.replace(perf, "roundResolveTime", utils.parse_datetime_string)
+            utils.replace(perf, "atRisk", utils.parse_float_string)
+            if perf["submissionScores"]:
+                for submission in perf["submissionScores"]:
+                    utils.replace(submission, "date", utils.parse_datetime_string)
+                    utils.replace(perf, "payoutPending", utils.parse_float_string)
+                    utils.replace(perf, "payoutSettled", utils.parse_float_string)
+        return performances
+
+
     def round_model_performances(self, username: str) -> List[Dict]:
         """Fetch round model performance of a user.
 
@@ -790,7 +860,8 @@ class Api:
         else:
             raise ValueError("round_model_performances is not available for ",
                              f"tournament {self.tournament_id}")
-
+        self.logger.warning(
+            "Deprecated soon. Checkout round_model_performances_v2.")
         query = f"""
           query($username: String!) {{
             {endpoint}(modelName: $username) {{

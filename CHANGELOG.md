@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## dev
+- added `round_model_performances_v2`, which allows fetching newer metrics
+
 ## [2.15.0] - 2023-07-13 - model uploads!
 - add corr20V2 into round_model_performances (PR #100)
 - add tcMultiplier into round_model_performances
