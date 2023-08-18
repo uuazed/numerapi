@@ -103,6 +103,8 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
             resp = requests.post(url, json=body,
                                  headers=headers, timeout=timeout)
         resp.raise_for_status()
+        return resp.json()
+
     except requests.exceptions.HTTPError as err:
         logger.error(f"Http Error: {err}")
     except requests.exceptions.ConnectionError as err:
@@ -111,17 +113,6 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
         logger.error(f"Timeout Error: {err}")
     except requests.exceptions.RequestException as err:
         logger.error(f"Oops, something went wrong: {err}")
-
-    if resp.status_code == 500:
-        logger.error(
-            "Numerai failed handling this request. Their API might be down!")
-        return {}
-
-    try:
-        return resp.json()
-    except UnboundLocalError:
-        # `resp` isn't available, probably because the try/except above failed
-        pass
     except json.decoder.JSONDecodeError as err:
         logger.error(f"Did not receive a valid JSON: {err}")
 

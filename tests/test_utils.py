@@ -71,5 +71,7 @@ def test_post_with_err_handling(caplog):
     # API down
     responses.add(responses.POST, "https://someurl4", status=500)
     utils.post_with_err_handling("https://someurl4", None, None)
-    assert 'Their API might be down' in caplog.text
+    assert 'Internal Server Error' in caplog.text
+    # we don't want to try parsing the response
+    assert 'Did not receive a valid JSON' not in caplog.text
     caplog.clear()
