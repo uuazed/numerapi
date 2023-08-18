@@ -769,9 +769,68 @@ class Api:
             utils.replace(perf, "atRisk", utils.parse_float_string)
             if perf["submissionScores"]:
                 for submission in perf["submissionScores"]:
-                    utils.replace(submission, "date", utils.parse_datetime_string)
-                    utils.replace(perf, "payoutPending", utils.parse_float_string)
-                    utils.replace(perf, "payoutSettled", utils.parse_float_string)
+                    utils.replace(
+                        submission, "date", utils.parse_datetime_string)
+                    utils.replace(
+                        submission, "payoutPending", utils.parse_float_string)
+                    utils.replace(
+                        submission, "payoutSettled",utils.parse_float_string)
+        return performances
+
+    def intra_round_scores(self, model_id: str):
+        """Fetch intra-round scores for your model.
+
+        While only the final scores are relevant for payouts, it might be
+        interesting to look how your scores evolve throughout a round.
+
+        Args:
+            model_id (str)
+
+        Returns:
+            list of dicts: list of intra-round model performance entries
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * roundNumber (`int`)
+                * intraRoundSubmissionScores (`dict`)
+                    * date (`datetime`)
+                    * day (`int`)
+                    * displayName (`str`): name of the metric
+                    * payoutPending (`float`)
+                    * payoutSettled (`float`)
+                    * percentile (`float`)
+                    * value (`float`): value of the metric
+        """
+
+        query = """
+          query($modelId: String!
+                $tournament: Int!) {
+            v2RoundModelPerformances(modelId: $modelId
+                                     tournament: $tournament) {
+                roundNumber,
+                intraRoundSubmissionScores {
+                    date,
+                    day,
+                    displayName,
+                    payoutPending,
+                    payoutSettled,
+                    percentile,
+                    value
+                }
+            }
+          }
+        """
+        arguments = {'modelId': model_id, 'tournament': self.tournament_id}
+        data = self.raw_query(query, arguments)['data']
+        performances = data['v2RoundModelPerformances']
+        for perf in performances:
+            if perf["intraRoundSubmissionScores"]:
+                for score in perf["intraRoundSubmissionScores"]:
+                    utils.replace(score, "date", utils.parse_datetime_string)
+                    fun = utils.parse_float_string
+                    utils.replace(score, "payoutPending", fun)
+                    utils.replace(score, "payoutSettled", fun)
         return performances
 
 
@@ -1230,8 +1289,7 @@ class Api:
         for field in res.keys():
             if field.endswith("At"):
                 utils.replace(res, field, utils.parse_datetime_string)
-        return res['data']
-
+        return res
 
 
     def model_upload(self, file_path: str,

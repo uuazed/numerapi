@@ -4,6 +4,7 @@ Notable changes to this project.
 ## dev
 - added `round_model_performances_v2`, which allows fetching newer metrics
 - added `pipeline_status` to get the status of numerai's scoring pipeline
+- added `intra_round_scores` to fetch intra-round metrics of your models
 
 ## [2.15.0] - 2023-07-13 - model uploads!
 - add corr20V2 into round_model_performances (PR #100)
