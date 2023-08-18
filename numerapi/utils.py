@@ -120,7 +120,7 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
     try:
         return resp.json()
     except UnboundLocalError:
-        # `r` isn't available, probably because the try/except above failed
+        # `resp` isn't available, probably because the try/except above failed
         pass
     except json.decoder.JSONDecodeError as err:
         logger.error(f"Did not receive a valid JSON: {err}")

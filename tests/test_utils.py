@@ -69,6 +69,7 @@ def test_post_with_err_handling(caplog):
     caplog.clear()
 
     # API down
-    responses.add(responses.POST, "https://someurl4", body=None, status=500)
+    responses.add(responses.POST, "https://someurl4", status=500)
     utils.post_with_err_handling("https://someurl4", None, None)
     assert 'Their API might be down' in caplog.text
+    caplog.clear()
