@@ -67,3 +67,8 @@ def test_post_with_err_handling(caplog):
     utils.post_with_err_handling("https://someurl3", None, None)
     assert 'Timeout Error' in caplog.text
     caplog.clear()
+
+    # API down
+    responses.add(responses.POST, "https://someurl4", body=None, status=500)
+    utils.post_with_err_handling("https://someurl4", None, None)
+    assert 'Their API might be down' in caplog.text

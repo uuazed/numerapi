@@ -112,6 +112,11 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
     except requests.exceptions.RequestException as err:
         logger.error(f"Oops, something went wrong: {err}")
 
+    if resp.status_code == 500:
+        logger.error(
+            "Numerai failed handling this request. Their API might be down!")
+        return
+
     try:
         return resp.json()
     except UnboundLocalError:
