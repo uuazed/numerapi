@@ -58,7 +58,7 @@ def test_post_with_err_handling(caplog):
     # invalid resonse type
     responses.add(responses.POST, "https://someurl2")
     utils.post_with_err_handling("https://someurl2", None, None)
-    assert 'Did not receive a valid JSON' in caplog.text
+    assert 'Http Error' in caplog.text
     caplog.clear()
 
     # timeout
