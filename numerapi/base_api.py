@@ -1191,6 +1191,49 @@ class Api:
         res = self.raw_query(query, arguments, authorization=True)
         return res['data']['model']["name"]
 
+    def pipeline_status(self, date: str = None) -> Dict:
+        """Get status of Numerai's scoring pipeline
+
+        Args:
+            date (str, optional): date in YYYY-MM-DD format. Defaults to today.
+
+        Returns:
+            dict: pipeline status information including the following fields:
+                * dataReadyAt (`str`)
+                * isScoringDay (`bool`)
+                * resolvedAt (`datetime`)
+                * scoredAt (`datetime`)
+                * startedAt (`datetime`)
+                * tournament (`str`)
+
+        Example:
+            >>> napi = NumerAPI()
+            >>> napi.pipeline_status()
+        """
+        if date is None:
+            date = datetime.date.today().isoformat()
+        tournament = "classic" if self.tournament_id == 8 else "signals"
+        query = """
+            query($tournament: String! $date: String) {
+                pipelineStatus(date: $date, tournament: $tournament) {
+                    dataReadyAt
+                    isScoringDay
+                    resolvedAt
+                    scoredAt
+                    startedAt
+                    tournament
+                }
+            }
+        """
+        arguments = {'tournament': tournament, "date": date}
+        res = self.raw_query(query, arguments)["data"]["pipelineStatus"]
+        for field in res.keys():
+            if field.endswith("At"):
+                utils.replace(res, field, utils.parse_datetime_string)
+        return res['data']
+
+
+
     def model_upload(self, file_path: str,
                  tournament: int = None,
                  model_id: str = None) -> str:
