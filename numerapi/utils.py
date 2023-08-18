@@ -115,7 +115,7 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
     if resp.status_code == 500:
         logger.error(
             "Numerai failed handling this request. Their API might be down!")
-        return
+        return {}
 
     try:
         return resp.json()
