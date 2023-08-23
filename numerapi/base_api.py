@@ -1291,7 +1291,6 @@ class Api:
                 utils.replace(res, field, utils.parse_datetime_string)
         return res
 
-
     def model_upload(self, file_path: str,
                  tournament: int = None,
                  model_id: str = None) -> str:
@@ -1344,3 +1343,57 @@ class Api:
                      'modelId': model_id}
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createComputePickleUpload']['id']
+
+    def model_upload_data_versions(self) -> Dict:
+        """ Get available data version for model uploads
+
+        Returns:
+            dict[str, str]: name to ID mapping
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.model_upload_data_versions()
+            {'v4.1': 'a76bafa1-b25a-4f22-9add-65b528a0f3d0'}
+
+        """
+        query = '''
+            query {
+                computePickleDataVersions {
+                    name
+                    id
+                }
+            }
+        '''
+        data = self.raw_query(query, authorization=True)['data']
+        res = {
+            item["name"]: item["id"]
+            for item in data["computePickleDataVersions"]}
+        return res
+
+    def model_upload_docker_images(self) -> Dict:
+        """ Get available docker images for model uploads
+
+        Returns:
+            dict[str, str]: name to ID mapping
+
+        Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> api.model_upload_docker_images()
+            {'Python 3.10': 'c72ae05e-2831-4c50-b20f-c2fe01c206ef',
+             'Python 3.9': '5a32b827-cd9a-40a9-a99d-e58401120a0b',
+               ...
+            }
+        """
+        query = '''
+            query {
+                computePickleDockerImages {
+                    name
+                    id
+                }
+            }
+        '''
+        data = self.raw_query(query, authorization=True)['data']
+        res = {
+            item["name"]: item["id"]
+            for item in data["computePickleDockerImages"]}
+        return res

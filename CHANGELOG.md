@@ -6,6 +6,7 @@ Notable changes to this project.
 - added `pipeline_status` to get the status of numerai's scoring pipeline
 - added `intra_round_scores` to fetch intra-round metrics of your models
 - handle downtimes of Numerai's API more gracefully
+- added `model_upload_docker_images` and `model_upload_data_versions`
 
 ## [2.15.0] - 2023-07-13 - model uploads!
 - add corr20V2 into round_model_performances (PR #100)
