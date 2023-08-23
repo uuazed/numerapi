@@ -1293,13 +1293,19 @@ class Api:
 
     def model_upload(self, file_path: str,
                  tournament: int = None,
-                 model_id: str = None) -> str:
+                 model_id: str = None,
+                 data_version: str = None,
+                 docker_image: str = None) -> str:
         """Upload pickled model to numerai.
 
         Args:
             file_path (str): pickle file, needs to endwith .pkl
             tournament (int): ID of the tournament (optional)
             model_id (str): Target model UUID
+            data_version (str, optional): which data version to use. ID or name.
+                    Check available options with 'model_upload_data_versions'
+            docker_image (str, optional): which docker image to use. ID or name.
+                    Check available options with 'model_upload_docker_images'
 
         Returns:
             str: model_upload_id
@@ -1310,6 +1316,23 @@ class Api:
             >>> api.model_upload("example.pkl", model_id=model_id)
             '93c46857-fed9-4594-981e-82db2b358daf'
         """
+        if data_version is not None:
+            if not utils.is_valid_uuid(data_version):
+                data_versions = self.model_upload_data_versions()
+                if data_version not in data_versions:
+                    msg = "'data_version' needs to be one of"
+                    msg += f"{list(data_versions.keys())}"
+                    raise ValueError(msg)
+                data_version = data_versions[data_version]
+        if docker_image is not None:
+            if not utils.is_valid_uuid(docker_image):
+                docker_images = self.model_upload_docker_images()
+                if docker_image not in docker_images:
+                    msg = "'docker_image' needs to be one of"
+                    msg += f"{list(docker_images.keys())}"
+                    raise ValueError(msg)
+                docker_image = docker_images[docker_image]
+
         auth_query = '''
             query($filename: String! $modelId: String) {
                 computePickleUploadAuth(filename: $filename
@@ -1330,17 +1353,24 @@ class Api:
         create_query = '''
             mutation($filename: String!
                      $tournament: Int!
-                     $modelId: String) {
+                     $modelId: String
+                     $dataVersionId: String
+                     $dockerImageId: String) {
                 createComputePickleUpload(filename: $filename
                                           tournament: $tournament
-                                          modelId: $modelId) {
+                                          modelId: $modelId
+                                          dataVersionId: $dataVersionId
+                                          dockerImageId: $dockerImageId) {
                     id
                 }
             }'''
+
         tournament = self.tournament_id if tournament is None else tournament
         arguments = {'filename': upload_auth['filename'],
                      'tournament': tournament,
-                     'modelId': model_id}
+                     'modelId': model_id,
+                     'dataVersionId': data_version,
+                     'dockerImageId': docker_image}
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createComputePickleUpload']['id']
 

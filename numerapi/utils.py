@@ -5,6 +5,7 @@ import decimal
 import logging
 import time
 import datetime
+import uuid
 import json
 from typing import Optional, Dict
 
@@ -117,3 +118,12 @@ def post_with_err_handling(url: str, body: str, headers: Dict,
         logger.error(f"Did not receive a valid JSON: {err}")
 
     return {}
+
+
+def is_valid_uuid(val: str) -> bool:
+    """ check if the given string is a valid UUID """
+    try:
+        uuid.UUID(str(val))
+        return True
+    except ValueError:
+        return False
