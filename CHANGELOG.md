@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## dev
+## [2.15.1] - 2023-08-25 - model upload improvements
 - model_upload now allows specifying which data_version and which image to use
 - added `round_model_performances_v2`, which allows fetching newer metrics
 - added `pipeline_status` to get the status of numerai's scoring pipeline
