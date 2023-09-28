@@ -1461,11 +1461,11 @@ class Api:
             str: path to downloaded file
 
         Example:
-            # fetch latest submission
+            >>> # fetch latest submission
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model_id = napi.get_models()["uuazed"]
+            >>> model_id = api.get_models()["uuazed"]
             >>> api.download_submission(model_id=model_id)
-            # fetch older submssion
+            >>> # fetch older submssion
             >>> ids = api.submission_ids(model_id)
             >>> import random; submission_id = random.choice(ids)["id"]
             >>> api.download_submission(submission_id=submission_id)
