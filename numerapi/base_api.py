@@ -833,7 +833,6 @@ class Api:
                     utils.replace(score, "payoutSettled", fun)
         return performances
 
-
     def round_model_performances(self, username: str) -> List[Dict]:
         """Fetch round model performance of a user.
 
@@ -1427,3 +1426,83 @@ class Api:
             item["name"]: item["id"]
             for item in data["computePickleDockerImages"]}
         return res
+
+    def submission_ids(self, model_id: str):
+        """ Get all submission ids from a model
+
+        Args:
+            model_id (str)
+
+        Returns:
+            list of dicts: list of submissions
+
+            For each entry in the list, there is a dict with the following
+            content:
+
+                * insertedAt (`datetime`)
+                * filename (`str`)
+                * id (`str`)
+
+         Example:
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = napi.get_models()["uuazed"]
+            >>> api.submission_ids(model_id)
+        """
+        query = """
+            query($modelId: String) {
+                submissions(modelId: $modelId) {
+                    id
+                    filename
+                    insertedAt
+                }
+            }
+        """
+        raw = self.raw_query(query, {"modelId": model_id}, authorization=True)
+        data = raw["data"]["submissions"]
+        utils.replace(data, "insertedAt", utils.parse_datetime_string)
+        return data
+
+    def download_submission(self, submission_id: str = None,
+                            model_id: str = None, dest_path: str = None) -> str:
+        """ Download previous submissions from numerai
+
+        Args:
+            submission_id (str, optional): the submission to be downloaded
+            model_id (str, optional): if provided, the latest submission of that
+                                      model gets downloaded
+            dest_path (str, optional): where to save the downloaded file
+
+        Returns:
+            str: path to downloaded file
+
+        Example:
+            # fetch latest submission
+            >>> api = NumerAPI(secret_key="..", public_id="..")
+            >>> model_id = napi.get_models()["uuazed"]
+            >>> api.download_submission(model_id=model_id)
+            # fetch older submssion
+            >>> ids = submission_ids(model_id)
+            >>> import random; submission_id = random.choice(ids)["id"]
+            >>> api.download_submission(submission_id=submission_id)
+        """
+        msg = "You need to provide one of `model_id` and `submission_id"
+        assert model_id or submission_id, msg
+        auth_query = '''
+            query($id: String) {
+                submissionDownloadAuth(id: $id) {
+                    filename
+                    url
+                }
+            }
+        '''
+        if not submission_id:
+            ids = self.submission_ids(model_id)
+            submission_id = max(ids, key=lambda x: x['insertedAt'])["id"]
+
+        data = self.raw_query(
+            auth_query, {'id': submission_id},
+            authorization=True)['data']["submissionDownloadAuth"]
+        if dest_path is None:
+            dest_path = data["filename"]
+        path = utils.download_file(data["url"], dest_path)
+        return path
