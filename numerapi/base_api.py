@@ -1466,7 +1466,7 @@ class Api:
             >>> model_id = napi.get_models()["uuazed"]
             >>> api.download_submission(model_id=model_id)
             # fetch older submssion
-            >>> ids = submission_ids(model_id)
+            >>> ids = api.submission_ids(model_id)
             >>> import random; submission_id = random.choice(ids)["id"]
             >>> api.download_submission(submission_id=submission_id)
         """
