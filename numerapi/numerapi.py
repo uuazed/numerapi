@@ -71,13 +71,13 @@ class NumerAPI(base_api.Api):
         args = {'round': round_num}
         return self.raw_query(query, args)['data']['listDatasets']
 
-    def download_dataset(self, filename: str = "numerai_live_data.csv",
+    def download_dataset(self, filename: str = None,
                          dest_path: str = None,
                          round_num: int = None) -> None:
         """ Download specified file for the given round.
 
         Args:
-            filename (str): file to be downloaded, defaults to live data
+            filename (str, optional): file to be downloaded
             dest_path (str, optional): complete path where the file should be
                 stored, defaults to the same name as the source file
             round_num (int, optional): tournament round you are interested in.
