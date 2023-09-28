@@ -383,7 +383,6 @@ class Api:
               'tournament': None,
               'txHash': '0xeasdfkjaskljf314451234',
               'type': 'withdrawal'},
-
               ...
               ]
         """
@@ -898,16 +897,6 @@ class Api:
              'mmc': -0.0152125841680981,
              'mmc20d': None,
              'mmc20dPercentile': None,
-             'mmcMultiplier': 2.0,
-             'mmcPercentile': 0.0443562928236567,
-             'payout': Decimal('-5.687406578133045'),
-             'roundNumber': 281,
-             'roundOpenTime': datetime.datetime(2021, 9, 11, 18, 0),
-             'roundPayoutFactor': Decimal('0.578065736524773470'),
-             'roundResolveTime': datetime.datetime(2021, 10, 13, 20, 0),
-             'roundResolved': False,
-             'roundTarget': None,
-             'selectedStakeValue': Decimal('226.73138356930343')},
              ...
             ]
         """
@@ -1030,7 +1019,6 @@ class Api:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1059,7 +1047,6 @@ class Api:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1236,7 +1223,6 @@ class Api:
 
         Returns:
             str: modelname
-
         """
         query = """
             query($modelid: String!) {
@@ -1363,7 +1349,6 @@ class Api:
                     id
                 }
             }'''
-
         tournament = self.tournament_id if tournament is None else tournament
         arguments = {'filename': upload_auth['filename'],
                      'tournament': tournament,
@@ -1493,8 +1478,7 @@ class Api:
                     filename
                     url
                 }
-            }
-        '''
+            }'''
         if not submission_id:
             ids = self.submission_ids(model_id)
             submission_id = max(ids, key=lambda x: x['insertedAt'])["id"]
