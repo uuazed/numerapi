@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] -
+## [2.16.1] - 2023-10.09
 - added 'corr20V2Rep' to 'get_leaderboard'
 - deprecate methods related to v2 and v3 datasets
 
