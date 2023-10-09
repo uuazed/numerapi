@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev] -
 - added 'corr20V2Rep' to 'get_leaderboard'
+- deprecate methods related to v2 and v3 datasets
 
 ## [2.16.0] - 2023-09-28 - submission downloads
 - added `download_submission` to download a CSV of a previous submission

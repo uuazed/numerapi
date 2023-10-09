@@ -1,6 +1,5 @@
 """API for Numerai Classic"""
 
-import zipfile
 import os
 import decimal
 from typing import List, Dict, Tuple, Union
@@ -32,20 +31,6 @@ class NumerAPI(base_api.Api):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 8
 
-    def _unzip_file(self, src_path, dest_path, filename):
-        """unzips file located at src_path into destination_path"""
-        self.logger.info("unzipping file...")
-
-        # construct full path (including file name) for unzipping
-        unzip_path = os.path.join(dest_path, filename)
-        os.makedirs(unzip_path, exist_ok=True)
-
-        # extract data
-        with zipfile.ZipFile(src_path, "r") as file:
-            file.extractall(unzip_path)
-
-        return True
-
     def list_datasets(self, round_num: int = None) -> List[str]:
         """List of available data files
 
@@ -57,7 +42,6 @@ class NumerAPI(base_api.Api):
         Example:
             >>> NumerAPI().list_datasets()
             [
-              "numerai_datasets.zip",
               "numerai_training_data.csv",
               "numerai_training_data.parquet",
               "numerai_validation_data.csv",
@@ -113,153 +97,6 @@ class NumerAPI(base_api.Api):
         dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
         return dest_path
-
-    def get_dataset_url(self, tournament: int = 8) -> str:
-        """Fetch url of the current dataset.
-
-        to be DEPRECATED sometime after the new data release on 2021-09-09
-
-        Args:
-            tournament (int, optional): ID of the tournament, defaults to 8
-              -- DEPRECATED there is only one tournament nowadays
-
-        Returns:
-            str: url of the current dataset
-
-        Example:
-            >>> NumerAPI().get_dataset_url()
-            https://numerai-datasets.s3.amazonaws.com/t1/104/n.........
-        """
-        query = """
-            query($tournament: Int!) {
-                dataset(tournament: $tournament)
-            }"""
-        arguments = {'tournament': tournament}
-        url = self.raw_query(query, arguments)['data']['dataset']
-        return url
-
-    def download_current_dataset(self, dest_path=".", dest_filename=None,
-                                 unzip=True, tournament=8) -> str:
-        """Download dataset for the current active round.
-
-        to be DEPRECATED sometime after the new data release on 2021-09-09
-
-        Args:
-            dest_path (str, optional): destination folder, defaults to `.`
-            dest_filename (str, optional): desired filename of dataset file,
-                defaults to `numerai_dataset_<round number>.zip`
-            unzip (bool, optional): indication of whether the training data
-                should be unzipped, defaults to `True`
-            tournament (int, optional): ID of the tournament, defaults to 8
-                -- DEPRECATED there is only one tournament nowadays
-
-        Returns:
-            str: Path to the downloaded dataset
-
-        Example:
-            >>> NumerAPI().download_current_dataset()
-            ./numerai_dataset_104.zip
-        """
-        # set up download path
-        if dest_filename is None:
-            try:
-                round_number = self.get_current_round(tournament)
-            except ValueError:
-                round_number = "x"
-            dest_filename = f"numerai_dataset_{round_number}.zip"
-        else:
-            # ensure it ends with ".zip"
-            if unzip and not dest_filename.endswith(".zip"):
-                dest_filename += ".zip"
-        dataset_path = os.path.join(dest_path, dest_filename)
-
-        # create parent folder if necessary
-        os.makedirs(dest_path, exist_ok=True)
-
-        url = self.get_dataset_url(tournament)
-        utils.download_file(url, dataset_path, self.show_progress_bars)
-
-        # unzip dataset
-        if unzip:
-            # remove the ".zip" in the end
-            dataset_name = dest_filename[:-4]
-            self._unzip_file(dataset_path, dest_path, dataset_name)
-
-        return dataset_path
-
-    def get_latest_data_url(self, data_type: str,
-                            extension: str = "csv") -> str:
-        """Fetch url of the latest data url for a specified data type
-
-        to be DEPRECATED sometime after the new data release on 2021-09-09
-
-        Args:
-            data_type (str): type of data to return
-            extension (str): file extension to get (optional, defaults to csv)
-
-        Returns:
-            str: url of the requested dataset
-
-        Example:
-            >>> url = NumerAPI().get_latest_data_url("live", "csv")
-            >>> numerapi.utils.download_file(url, ".")
-        """
-        valid_extensions = ["csv", "csv.xz", "parquet"]
-        valid_data_types = [
-            "live",
-            "training",
-            "validation",
-            "test",
-            "max_test_era",
-            "tournament",
-            "tournament_ids",
-            "example_predictions",
-        ]
-
-        # Allow extension to have a "." as the first character
-        extension = extension.lstrip(".")
-
-        # Validate arguments
-        if extension not in valid_extensions:
-            msg = f"extension must be set to one of {valid_extensions}"
-            raise ValueError(msg)
-
-        if data_type not in valid_data_types:
-            raise ValueError(
-                f"data_type must be set to one of {valid_data_types}")
-
-        url = (f"{self.PUBLIC_DATASETS_URL}/"
-               f"latest_numerai_{data_type}_data.{extension}")
-
-        return url
-
-    def download_latest_data(self, data_type: str, extension: str = "csv",
-                             dest_path: str = ".", dest_filename: str = None):
-        """ Download specified dataset for the current active round.
-
-        to be DEPRECATED with the new data release on 2021-09-09
-
-        Args:
-            data_type (str): type of data to return
-            extension (str): file extension to get (optional, defaults to csv)
-            dest_path (str): folder where the file should be stored
-            dest_filename (str): target filename
-
-        Example:
-            >>> url = NumerAPI().download_latest_data("live", "csv")
-        """
-
-        # set up download path
-        if dest_filename is None:
-            dest_filename = f"latest_numerai_{data_type}_data.{extension}"
-
-        dataset_path = os.path.join(dest_path, dest_filename)
-
-        # create parent folder if necessary
-        os.makedirs(dest_path, exist_ok=True)
-
-        url = self.get_latest_data_url(data_type, extension)
-        utils.download_file(url, dataset_path, self.show_progress_bars)
 
     def get_competitions(self, tournament=8):
         """Retrieves information about all competitions

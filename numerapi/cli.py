@@ -46,17 +46,6 @@ def list_datasets(round_num):
 
 
 @cli.command()
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
-@click.option('--unzip', is_flag=True, default=True,
-              help='indication of whether the data should be unzipped')
-def download_dataset_old(tournament, unzip):
-    """Download dataset for the current active round."""
-    click.echo(napi.download_current_dataset(
-        tournament=tournament, unzip=unzip))
-
-
-@cli.command()
 @click.option(
     '--round_num',
     help='round you are interested in.defaults to the current round')
@@ -71,14 +60,6 @@ def download_dataset(round_num, filename="numerai_live_data.parquet",
     click.echo("WARNING to download the old data use `download-dataset-old`")
     click.echo(napi.download_dataset(
         round_num=round_num, filename=filename, dest_path=dest_path))
-
-
-@cli.command()
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
-def dataset_url(tournament):
-    """Fetch url of the current dataset."""
-    click.echo(prettify(napi.get_dataset_url(tournament=tournament)))
 
 
 @cli.command()

@@ -38,7 +38,7 @@ and `NUMERAI_SECRET_KEY`).
     import numerapi
     # some API calls do not require logging in
     napi = numerapi.NumerAPI(verbosity="info")
-    # download current dataset => also check `https://numer.ai/data/v4`
+    # download current dataset => also check `https://numer.ai/data`
     napi.download_dataset("v4/train.parquet", "train.parquet")
     # get current leaderboard
     leaderboard = napi.get_leaderboard()
