@@ -600,6 +600,7 @@ class NumerAPI(base_api.Api):
                 rank
                 username
                 corr20Rep
+                corr20V2Rep
                 corj60Rep
                 fncRep
                 fncV3Rep

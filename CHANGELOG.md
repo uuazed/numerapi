@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] -
+- added 'corr20V2Rep' to 'get_leaderboard'
+
 ## [2.16.0] - 2023-09-28 - submission downloads
 - added `download_submission` to download a CSV of a previous submission
 - added `submission_ids` to fetch all submission_ids of a model
