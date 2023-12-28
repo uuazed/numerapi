@@ -413,7 +413,6 @@ class NumerAPI(base_api.Api):
                 * fncRep (`float`)
                 * fncV3Rep (`float`)
                 * tcRep (`float`)
-                * payout_selection_tc_multiplier (`float`)
                 * team (`bool`)
                 * return_1_day (`float`)
                 * return_52_day (`float`)
@@ -442,7 +441,6 @@ class NumerAPI(base_api.Api):
                 fncRep
                 fncV3Rep
                 tcRep
-                payout_selection_tc_multiplier
                 team
                 return_1_day
                 return_52_weeks
