@@ -413,6 +413,8 @@ class NumerAPI(base_api.Api):
                 * fncRep (`float`)
                 * fncV3Rep (`float`)
                 * tcRep (`float`)
+                * mmcRep (`float`)
+                * bmcRep (`float`)
                 * team (`bool`)
                 * return_1_day (`float`)
                 * return_52_day (`float`)
@@ -441,6 +443,8 @@ class NumerAPI(base_api.Api):
                 fncRep
                 fncV3Rep
                 tcRep
+                mmcRep
+                bmcRep
                 team
                 return_1_day
                 return_52_weeks

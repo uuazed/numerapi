@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.16.3] - 2024-01-01
+- add `bmcRep` and `mmcRep` to `get_leaderboard`
+
 ## [2.16.2] - 2023-12-28
 - fix `get_leaderboard`
 
