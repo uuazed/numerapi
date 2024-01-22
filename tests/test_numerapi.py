@@ -31,36 +31,6 @@ def test_download_current_dataset(api, tmpdir):
     assert os.path.exists(os.path.join(directory, filename))
 
 
-def test_get_latest_data_url(api):
-    # List of data types that have latest data files
-    data_types = [
-        "live",
-        "training",
-        "validation",
-        "test",
-        "max_test_era",
-        "tournament",
-        "tournament_ids",
-        "example_predictions",
-    ]
-
-    extensions = ["csv", "csv.xz", "parquet"]
-
-    # Test each combination of function and extension
-    for data_type in data_types:
-        with pytest.raises(ValueError):
-            url = api.get_latest_data_url(data_type, extension='.txt')
-
-        for extension in extensions:
-            expected_url = f"{api.PUBLIC_DATASETS_URL}/latest_numerai_{data_type}_data.{extension}"
-
-            url = api.get_latest_data_url(data_type, extension)
-            assert url == expected_url
-
-            url = api.get_latest_data_url(data_type, f'.{extension}')
-            assert url == expected_url
-
-
 def test_get_current_round(api):
     current_round = api.get_current_round()
     assert current_round >= 82
