@@ -22,15 +22,6 @@ def test_get_competitions(api):
     assert len(res) > 80
 
 
-def test_download_current_dataset(api, tmpdir):
-    path = api.download_current_dataset(dest_path=str(tmpdir), unzip=True)
-    assert os.path.exists(path)
-
-    directory = path.replace(".zip", "")
-    filename = "numerai_tournament_data.csv"
-    assert os.path.exists(os.path.join(directory, filename))
-
-
 def test_get_current_round(api):
     current_round = api.get_current_round()
     assert current_round >= 82

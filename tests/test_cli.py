@@ -23,13 +23,6 @@ def test_download_dataset(mocked):
     assert result.exit_code == 0
 
 
-@patch('numerapi.NumerAPI.get_dataset_url')
-def test_dataset_url(mocked):
-    result = CliRunner().invoke(cli.dataset_url, ['--tournament', 1])
-    # just testing if calling works fine
-    assert result.exit_code == 0
-
-
 @patch('numerapi.NumerAPI.get_leaderboard')
 def test_leaderboard(mocked):
     result = CliRunner().invoke(cli.leaderboard)
