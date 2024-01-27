@@ -16,7 +16,8 @@ SIGNALS_DOM = "https://numerai-signals-public-data.s3-us-west-2.amazonaws.com"
 
 
 class SignalsAPI(base_api.Api):
-    """"API for Numerai Signals"""
+    """ "API for Numerai Signals"""
+
     TICKER_UNIVERSE_URL = f"{SIGNALS_DOM}/latest_universe.csv"
     HISTORICAL_DATA_URL = f"{SIGNALS_DOM}/signals_train_val_bbg.csv"
 
@@ -59,7 +60,7 @@ class SignalsAPI(base_api.Api):
               ..
              }]
         """
-        query = '''
+        query = """
             query($limit: Int!
                   $offset: Int!) {
               signalsLeaderboard(limit: $limit
@@ -78,16 +79,18 @@ class SignalsAPI(base_api.Api):
                 tcRank
               }
             }
-        '''
+        """
 
-        arguments = {'limit': limit, 'offset': offset}
-        data = self.raw_query(query, arguments)['data']['signalsLeaderboard']
+        arguments = {"limit": limit, "offset": offset}
+        data = self.raw_query(query, arguments)["data"]["signalsLeaderboard"]
         return data
 
-    def upload_predictions(self, file_path: str = "predictions.csv",
-                           model_id: str = None,
-                           df: pd.DataFrame = None,
-                           timeout: Union[None, float, Tuple[float, float]] = (10, 60),
+    def upload_predictions(
+        self,
+        file_path: str = "predictions.csv",
+        model_id: str = None,
+        df: pd.DataFrame = None,
+        timeout: Union[None, float, Tuple[float, float]] = (10, 60),
     ) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
@@ -123,7 +126,7 @@ class SignalsAPI(base_api.Api):
             buffer_csv = BytesIO(df.to_csv(index=False).encode())
             buffer_csv.name = file_path
 
-        auth_query = '''
+        auth_query = """
             query($filename: String!
                   $modelId: String) {
               submissionUploadSignalsAuth(filename: $filename
@@ -132,21 +135,20 @@ class SignalsAPI(base_api.Api):
                     url
                 }
             }
-            '''
+            """
 
-        arguments = {'filename': os.path.basename(file_path),
-                     'modelId': model_id}
-        submission_resp = self.raw_query(auth_query, arguments,
-                                         authorization=True)
-        auth = submission_resp['data']['submissionUploadSignalsAuth']
+        arguments = {"filename": os.path.basename(file_path), "modelId": model_id}
+        submission_resp = self.raw_query(auth_query, arguments, authorization=True)
+        auth = submission_resp["data"]["submissionUploadSignalsAuth"]
 
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
 
-        with open(file_path, 'rb') if df is None else buffer_csv as file:
-            requests.put(auth['url'], data=file.read(),
-                         headers=headers, timeout=timeout)
-        create_query = '''
+        with open(file_path, "rb") if df is None else buffer_csv as file:
+            requests.put(
+                auth["url"], data=file.read(), headers=headers, timeout=timeout
+            )
+        create_query = """
             mutation($filename: String!
                      $modelId: String
                      $triggerId: String) {
@@ -158,12 +160,14 @@ class SignalsAPI(base_api.Api):
                     firstEffectiveDate
                 }
             }
-            '''
-        arguments = {'filename': auth['filename'],
-                     'modelId': model_id,
-                     'triggerId': os.getenv('TRIGGER_ID', None)}
+            """
+        arguments = {
+            "filename": auth["filename"],
+            "modelId": model_id,
+            "triggerId": os.getenv("TRIGGER_ID", None),
+        }
         create = self.raw_query(create_query, arguments, authorization=True)
-        return create['data']['createSignalsSubmission']['id']
+        return create["data"]["createSignalsSubmission"]["id"]
 
     def submission_status(self, model_id: str = None) -> None:
         """submission status of the last submission associated with the account
@@ -180,7 +184,9 @@ class SignalsAPI(base_api.Api):
             >>> api.submission_status(model_id)
         """
         _ = model_id
-        self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
+        self.logger.warning(
+            "Method submission_status is DEPRECATED and will be removed soon."
+        )
 
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public Numerai Signals profile of a user.
@@ -218,8 +224,8 @@ class SignalsAPI(base_api.Api):
             }
           }
         """
-        arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['v2SignalsProfile']
+        arguments = {"username": username}
+        data = self.raw_query(query, arguments)["data"]["v2SignalsProfile"]
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         utils.replace(data, "nmrStaked", utils.parse_float_string)
@@ -294,9 +300,9 @@ class SignalsAPI(base_api.Api):
             }
           }
         """
-        arguments = {'username': username}
-        data = self.raw_query(query, arguments)['data']['v2SignalsProfile']
-        performances = data['dailyModelPerformances']
+        arguments = {"username": username}
+        data = self.raw_query(query, arguments)["data"]["v2SignalsProfile"]
+        performances = data["dailyModelPerformances"]
         # convert strings to python objects
         for perf in performances:
             utils.replace(perf, "date", utils.parse_datetime_string)
@@ -312,10 +318,9 @@ class SignalsAPI(base_api.Api):
             >>> SignalsAPI().ticker_universe()
             ["MSFT", "AMZN", "APPL", ...]
         """
-        result = requests.get(
-            self.TICKER_UNIVERSE_URL, stream=True, timeout=120)
-        iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
-        tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
+        result = requests.get(self.TICKER_UNIVERSE_URL, stream=True, timeout=120)
+        iterator = codecs.iterdecode(result.iter_lines(), "utf-8")
+        tickers = [t.strip() for t in iterator if t != "bloomberg_ticker"]
         return tickers
 
     def download_validation_data(self, dest_filename: str = None) -> str:
@@ -334,8 +339,7 @@ class SignalsAPI(base_api.Api):
 
         path = os.path.join(self.global_data_dir, dest_filename)
 
-        utils.download_file(
-            self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
+        utils.download_file(self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
         return path
 
     def stake_get(self, username) -> decimal.Decimal:
@@ -352,4 +356,97 @@ class SignalsAPI(base_api.Api):
             Decimal('14.63')
         """
         data = self.public_user_profile(username)
-        return data['totalStake']
+        return data["totalStake"]
+
+    def model_latest_submissions(self, model_id: str, n_rounds: int = 5) -> list[dict]:
+        """Gets the latest submissions of a model. For each submittion, returns:
+        filename, roundClose, roundCloseStaking, roundNumber, roundOpen, status, timestamp
+
+        Args:
+            model_id (str): model if to fetch submissions for.
+            n_rounds (int, optional): latest N rounds to fetch. Defaults to 5.
+
+        Returns:
+            list[dict]: list of the submissions' details
+
+        Note:
+            Due to a bug in Numerai's API, n_rounds will always return +1 round. Meaning `n_rounds=1` will return 2 rounds.
+            To return only latest round, use `n_rounds=0`. I chose to keep this behaviour and not decrease the argument by 1
+            in order to match Numerai's API and not needing to change the code after Numerai fixes the bug.
+
+        Query:
+            query {
+                model(modelId:"this_is_the_model_id") {
+                    latestSubmissions(latestNRounds: 2) {
+                        filename
+                        roundClose
+                        roundCloseStaking
+                        roundNumber
+                        roundOpen
+                        status
+                        timestamp
+                    }
+                }
+            }
+        """
+
+        query = f"""
+            query($modelId: String!) {{
+                model(modelId: $modelId) {{
+                    latestSubmissions(latestNRounds: {n_rounds}) {{
+                        filename
+                        roundClose
+                        roundCloseStaking
+                        roundNumber
+                        roundOpen
+                        status
+                        timestamp
+                    }}
+                }}
+          }}
+        """
+
+        arguments = {"modelId": model_id}
+        data = self.raw_query(query, arguments, authorization=True)["data"]["model"][
+            "latestSubmissions"
+        ]
+
+        return data
+
+    def get_submissions(
+        self, model_id: str, fields: str = None
+    ) -> list[dict[str, str]]:
+        """Get submissions of a model.
+
+        Args:
+            fields (str): use to select only a subset of fields in query format. If not provided, returns id, round number and insertedAt.
+
+        Returns:
+            list[dict[str,str]]: list of submissions of a model.
+        """
+
+        fields = (
+            """
+        id
+        insertedAt
+        round{
+            number
+        }"""
+            if fields is None
+            else fields
+        )
+
+        query = f"""
+            query($modelid: String!) {{
+                    submissions(modelId: $modelid) {{
+                        {fields}
+                }}
+            }}
+        """
+
+        arguments = {"modelid": model_id}
+        data = self.raw_query(query, arguments, authorization=True)["data"][
+            "submissions"
+        ]
+
+        return data
