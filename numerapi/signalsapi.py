@@ -336,6 +336,8 @@ class SignalsAPI(base_api.Api):
 
         utils.download_file(
             self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
+        self.logger.warning("'download_validation_data' is DEPRECATED and will be removed soon.")
+        self.logger.warning("Please start using 'download_dataset' and 'list_datasets'")
         return path
 
     def stake_get(self, username) -> decimal.Decimal:
