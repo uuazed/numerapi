@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev] -
+## [2.17.0] - 2024-02-18
 - signals: add 'list_datasets' and 'download_dataset'
 
 ## [2.16.3] - 2024-01-01
