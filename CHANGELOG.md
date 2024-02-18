@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev] -
+- signals: add 'list_datasets' and 'download_dataset'
+
 ## [2.16.3] - 2024-01-01
 - add `bmcRep` and `mmcRep` to `get_leaderboard`
 
