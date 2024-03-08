@@ -1196,49 +1196,6 @@ class Api:
         """
         return self.stake_change(nmr, 'increase', model_id)
 
-    def set_stake_type(self, model_id: str = None,
-                       corr_multiplier: int = 0,
-                       tc_multiplier: float = 0,
-                       take_profit: bool = False) -> Dict:
-        """Change stake type by model.
-
-        Args:
-            model_id (str): Target model UUID (required for accounts with
-                multiple models)
-            corrMultiplier (int): multiplier of correlation for returns
-            tcMultiplier (float): multiplier of TC for returns
-            takeProfit (bool): determines whether payouts are returned to usr
-                wallet or automatically staked to next round.
-
-        Returns:
-           dict with confirmation that payout selection has been updated
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model = api.get_models()['uuazed']
-            >>> api.set_stake_type(model, 1, 3)
-            {'data': {'v2ChangePayoutSelection': 'payout selection updated'}}
-        """
-        query = """mutation ($corrMultiplier: Float!
-                             $modelId: String!
-                             $takeProfit: Boolean!
-                             $tcMultiplier: Float!
-                             $tournamentNumber: Int!) {
-                        v2ChangePayoutSelection(corrMultiplier: $corrMultiplier
-                                                modelId: $modelId
-                                                takeProfit: $takeProfit
-                                                tcMultiplier: $tcMultiplier
-                                                tournamentNumber: $tournamentNumber)}
-        """
-        args = {'modelId':  model_id,
-                'corrMultiplier': corr_multiplier,
-                'tcMultiplier': tc_multiplier,
-                'takeProfit': take_profit,
-                'tournamentNumber': self.tournament_id}
-        result = self.raw_query(query, args, authorization=True)
-
-        return result
-
     def check_round_open(self) -> bool:
         """Check if a round is currently open.
 

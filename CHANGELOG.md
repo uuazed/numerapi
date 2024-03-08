@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- remove `set_stake_type` - no longer relevant
 - added 'models_of_account' to fetch all models of an account
 - 'SignalsAPI.ticker_universe': stop using hardcoded URL
 - deprecate 'SignalsAPI.download_validation_data'
