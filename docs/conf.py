@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Requests documentation build configuration file, created by
+# Numerapi documentation build configuration file, created by
 # sphinx-quickstart on Fri Feb 19 00:05:47 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -100,7 +100,7 @@ add_module_names = True
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "flask_theme_support.FlaskyStyle"
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -244,7 +244,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "Requests.tex", u"Requests Documentation", u"Kenneth Reitz", "manual")
+    (master_doc, "NumerAPI.tex", u"NumerAPI Documentation", u"uuazed", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
