@@ -7,6 +7,7 @@ Notable changes to this project.
 - 'SignalsAPI.ticker_universe': stop using hardcoded URL
 - remove `set_stake_type` - no longer relevant
 - deprecate 'SignalsAPI.download_validation_data'
+- code style fixes
 
 ## [2.17.0] - 2024-02-18
 - signals: add 'list_datasets' and 'download_dataset'

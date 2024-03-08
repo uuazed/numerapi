@@ -2,7 +2,6 @@
 
 from typing import List, Dict, Tuple, Union
 import os
-import codecs
 import decimal
 from io import BytesIO
 
@@ -311,7 +310,7 @@ class SignalsAPI(base_api.Api):
         path = self.download_dataset("signals/universe_public.csv")
         return pd.read_csv(path).ticker.tolist()
 
-    def download_validation_data(self, dest_filename: str = None) -> None:
+    def download_validation_data(self, *args, **kwargs) -> None:
         """download CSV file with historical targets and ticker universe
         """
         self.logger.warning("'download_validation_data' is DEPRECATED.")
