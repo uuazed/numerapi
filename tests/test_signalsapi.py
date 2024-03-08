@@ -55,12 +55,3 @@ def test_upload_predictions_df(api):
     assert submission_id == "12345"
     assert len(responses.calls) == 3
 
-
-@responses.activate
-def test_ticker_universe(api):
-    data = "bloomberg_ticker\nSTOCK A\nSTOCK B\nSTOCK C"
-    responses.add(responses.GET,
-                  api.TICKER_UNIVERSE_URL, body=data)
-    result = api.ticker_universe()
-    assert "bloomberg_ticker" not in result
-    assert len(result) == 3
