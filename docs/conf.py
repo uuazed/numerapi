@@ -57,7 +57,7 @@ master_doc = "index"
 
 # General information about the project.
 project = 'numerapi'
-copyright = str(datetime.now().year) + ', uuazed'
+copyright = str(datetime.datetime.now().year) + ', uuazed'
 author = 'uuazed'
 
 # The version info for the project you're documenting, acts as replacement for
