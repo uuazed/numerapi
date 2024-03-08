@@ -18,7 +18,6 @@ SIGNALS_DOM = "https://numerai-signals-public-data.s3-us-west-2.amazonaws.com"
 class SignalsAPI(base_api.Api):
     """"API for Numerai Signals"""
     TICKER_UNIVERSE_URL = f"{SIGNALS_DOM}/latest_universe.csv"
-    HISTORICAL_DATA_URL = f"{SIGNALS_DOM}/signals_train_val_bbg.csv"
 
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
@@ -318,27 +317,11 @@ class SignalsAPI(base_api.Api):
         tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
         return tickers
 
-    def download_validation_data(self, dest_filename: str = None) -> str:
+    def download_validation_data(self, dest_filename: str = None) -> None:
         """download CSV file with historical targets and ticker universe
-
-        Returns:
-            str: filename
-
-        Example:
-            >>> SignalsAPI().download_validation_data()
-            signals_train_val_bbg.csv
         """
-        # set up download path
-        if dest_filename is None:
-            dest_filename = "numerai_signals_historical.csv"
-
-        path = os.path.join(self.global_data_dir, dest_filename)
-
-        utils.download_file(
-            self.HISTORICAL_DATA_URL, path, self.show_progress_bars)
-        self.logger.warning("'download_validation_data' is DEPRECATED and will be removed soon.")
-        self.logger.warning("Please start using 'download_dataset' and 'list_datasets'")
-        return path
+        self.logger.warning("'download_validation_data' is DEPRECATED.")
+        self.logger.warning("Please use 'download_dataset' and 'list_datasets'")
 
     def stake_get(self, username) -> decimal.Decimal:
         """get current stake for a given users

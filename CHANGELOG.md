@@ -2,7 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
-- add deprecation warning
+- deprecate SignalsAPI.download_validation_data
 
 ## [2.17.0] - 2024-02-18
 - signals: add 'list_datasets' and 'download_dataset'
