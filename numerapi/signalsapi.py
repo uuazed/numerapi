@@ -12,12 +12,9 @@ import pandas as pd
 from numerapi import base_api
 from numerapi import utils
 
-SIGNALS_DOM = "https://numerai-signals-public-data.s3-us-west-2.amazonaws.com"
-
 
 class SignalsAPI(base_api.Api):
     """"API for Numerai Signals"""
-    TICKER_UNIVERSE_URL = f"{SIGNALS_DOM}/latest_universe.csv"
 
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
@@ -311,11 +308,8 @@ class SignalsAPI(base_api.Api):
             >>> SignalsAPI().ticker_universe()
             ["MSFT", "AMZN", "APPL", ...]
         """
-        result = requests.get(
-            self.TICKER_UNIVERSE_URL, stream=True, timeout=120)
-        iterator = codecs.iterdecode(result.iter_lines(), 'utf-8')
-        tickers = [t.strip() for t in iterator if t != 'bloomberg_ticker']
-        return tickers
+        path = self.download_dataset("signals/universe_public.csv")
+        return pd.read_csv(path).ticker.tolist()
 
     def download_validation_data(self, dest_filename: str = None) -> None:
         """download CSV file with historical targets and ticker universe
