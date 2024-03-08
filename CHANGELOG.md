@@ -2,7 +2,9 @@
 Notable changes to this project.
 
 ## [dev]
-- deprecate SignalsAPI.download_validation_data
+- added 'models_of_account' to fetch all models of an account
+- 'SignalsAPI.ticker_universe': stop using hardcoded URL
+- deprecate 'SignalsAPI.download_validation_data'
 
 ## [2.17.0] - 2024-02-18
 - signals: add 'list_datasets' and 'download_dataset'

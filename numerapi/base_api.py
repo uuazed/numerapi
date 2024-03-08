@@ -294,6 +294,37 @@ class Api:
         utils.replace(data, "availableNmr", utils.parse_float_string)
         return data
 
+    def models_of_account(self, account) -> Dict[str, str]:
+        """Get all models (name and id) of an account
+
+        Args:
+            account (str): account name
+
+        Returns:
+            dict: modelname->model_id mapping, string->string
+
+        Example:
+            >>> api = NumerAPI()
+            >>> NumerAPI().models_of_account("uuazed")
+            {'uuazed': '9b157d9b-ce61-4ab5-9413-413f13a0c0a6', ...}
+        """
+        query = """
+            query($username: Str!
+                  $tournament: Int) {
+                accountProfile(username: $username
+                               tournament: $tournament){
+                    models {
+                    id
+                    displayName
+                    }
+                }
+            }
+        """
+        args = {"username": account, "tournament": self.tournament_id}
+        data = self.raw_query(query, args)['data']['accountProfile']['models']
+        return {item["displayName"]: item["id"]
+                for item in sorted(data, key=lambda x: x["displayName"])}
+
     def get_models(self, tournament: int = None) -> Dict:
         """Get mapping of account model names to model ids for convenience
 
