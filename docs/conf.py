@@ -169,15 +169,10 @@ html_use_smartypants = False
 
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
-    "index": ["sidebarintro.html", "sourcelink.html", "searchbox.html", "hacks.html"],
-    "**": [
-        "sidebarlogo.html",
-        "localtoc.html",
-        "relations.html",
-        "sourcelink.html",
-        "searchbox.html",
-        "hacks.html",
-    ],
+    '**': [
+        'relations.html',  # needs 'show_related': True theme option to display
+        'searchbox.html',
+    ]
 }
 
 # Additional templates that should be rendered to pages, maps page names to
