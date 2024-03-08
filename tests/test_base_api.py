@@ -36,7 +36,7 @@ def test__login(api):
 
 
 def test_raw_query(api):
-    query = "query {dataset(tournament:8)}"
+    query = "query {latestNmrPrice {priceUsd}}"
     result = api.raw_query(query)
     assert isinstance(result, dict)
     assert "data" in result
