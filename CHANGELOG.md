@@ -1,13 +1,14 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.18.0] - 2024-03-08
 - added `get_account_leaderboard` to fetch account-level leaderboard
 - added 'models_of_account' to fetch all models of an account
 - 'SignalsAPI.ticker_universe': stop using hardcoded URL
 - remove `set_stake_type` - no longer relevant
 - deprecate 'SignalsAPI.download_validation_data'
 - code style fixes
+- fix docs
 
 ## [2.17.0] - 2024-02-18
 - signals: add 'list_datasets' and 'download_dataset'
