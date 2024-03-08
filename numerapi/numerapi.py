@@ -24,9 +24,6 @@ class NumerAPI(base_api.Api):
     information and much more.
     """
 
-    PUBLIC_DATASETS_URL = \
-        "https://numerai-public-datasets.s3-us-west-2.amazonaws.com"
-
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 8
