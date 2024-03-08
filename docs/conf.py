@@ -22,6 +22,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import os
+import datetime
 
 # -- Hack for ReadTheDocs -----------------------------------------------------
 # This hack is necessary since RTD does not issue `sphinx-apidoc` before
@@ -31,7 +32,7 @@ import os
 # setup.py install" in the RTD Advanced Settings.
 
 import inspect
-from sphinx import apidoc
+from sphinx.ext import apidoc
 
 __location__ = os.path.join(os.getcwd(), os.path.dirname(
     inspect.getfile(inspect.currentframe())))
@@ -74,7 +75,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'numerapi'
-copyright = '2022, uuazed'
+copyright = str(datetime.now().year) + ', uuazed'
 author = 'uuazed'
 
 # The version info for the project you're documenting, acts as replacement for
