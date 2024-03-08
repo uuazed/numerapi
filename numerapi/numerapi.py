@@ -327,7 +327,7 @@ class NumerAPI(base_api.Api):
         return submission_id
 
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
-        """Get the current leaderboard
+        """Get the current model leaderboard
 
         Args:
             limit (int): number of items to return (optional, defaults to 50)

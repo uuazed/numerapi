@@ -2,9 +2,10 @@
 Notable changes to this project.
 
 ## [dev]
-- remove `set_stake_type` - no longer relevant
+- added `get_account_leaderboard` to fetch account-level leaderboard
 - added 'models_of_account' to fetch all models of an account
 - 'SignalsAPI.ticker_universe': stop using hardcoded URL
+- remove `set_stake_type` - no longer relevant
 - deprecate 'SignalsAPI.download_validation_data'
 
 ## [2.17.0] - 2024-02-18

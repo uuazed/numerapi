@@ -1272,6 +1272,83 @@ class Api:
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
 
+    def get_account_leaderboard(
+            self, limit: int = 50, offset: int = 0) -> List[Dict]:
+        """Get the current account leaderboard
+
+        Args:
+            limit (int): number of items to return (optional, defaults to 50)
+            offset (int): number of items to skip (optional, defaults to 0)
+
+        Returns:
+            list of dicts: list of leaderboard entries
+
+            Each dict contains the following items:
+
+                * username (`str`)
+                * displayName (`str`)
+                * rank (`int`)
+                * nmrStaked (`decimal.Decimal`)
+                * v2Corr20 (`float`)
+                * cort20 (`float`)
+                * corrV4 (`float`)
+                * fncV4 (`float`)
+                * icV2 (`float`)
+                * mmc (`float`)
+                * ric (`float`)
+                * return1y (`float`)
+                * return3m (`float`)
+                * returnAllTime (`float`)
+                * return1yNmr (`decimal.Decimal`)
+                * return3mNmr (`decimal.Decimal`)
+                * returnAllTimeNmr (`decimal.Decimal`)
+
+        Example:
+            >>> numerapi.NumerAPI().get_account_leaderboard()
+            [{'username': 'leonidas',
+              'rank': 1,
+              'nmrStaked': Decimal('3034.00'),
+              ...
+              }]
+        """
+        query = '''
+            query($limit: Int!
+                  $offset: Int!
+                  $tournament: Int) {
+              accountLeaderboard(limit: $limit
+                                 offset: $offset
+                                 tournament: $tournament) {
+                displayName
+                nmrStaked
+                rank
+                username
+                v2Corr20
+                cort20
+                corJ60
+                corrV4
+                fncV4
+                icV2
+                mmc
+                ric
+                return1y
+                return3m
+                returnAllTime
+                return1yNmr
+                return3mNmr
+                returnAllTimeNmr
+              }
+            }
+        '''
+        args = {'limit': limit, 'offset': offset,
+                "tournament": self.tournament_id}
+        data = self.raw_query(query, args)['data']['accountLeaderboard']
+        for item in data:
+            utils.replace(item, "nmrStaked", utils.parse_float_string)
+            utils.replace(item, "return1yNmr", utils.parse_float_string)
+            utils.replace(item, "return3mNmr", utils.parse_float_string)
+            utils.replace(item, "returnAllTimeNmr", utils.parse_float_string)
+        return data
+
     def modelid_to_modelname(self, model_id: str) -> str:
         """Get model name from a model_id.
 
