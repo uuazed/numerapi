@@ -40,6 +40,8 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    'sphinx.ext.doctest',
     'm2r'
 ]
 
