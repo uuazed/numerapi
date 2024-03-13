@@ -40,6 +40,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    'm2r'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
