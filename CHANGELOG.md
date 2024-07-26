@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- fix `SignalsAPI.ticker_universe`
 - added `validationBmcMean` and `era.validationBmc` to diagnostics
 - added `CyptoAPI`
 

@@ -298,8 +298,8 @@ class SignalsAPI(base_api.Api):
             >>> SignalsAPI().ticker_universe()
             ["MSFT", "AMZN", "APPL", ...]
         """
-        path = self.download_dataset("signals/universe_public.csv")
-        return pd.read_csv(path).ticker.tolist()
+        path = self.download_dataset("signals/v1.0/live.parquet")
+        return pd.read_parquet(path).numerai_ticker.tolist()
 
     def download_validation_data(self) -> None:
         """download CSV file with historical targets and ticker universe
