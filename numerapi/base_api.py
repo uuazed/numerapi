@@ -3,7 +3,7 @@
 import os
 import datetime
 import logging
-from typing import Dict, List
+from typing import Dict, List, Union, Tuple
 from io import BytesIO
 import pytz
 
@@ -1627,83 +1627,7 @@ class Api:
         if dest_path is None:
             dest_path = data["filename"]
         path = utils.download_file(data["url"], dest_path)
-        return path    def upload_predictions(self, file_path: str = "predictions.csv",
-                               tournament: int = 8,
-                               model_id: str = None,
-                               df: pd.DataFrame = None,
-                               data_datestamp: int = None,
-                               timeout: Union[None, float, Tuple[float, float]] = (10, 600),
-        ) -> str:
-            """Upload predictions from file.
-            Will read TRIGGER_ID from the environment if this model is enabled with
-            a Numerai Compute cluster setup by Numerai CLI.
-
-            Args:
-                file_path (str): CSV file with predictions that will get uploaded
-                tournament (int): ID of the tournament (optional, defaults to 8)
-                    -- DEPRECATED there is only one tournament nowadays
-                model_id (str): Target model UUID (required for accounts with
-                    multiple models)
-                df (pandas.DataFrame): pandas DataFrame to upload, if function is
-                    given df and file_path, df will be uploaded.
-                data_datestamp (int): Data lag, in case submission is done using
-                    data from the previous day(s).
-                timeout (float|tuple(float,float)): waiting time (connection timeout,
-                    read timeout)
-
-            Returns:
-                str: submission_id
-
-            Example:
-                >>> api = NumerAPI(secret_key="..", public_id="..")
-                >>> model_id = api.get_models()['uuazed']
-                >>> api.upload_predictions("prediction.cvs", model_id=model_id)
-                '93c46857-fed9-4594-981e-82db2b358daf'
-                >>> # upload from pandas DataFrame directly:
-                >>> api.upload_predictions(df=predictions_df, model_id=model_id)
-            """
-            self.logger.info("uploading predictions...")
-
-            # write the pandas DataFrame as a binary buffer if provided
-            buffer_csv = None
-
-            if df is not None:
-                buffer_csv = BytesIO(df.to_csv(index=False).encode())
-                buffer_csv.name = file_path
-
-            upload_auth = self._upload_auth(
-                'submission_upload_auth', file_path, tournament, model_id)
-
-            # get compute id if available and pass it along
-            headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
-            with open(file_path, 'rb') if df is None else buffer_csv as file:
-                requests.put(
-                    upload_auth['url'], data=file.read(), headers=headers,
-                    timeout=timeout)
-            create_query = '''
-                mutation($filename: String!
-                         $tournament: Int!
-                         $modelId: String
-                         $triggerId: String,
-                         $dataDatestamp: Int) {
-                    create_submission(filename: $filename
-                                      tournament: $tournament
-                                      modelId: $modelId
-                                      triggerId: $triggerId
-                                      source: "numerapi"
-                                      dataDatestamp: $dataDatestamp) {
-                        id
-                    }
-                }
-                '''
-            arguments = {'filename': upload_auth['filename'],
-                         'tournament': tournament,
-                         'modelId': model_id,
-                         'triggerId': os.getenv('TRIGGER_ID', None),
-                         'dataDatestamp': data_datestamp}
-            create = self.raw_query(create_query, arguments, authorization=True)
-            submission_id = create['data']['create_submission']['id']
-            return submission_id
+        return path
 
     def upload_predictions(self, file_path: str = "predictions.csv",
                             model_id: str = None,

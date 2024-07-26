@@ -11,4 +11,5 @@ except pkg_resources.DistributionNotFound:
 # pylint: disable=wrong-import-position
 from numerapi.numerapi import NumerAPI
 from numerapi.signalsapi import SignalsAPI
+from numerapi.cryptoapi import CryptoAPI
 # pylint: enable=wrong-import-position

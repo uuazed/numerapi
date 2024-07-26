@@ -1,6 +1,6 @@
 from numerapi import base_api
 
-class CyptoAPI(base_api.Api):
+class CryptoAPI(base_api.Api):
     """"API for Numerai Crypto"""
 
     def __init__(self, *args, **kwargs):
