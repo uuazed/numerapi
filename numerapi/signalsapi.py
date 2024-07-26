@@ -83,7 +83,7 @@ class SignalsAPI(base_api.Api):
                            model_id: str = None,
                            df: pd.DataFrame = None,
                            data_datestamp: int = None,
-                           timeout: Union[None, float, Tuple[float, float]] = (10, 60),
+                           timeout: Union[None, float, Tuple[float, float]] = (10, 600)
     ) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
@@ -119,28 +119,15 @@ class SignalsAPI(base_api.Api):
             buffer_csv = BytesIO(df.to_csv(index=False).encode())
             buffer_csv.name = file_path
 
-        auth_query = '''
-            query($filename: String!
-                  $modelId: String) {
-              submissionUploadSignalsAuth(filename: $filename
-                                          modelId: $modelId) {
-                    filename
-                    url
-                }
-            }
-            '''
-
-        arguments = {'filename': os.path.basename(file_path),
-                     'modelId': model_id}
-        submission_resp = self.raw_query(auth_query, arguments,
-                                         authorization=True)
-        auth = submission_resp['data']['submissionUploadSignalsAuth']
+        upload_auth = self._upload_auth(
+            'submissionUploadSignalsAuth', file_path,
+            self.tournament_id, model_id)
 
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
 
         with open(file_path, 'rb') if df is None else buffer_csv as file:
-            requests.put(auth['url'], data=file.read(),
+            requests.put(upload_auth['url'], data=file.read(),
                          headers=headers, timeout=timeout)
         create_query = '''
             mutation($filename: String!
@@ -157,7 +144,7 @@ class SignalsAPI(base_api.Api):
                 }
             }
             '''
-        arguments = {'filename': auth['filename'],
+        arguments = {'filename': upload_auth['filename'],
                      'modelId': model_id,
                      'triggerId': os.getenv('TRIGGER_ID', None),
                      'dataDatestamp': data_datestamp}
