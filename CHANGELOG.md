@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- `stake_drain`: set drain flag correctly, so things will look less confusing
+  in the UI
+
 ## [2.19.0] - 2024-07-26 - hello CryptoAPI
 - fix `SignalsAPI.ticker_universe`
 - added `validationBmcMean` and `era.validationBmc` to diagnostics

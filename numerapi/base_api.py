@@ -1120,9 +1120,7 @@ class Api:
         """Completely remove your stake.
 
         Args:
-            model_id (str): Target model UUID (required for accounts with
-                multiple models)
-            tournament (int): ID of the tournament (optional, defaults to 8)
+            model_id (str): Target model UUID
 
         Returns:
             dict: stake information with the following content:
@@ -1131,17 +1129,36 @@ class Api:
               * status (`str`)
               * requestedAmount (`decimal.Decimal`)
               * type (`str`)
+              * drain (`bool`)
 
         Example:
             >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model = api.get_models()['uuazed']
-            >>> api.stake_drain(model)
+            >>> model_id = api.get_models()['uuazed']
+            >>> api.stake_drain(model_id)
             {'dueDate': None,
              'requestedAmount': decimal.Decimal('11000000'),
              'type': 'decrease',
-             'status': ''}
+             'status': '',
+             'drain": True}
         """
-        return self.stake_decrease(11000000, model_id)
+        query = '''
+            mutation($drain: bool!
+                     $amount: String
+                     $modelId: String) {
+                releaseStake(drain: $drain
+                             modelId: $modelId
+                             amount: $amount) {
+                    id
+                    dueDate
+                    status
+                    type
+                    requestedAmount
+                    drain
+                }
+            }'''
+        arguments = {'drain': True, "modelId": model_id, "amount": '11000000'}
+        raw = self.raw_query(query, arguments, authorization=True)
+        return raw['data']['releaseStake']
 
     def stake_decrease(self, nmr, model_id: str = None) -> Dict:
         """Decrease your stake by `value` NMR.
