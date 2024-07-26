@@ -655,6 +655,7 @@ class Api:
                     * validationFncV4 (`float`)
                     * validationIcV2 (`float`)
                     * validationRic (`float`)
+                    * validationBmc (`float`)
                 * validationCorrPlusMmcStd (`float`)
                 * validationMmcMean (`float`)
                 * validationCorrStdRating (`float`)
@@ -686,6 +687,7 @@ class Api:
                 * validationCorrV4CorrWExamplePreds (`float`)
                 * validationCorrV4MaxDrawdown (`float`)
                 * validationCorrV4Mean (`float`)
+                * validationBmcMean (`float`)
                 * validationCorrV4Sharpe (`float`)
                 * validationCorrV4Std (`float`)
                 * validationFeatureNeutralCorrV3Mean (`float`)
@@ -737,6 +739,7 @@ class Api:
                     validationFncV4
                     validationIcV2
                     validationRic
+                    validationBmc
                 }
                 status
                 trainedOnVal
@@ -767,6 +770,7 @@ class Api:
                 validationMmcSharpeRating
                 validationMmcStd
                 validationMmcStdRating
+                validationBmcMean
 
                 validationAdjustedSharpe
                 validationApy

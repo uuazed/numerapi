@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- added `validationBmcMean` and `era.validationBmc` to diagnostics
+
 ## [2.18.0] - 2024-03-08
 - added `get_account_leaderboard` to fetch account-level leaderboard
 - added 'models_of_account' to fetch all models of an account
