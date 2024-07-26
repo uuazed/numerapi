@@ -1,12 +1,7 @@
 """API for Numerai Classic"""
 
-import os
 import decimal
-from typing import List, Dict, Tuple, Union
-from io import BytesIO
-
-import requests
-import pandas as pd
+from typing import List, Dict
 
 from numerapi import utils
 from numerapi import base_api
