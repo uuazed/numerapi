@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - added `validationBmcMean` and `era.validationBmc` to diagnostics
+- added `CyptoAPI`
 
 ## [2.18.0] - 2024-03-08
 - added `get_account_leaderboard` to fetch account-level leaderboard

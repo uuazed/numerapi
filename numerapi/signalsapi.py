@@ -82,6 +82,7 @@ class SignalsAPI(base_api.Api):
     def upload_predictions(self, file_path: str = "predictions.csv",
                            model_id: str = None,
                            df: pd.DataFrame = None,
+                           data_datestamp: int = None,
                            timeout: Union[None, float, Tuple[float, float]] = (10, 60),
     ) -> str:
         """Upload predictions from file.
@@ -122,7 +123,7 @@ class SignalsAPI(base_api.Api):
             query($filename: String!
                   $modelId: String) {
               submissionUploadSignalsAuth(filename: $filename
-                                        modelId: $modelId) {
+                                          modelId: $modelId) {
                     filename
                     url
                 }
@@ -144,11 +145,13 @@ class SignalsAPI(base_api.Api):
         create_query = '''
             mutation($filename: String!
                      $modelId: String
-                     $triggerId: String) {
+                     $triggerId: String
+                     $ddataDatestamp: Int) {
                 createSignalsSubmission(filename: $filename
                                         modelId: $modelId
                                         triggerId: $triggerId
-                                        source: "numerapi") {
+                                        source: "numerapi"
+                                        dataDatestamp: $dataDatestamp) {
                     id
                     firstEffectiveDate
                 }
@@ -156,7 +159,8 @@ class SignalsAPI(base_api.Api):
             '''
         arguments = {'filename': auth['filename'],
                      'modelId': model_id,
-                     'triggerId': os.getenv('TRIGGER_ID', None)}
+                     'triggerId': os.getenv('TRIGGER_ID', None),
+                     'dataDatestamp': data_datestamp}
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 
