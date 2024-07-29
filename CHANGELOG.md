@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.19.1]
 - `stake_drain`: set drain flag correctly, so things will look less confusing
   in the UI
 - fix `SignalsAPI.upload_predictions`
