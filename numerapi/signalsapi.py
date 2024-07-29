@@ -133,7 +133,7 @@ class SignalsAPI(base_api.Api):
             mutation($filename: String!
                      $modelId: String
                      $triggerId: String
-                     $ddataDatestamp: Int) {
+                     $dataDatestamp: Int) {
                 createSignalsSubmission(filename: $filename
                                         modelId: $modelId
                                         triggerId: $triggerId
