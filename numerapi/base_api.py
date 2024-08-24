@@ -1240,7 +1240,7 @@ class Api:
         arguments = {'tournament': self.tournament_id}
         # in some period in between rounds, "number: 0" returns Value error -
         # "Current round not open for submissions", because there is no active
-        # round. This is catched by the try / except.
+        # round. This is caught by the try / except.
         try:
             raw = self.raw_query(query, arguments)['data']['rounds'][0]
         except ValueError:
@@ -1281,7 +1281,7 @@ class Api:
         arguments = {'tournament': tournament}
         # in some period in between rounds, "number: 0" returns Value error -
         # "Current round not open for submissions", because there is no active
-        # round. This is catched by the try / except.
+        # round. This is caught by the try / except.
         try:
             raw = self.raw_query(query, arguments)['data']['rounds'][0]
         except ValueError:

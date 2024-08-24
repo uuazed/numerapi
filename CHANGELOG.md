@@ -99,7 +99,7 @@ Notable changes to this project.
 
 ## [2.12.6] - 2022-11-01
 - add `check_round_open` to check if there is a currently an active round
-- make `check_new_round` accessiable from `SignalsAPI`
+- make `check_new_round` accessible from `SignalsAPI`
 
 ## [2.12.5] - 2022-10-24
 - add fncV3 to `daily_submissions_performances`
@@ -120,7 +120,7 @@ Notable changes to this project.
 - `download_dataset`: in case the destination path contains a directory, ensure it exists
 
 ## [2.12.1] - 2022-06-20
-- bugfix, timeout for http requests was accidently set to 3 seconds.
+- bugfix, timeout for http requests was accidentally set to 3 seconds.
 
 ## [2.12.0] - 2022-06-17
 - make downloads more robust and prevent broken files by downloading to temporary files
@@ -507,7 +507,7 @@ Notable changes to this project.
 - test coverage reports via codecov.io
 
 ## [0.6.3] - 2017-12-20
-- complete rewrite to adapt to Numerai's API swich to GraphQL
+- complete rewrite to adapt to Numerai's API switch to GraphQL
 - update documentation and example
 - added staking via API - `stake`
 - added `get_staking_leaderboard`
