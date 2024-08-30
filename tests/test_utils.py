@@ -55,7 +55,7 @@ def test_post_with_err_handling(caplog):
     assert 'Http Error' in caplog.text
     caplog.clear()
 
-    # invalid resonse type
+    # invalid response type
     responses.add(responses.POST, "https://someurl2")
     utils.post_with_err_handling("https://someurl2", None, None)
     assert 'Oops' in caplog.text

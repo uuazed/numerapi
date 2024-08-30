@@ -34,7 +34,7 @@ def test_unauthorized_requests(api, fun):
         # while this won't work because we are not authorized, it still tells
         # us if the remaining code works
         getattr(api, fun)()
-    # error should warn about not beeing logged in.
+    # error should warn about not being logged in.
     assert "API keys required for this action" in str(err.value) or \
            "Your session is invalid or has expired." in str(err.value)
 
