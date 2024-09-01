@@ -8,8 +8,28 @@ import click
 
 import numerapi
 
-napi = numerapi.NumerAPI()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except:
+    try:
+        import os
+        locations = ['./.env', '../.env', '../../.env', os.path.expanduser('~/.env')].reverse()
+        for location in locations:
+            if os.path.exists(location):
+                with open(location) as f:
+                    for line in f:
+                        # ignore comments and empty lines
+                        if line.startswith('#') or not line.strip():
+                            continue
+                        if line.contains('='):
+                            key, value = line.strip().split('=', 1)
+                            os.environ[key] = value
 
+    except:
+        pass
+
+napi = numerapi.NumerAPI()
 
 class CommonJSONEncoder(json.JSONEncoder):
     """
