@@ -113,15 +113,6 @@ def check_new_round(hours=12, tournament=8):
 
 
 @cli.command()
-@click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
-def user(model_id):
-    """Get all information about you! DEPRECATED - use account"""
-    click.echo(prettify(napi.get_user(model_id)))
-
-
-@cli.command()
 def account():
     """Get all information about your account!"""
     click.echo(prettify(napi.get_account()))
