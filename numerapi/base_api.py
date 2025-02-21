@@ -46,12 +46,10 @@ class Api:
         self.tournament_id = 0
         self.global_data_dir = "."
 
-    def _login(self, public_id=None, secret_key=None):
+    def _login(self, public_id: str | None = None, secret_key: str | None = None) -> None:
         # check env variables if not set
-        if not public_id:
-            public_id = os.getenv("NUMERAI_PUBLIC_ID")
-        if not secret_key:
-            secret_key = os.getenv("NUMERAI_SECRET_KEY")
+        if not public_id or not secret_key:
+            public_id, secret_key = utils.load_secrets()
 
         if public_id and secret_key:
             self.token = (public_id, secret_key)

@@ -16,6 +16,21 @@ import tqdm
 logger = logging.getLogger(__name__)
 
 
+def load_secrets() -> tuple:
+    """load secrets from environment variables or dotenv file"""
+
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass
+
+    public_id = os.getenv("NUMERAI_PUBLIC_ID")
+    secret_key = os.getenv("NUMERAI_SECRET_KEY")
+
+    return public_id, secret_key
+
+
 def parse_datetime_string(string: str) -> Optional[datetime.datetime]:
     """try to parse string to datetime object"""
     if string is None:
