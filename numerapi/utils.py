@@ -20,7 +20,7 @@ def load_secrets() -> tuple:
     """load secrets from environment variables or dotenv file"""
 
     try:
-        from dotenv import load_dotenv
+        from dotenv import load_dotenv # pylint: disable-msg=import-outside-toplevel
         load_dotenv()
     except ImportError:
         pass
@@ -106,7 +106,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
 
 
 def post_with_err_handling(url: str, body: str, headers: Dict,
-                           timeout: Optional[int] = None,
+                           *, timeout: Optional[int] = None,
                            retries: int = 3, delay: int = 1, backoff: int = 2
                            ) -> Dict:
     """send `post` request and handle (some) errors that might occur"""

@@ -450,6 +450,7 @@ ignored-parents=
 
 # Maximum number of arguments for function / method.
 max-args=7
+max-positional-arguments=6
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=7
@@ -550,5 +551,5 @@ valid-metaclass-classmethod-first-arg=cls
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
-overgeneral-exceptions=BaseException,
+overgeneral-exceptions=builtins.BaseException,
                        builtins.Exception

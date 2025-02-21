@@ -1,3 +1,5 @@
+"""API for Numerai Crypto"""
+
 from numerapi import base_api
 
 class CryptoAPI(base_api.Api):

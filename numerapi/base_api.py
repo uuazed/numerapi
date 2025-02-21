@@ -74,7 +74,7 @@ class Api:
 
     def raw_query(self, query: str, variables: Dict = None,
                   authorization: bool = False,
-                  retries: int = 3, delay: int = 5, backoff: int = 2):
+                  *, retries: int = 3, delay: int = 5, backoff: int = 2):
         """Send a raw request to the Numerai's GraphQL API.
 
         This function allows to build your own queries and fetch results from
