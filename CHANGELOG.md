@@ -1,13 +1,13 @@
 # Changelog
 Notable changes to this project.
 
-## [unreleased]
+## [2.20.0] - 2025-02-21
 - deprecate `round_model_performances`
 - support `.env` files for authentication, requires `python-dotenv`
 - remove deprecated functionality
 - ci: use Python 3.10
 
-## [2.19.1]
+## [2.19.1] - 2024-07-29
 - `stake_drain`: set drain flag correctly, so things will look less confusing
   in the UI
 - fix `SignalsAPI.upload_predictions`
