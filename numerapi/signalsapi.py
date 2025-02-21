@@ -151,23 +151,6 @@ class SignalsAPI(base_api.Api):
         create = self.raw_query(create_query, arguments, authorization=True)
         return create['data']['createSignalsSubmission']['id']
 
-    def submission_status(self, model_id: str = None) -> None:
-        """submission status of the last submission associated with the account
-
-        DEPRECATED numerai no longer provides this data. This will be removed
-        in one of the next versions
-
-        Args:
-            model_id (str)
-
-        Example:
-            >>> api = SignalsAPI(secret_key="..", public_id="..")
-            >>> model_id = api.get_models()['uuazed']
-            >>> api.submission_status(model_id)
-        """
-        _ = model_id
-        self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
-
     def public_user_profile(self, username: str) -> Dict:
         """Fetch the public Numerai Signals profile of a user.
 
@@ -300,12 +283,6 @@ class SignalsAPI(base_api.Api):
         """
         path = self.download_dataset("signals/v1.0/live.parquet")
         return pd.read_parquet(path).numerai_ticker.tolist()
-
-    def download_validation_data(self) -> None:
-        """download CSV file with historical targets and ticker universe
-        """
-        self.logger.warning("'download_validation_data' is DEPRECATED.")
-        self.logger.warning("Please use 'download_dataset' and 'list_datasets'")
 
     def stake_get(self, username) -> decimal.Decimal:
         """get current stake for a given users

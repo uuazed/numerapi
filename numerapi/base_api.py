@@ -389,15 +389,6 @@ class Api:
         round_num = data["number"]
         return round_num
 
-    def get_account_transactions(self) -> List:
-        """Get all your account deposits and withdrawals.
-
-        DEPRECATED - please use `wallet_transactions` instead"
-        """
-        self.logger.warning(
-            "DEPRECATED - please use `wallet_transactions` instead")
-        return self.wallet_transactions()
-
     def set_bio(self, model_id: str, bio: str) -> bool:
         """Set bio field for a model id.
 
@@ -571,7 +562,6 @@ class Api:
         Args:
             file_path (str): CSV file with predictions that will get uploaded
             tournament (int): ID of the tournament (optional, defaults to None)
-                -- DEPRECATED there is only one tournament nowadays
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             df (pandas.DataFrame): pandas DataFrame to upload, if function is
@@ -1077,7 +1067,6 @@ class Api:
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
             tournament (int): ID of the tournament (optional, defaults to 8)
-                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             dict: stake information with the following content:
@@ -1140,7 +1129,6 @@ class Api:
         Args:
             hours (int, optional): timeframe to consider, defaults to 12
             tournament (int): ID of the tournament (optional)
-                -- DEPRECATED this is now automatically filled
 
         Returns:
             bool: True if a new round has started, False otherwise.

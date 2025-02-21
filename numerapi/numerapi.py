@@ -28,7 +28,6 @@ class NumerAPI(base_api.Api):
 
         Args:
             tournament (int, optional): ID of the tournament, defaults to 8
-                -- DEPRECATED there is only one tournament nowadays
 
         Returns:
             list of dicts: list of rounds
@@ -81,7 +80,6 @@ class NumerAPI(base_api.Api):
 
         Args:
             tournament (int): optionally filter by ID of the tournament
-                -- DEPRECATED there is only one tournament nowadays
             round_num (int): optionally filter round number
             model_id (str): Target model UUID (required for accounts with
                 multiple models)
@@ -133,112 +131,6 @@ class NumerAPI(base_api.Api):
             filenames = [f for f in filenames if f['tournament'] == tournament]
         filenames.sort(key=lambda f: (f['round_num'], f['tournament']))
         return filenames
-
-    def get_user(self, model_id: str = None) -> Dict:
-        """Get all information about you! DEPRECATED
-
-        Args:
-            model_id (str): Target model UUID (required for accounts with
-                multiple models)
-
-        Returns:
-            dict: user information including the following fields:
-
-                * assignedEthAddress (`str`)
-                * availableNmr (`decimal.Decimal`)
-                * availableUsd (`decimal.Decimal`)
-                * banned (`bool`)
-                * email (`str`)
-                * id (`str`)
-                * insertedAt (`datetime`)
-                * mfaEnabled (`bool`)
-                * status (`str`)
-                * username (`str`)
-                * country (`str)
-                * apiTokens (`list`) each with the following fields:
-                 * name (`str`)
-                 * public_id (`str`)
-                 * scopes (`list of str`)
-                * v2Stake
-                 * status (`str`)
-                 * txHash (`str`)
-
-        Example:
-            >>> api = NumerAPI(secret_key="..", public_id="..")
-            >>> model = api.get_models()['uuazed']
-            >>> api.get_user(model)
-            {'apiTokens': [
-                    {'name': 'tokenname',
-                     'public_id': 'BLABLA',
-                     'scopes': ['upload_submission', 'stake', ..]
-                     }, ..],
-             'assignedEthAddress': '0x0000000000000000000000000001',
-             'availableNmr': Decimal('99.01'),
-             'availableUsd': Decimal('9.47'),
-             'banned': False,
-             'email': 'username@example.com',
-             'country': 'US',
-             'id': '1234-ABC..',
-             'insertedAt': datetime.datetime(2018, 1, 1, 2, 16, 48),
-             'mfaEnabled': False,
-             'status': 'VERIFIED',
-             'username': 'cool username',
-             'v2Stake': None
-             }
-        """
-        self.logger.warning("Method get_user is DEPRECATED, use get_account")
-        query = """
-          query($modelId: String) {
-            user(modelId: $modelId) {
-              username
-              banned
-              assignedEthAddress
-              availableNmr
-              availableUsd
-              email
-              id
-              mfaEnabled
-              status
-              country
-              insertedAt
-              apiTokens {
-                name
-                public_id
-                scopes
-              }
-              v2Stake {
-                status
-                txHash
-              }
-            }
-          }
-        """
-        arguments = {'modelId': model_id}
-        data = self.raw_query(
-            query, arguments, authorization=True)['data']['user']
-        # convert strings to python objects
-        utils.replace(data, "insertedAt", utils.parse_datetime_string)
-        utils.replace(data, "availableUsd", utils.parse_float_string)
-        utils.replace(data, "availableNmr", utils.parse_float_string)
-        return data
-
-    def submission_status(self, model_id: str = None) -> None:
-        """submission status of the last submission associated with the account
-
-        DEPRECATED numerai no longer provides this data. This will be removed
-        in one of the next versions
-
-        Args:
-            model_id (str): Target model UUID (required for accounts with
-                multiple models)
-
-        Example:
-            >>> napi = NumerAPI(secret_key="..", public_id="..")
-            >>> model_id = napi.get_models()['uuazed']
-            >>> napi.submission_status(model_id)
-        """
-        _ = model_id
-        self.logger.warning("Method submission_status is DEPRECATED and will be removed soon.")
 
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current model leaderboard
@@ -422,12 +314,6 @@ class NumerAPI(base_api.Api):
         # convert strings to python objects
         utils.replace(data, "startDate", utils.parse_datetime_string)
         return data
-
-    def daily_user_performances(self, username: str) -> List[Dict]:
-        """DEPRECATED"""
-        self.logger.warning("Method daily_user_performances is DEPRECATED, "
-                            "use daily_model_performances")
-        return self.daily_model_performances(username)
 
     def daily_model_performances(self, username: str) -> List[Dict]:
         """Fetch daily performance of a user.
