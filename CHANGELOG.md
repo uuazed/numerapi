@@ -5,6 +5,7 @@ Notable changes to this project.
 - deprecate `round_model_performances`
 - support `.env` files for authentication, requires `python-dotenv`
 - remove deprecated functionality
+- ci: use Python 3.10
 
 ## [2.19.1]
 - `stake_drain`: set drain flag correctly, so things will look less confusing
