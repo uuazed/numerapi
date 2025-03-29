@@ -33,7 +33,7 @@ if __name__ == "__main__":
         platforms="OS Independent",
         classifiers=classifiers,
         license='MIT License',
-        package_data={'numerai': ['LICENSE', 'README.md', "py.typed"]},
+        package_data={'numerapi': ['LICENSE', 'README.md', "py.typed"]},
         packages=find_packages(exclude=['tests']),
         install_requires=["requests", "pytz", "python-dateutil",
                           "tqdm>=4.29.1", "click>=7.0", "pandas>=1.1.0"],
