@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+##
+- add a `py.typed` file to indicate type hints
+
 ## [2.20.0] - 2025-02-21
 - deprecate `round_model_performances`
 - support `.env` files for authentication, requires `python-dotenv`
