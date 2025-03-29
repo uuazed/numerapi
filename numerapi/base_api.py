@@ -72,7 +72,7 @@ class Api:
                 self.logger.error(msg)
         return msg
 
-    def raw_query(self, query: str, variables: Dict = None,
+    def raw_query(self, query: str, variables: Dict | None = None,
                   authorization: bool = False,
                   *, retries: int = 3, delay: int = 5, backoff: int = 2):
         """Send a raw request to the Numerai's GraphQL API.
@@ -131,7 +131,7 @@ class Api:
             raise ValueError(err)
         return result
 
-    def list_datasets(self, round_num: int = None) -> List[str]:
+    def list_datasets(self, round_num: int | None = None) -> List[str]:
         """List of available data files
 
         Args:
@@ -158,8 +158,8 @@ class Api:
         return self.raw_query(query, args)['data']['listDatasets']
 
     def download_dataset(self, filename: str = None,
-                         dest_path: str = None,
-                         round_num: int = None) -> None:
+                         dest_path: str | None = None,
+                         round_num: int | None = None) -> str:
         """ Download specified file for the given round.
 
         Args:
@@ -358,7 +358,7 @@ class Api:
         }
         return mapping
 
-    def get_current_round(self, tournament: int = None) -> int:
+    def get_current_round(self, tournament: int | None = None) -> int | None:
         """Get number of the current active round.
 
         Args:
@@ -554,9 +554,9 @@ class Api:
             authorization=True)['data'][endpoint]
 
     def upload_diagnostics(self, file_path: str = "predictions.csv",
-                           tournament: int = None,
-                           model_id: str = None,
-                           df: pd.DataFrame = None) -> str:
+                           tournament: int | None = None,
+                           model_id: str | None = None,
+                           df: pd.DataFrame | None = None) -> str:
         """Upload predictions to diagnostics from file.
 
         Args:
@@ -611,7 +611,7 @@ class Api:
         diagnostics_id = create['data']['createDiagnostics']['id']
         return diagnostics_id
 
-    def diagnostics(self, model_id: str, diagnostics_id: str = None) -> Dict:
+    def diagnostics(self, model_id: str, diagnostics_id: str | None = None) -> Dict:
         """Fetch results of diagnostics run
 
         Args:
@@ -935,7 +935,7 @@ class Api:
 
 
     def stake_change(self, nmr, action: str = "decrease",
-                     model_id: str = None) -> Dict:
+                     model_id: str | None = None) -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -1031,7 +1031,7 @@ class Api:
         raw = self.raw_query(query, arguments, authorization=True)
         return raw['data']['releaseStake']
 
-    def stake_decrease(self, nmr, model_id: str = None) -> Dict:
+    def stake_decrease(self, nmr, model_id: str | None = None) -> Dict:
         """Decrease your stake by `value` NMR.
 
         Args:
@@ -1059,7 +1059,7 @@ class Api:
         """
         return self.stake_change(nmr, 'decrease', model_id)
 
-    def stake_increase(self, nmr, model_id: str = None) -> Dict:
+    def stake_increase(self, nmr, model_id: str | None = None) -> Dict:
         """Increase your stake by `value` NMR.
 
         Args:
@@ -1123,12 +1123,11 @@ class Api:
         is_open = open_time < now < deadline
         return is_open
 
-    def check_new_round(self, hours: int = 12, tournament: int = None) -> bool:
+    def check_new_round(self, hours: int = 12) -> bool:
         """Check if a new round has started within the last `hours`.
 
         Args:
             hours (int, optional): timeframe to consider, defaults to 12
-            tournament (int): ID of the tournament (optional)
 
         Returns:
             bool: True if a new round has started, False otherwise.
@@ -1146,8 +1145,7 @@ class Api:
               }
             }
         '''
-        tournament = self.tournament_id if tournament is None else tournament
-        arguments = {'tournament': tournament}
+        arguments = {'tournament': self.tournament_id}
         # in some period in between rounds, "number: 0" returns Value error -
         # "Current round not open for submissions", because there is no active
         # round. This is caught by the try / except.
@@ -1301,10 +1299,10 @@ class Api:
         return res
 
     def model_upload(self, file_path: str,
-                 tournament: int = None,
-                 model_id: str = None,
-                 data_version: str = None,
-                 docker_image: str = None) -> str:
+                 tournament: int | None = None,
+                 model_id: str | None = None,
+                 data_version: str | None = None,
+                 docker_image: str  | None = None) -> str:
         """Upload pickled model to numerai.
 
         Args:
@@ -1471,8 +1469,9 @@ class Api:
         utils.replace(data, "insertedAt", utils.parse_datetime_string)
         return data
 
-    def download_submission(self, submission_id: str = None,
-                            model_id: str = None, dest_path: str = None) -> str:
+    def download_submission(self, submission_id: str | None = None,
+                            model_id: str | None = None,
+                            dest_path: str | None = None) -> str:
         """ Download previous submissions from numerai
 
         Args:
@@ -1516,9 +1515,9 @@ class Api:
         return path
 
     def upload_predictions(self, file_path: str = "predictions.csv",
-                            model_id: str = None,
-                            df: pd.DataFrame = None,
-                            data_datestamp: int = None,
+                            model_id: str | None = None,
+                            df: pd.DataFrame | None = None,
+                            data_datestamp: int | None = None,
                             timeout: Union[None, float, Tuple[float, float]] = (10, 600)
         ) -> str:
         """Upload predictions from file.

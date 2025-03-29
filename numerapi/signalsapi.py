@@ -80,9 +80,9 @@ class SignalsAPI(base_api.Api):
         return data
 
     def upload_predictions(self, file_path: str = "predictions.csv",
-                           model_id: str = None,
-                           df: pd.DataFrame = None,
-                           data_datestamp: int = None,
+                           model_id: str | None = None,
+                           df: pd.DataFrame | None = None,
+                           data_datestamp: int | None = None,
                            timeout: Union[None, float, Tuple[float, float]] = (10, 600)
     ) -> str:
         """Upload predictions from file.

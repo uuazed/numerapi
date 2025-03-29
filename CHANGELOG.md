@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- type hint improvements
+
 ## [2.20.1] - 2025-03-29
 - add a `py.typed` file to indicate type hints
 
