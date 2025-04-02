@@ -53,7 +53,7 @@ def test_submission_filenames(mocked):
 
 @patch('numerapi.NumerAPI.check_new_round')
 def test_check_new_round(mocked):
-    result = CliRunner().invoke(cli.check_new_round, ['--tournament', 1])
+    result = CliRunner().invoke(cli.check_new_round)
     # just testing if calling works fine
     assert result.exit_code == 0
 
