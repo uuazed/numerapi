@@ -1,8 +1,9 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.20.5] - 2025-04-02
 - type hint improvements
+- no longer depend on `pkg_resources`
 
 ## [2.20.1] - 2025-03-29
 - add a `py.typed` file to indicate type hints

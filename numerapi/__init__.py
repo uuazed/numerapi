@@ -1,10 +1,10 @@
 """ Numerai Python API"""
 
-import pkg_resources
+from importlib.metadata import version, PackageNotFoundError
 
 try:
-    __version__ = pkg_resources.get_distribution(__name__).version
-except pkg_resources.DistributionNotFound:
+    __version__ = version("package-name")
+except PackageNotFoundError:
     __version__ = 'unknown'
 
 
