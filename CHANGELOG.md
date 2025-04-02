@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [2.20.6] - 2025-04-02
+- cli: fix `check_new_round`
+
 ## [2.20.5] - 2025-04-02
 - type hint improvements
 - no longer depend on `pkg_resources`

@@ -103,13 +103,11 @@ def submission_filenames(round_num, tournament, model_id):
 
 
 @cli.command()
-@click.option('--tournament', default=8,
-              help='The ID of the tournament, defaults to 8')
 @click.option('--hours', default=12,
               help='timeframe to consider, defaults to 12')
-def check_new_round(hours=12, tournament=8):
+def check_new_round(hours=12):
     """Check if a new round has started within the last `hours`."""
-    click.echo(int(napi.check_new_round(hours=hours, tournament=tournament)))
+    click.echo(int(napi.check_new_round(hours=hours)))
 
 
 @cli.command()
