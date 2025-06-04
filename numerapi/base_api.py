@@ -189,12 +189,14 @@ class Api:
 
         query = """
         query ($filename: String!
-               $round: Int) {
+               $round: Int
+               $tournament: Int) {
             dataset(filename: $filename
-                    round: $round)
+                    round: $round
+                    tournament: $tournament)
         }
         """
-        args = {'filename': filename, "round": round_num}
+        args = {'filename': filename, "round": round_num, "tournament": self.tournament_id}
 
         dataset_url = self.raw_query(query, args)['data']['dataset']
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
