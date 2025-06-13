@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [2.20.7] - 2025-06-13
 - fix `download_dataset`
+- improve type hints
 
 ## [2.20.6] - 2025-04-02
 - cli: fix `check_new_round`
