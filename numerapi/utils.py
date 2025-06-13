@@ -104,7 +104,7 @@ def download_file(url: str, dest_path: str, show_progress_bars: bool = True):
     return dest_path
 
 
-def post_with_err_handling(url: str, body: str, headers: dict,
+def post_with_err_handling(url: str, body: dict, headers: dict,
                            *, timeout: int | None = None,
                            retries: int = 3, delay: int = 1, backoff: int = 2
                            ) -> dict:

@@ -60,7 +60,8 @@ class Api:
                 "You need to supply both a public id and a secret key.")
             self.token = None
 
-    def _handle_call_error(self, errors):
+    def _handle_call_error(self, errors) -> str:
+        msg = ""
         if isinstance(errors, list):
             for error in errors:
                 if "message" in error:
@@ -157,7 +158,7 @@ class Api:
         args = {'round': round_num, "tournament": self.tournament_id}
         return self.raw_query(query, args)['data']['listDatasets']
 
-    def download_dataset(self, filename: str = None,
+    def download_dataset(self, filename: str,
                          dest_path: str | None = None,
                          round_num: int | None = None) -> str:
         """ Download specified file for the given round.
@@ -325,7 +326,7 @@ class Api:
         return {item["displayName"]: item["id"]
                 for item in sorted(data, key=lambda x: x["displayName"])}
 
-    def get_models(self, tournament: int = None) -> Dict:
+    def get_models(self, tournament: int | None = None) -> Dict:
         """Get mapping of account model names to model ids for convenience
 
         Args:
@@ -502,7 +503,7 @@ class Api:
         return txs
 
     def set_submission_webhook(self, model_id: str,
-                               webhook: str = None) -> bool:
+                               webhook: str | None = None) -> bool:
         """Set a model's submission webhook used in Numerai Compute.
         Read More: https://docs.numer.ai/tournament/compute
 
@@ -557,7 +558,7 @@ class Api:
 
     def upload_diagnostics(self, file_path: str = "predictions.csv",
                            tournament: int | None = None,
-                           model_id: str | None = None,
+                           model_id: str = "",
                            df: pd.DataFrame | None = None) -> str:
         """Upload predictions to diagnostics from file.
 
@@ -937,7 +938,7 @@ class Api:
 
 
     def stake_change(self, nmr, action: str = "decrease",
-                     model_id: str | None = None) -> Dict:
+                     model_id: str = "") -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -1033,7 +1034,7 @@ class Api:
         raw = self.raw_query(query, arguments, authorization=True)
         return raw['data']['releaseStake']
 
-    def stake_decrease(self, nmr, model_id: str | None = None) -> Dict:
+    def stake_decrease(self, nmr, model_id: str) -> Dict:
         """Decrease your stake by `value` NMR.
 
         Args:
@@ -1061,7 +1062,7 @@ class Api:
         """
         return self.stake_change(nmr, 'decrease', model_id)
 
-    def stake_increase(self, nmr, model_id: str | None = None) -> Dict:
+    def stake_increase(self, nmr, model_id: str) -> Dict:
         """Increase your stake by `value` NMR.
 
         Args:
@@ -1472,8 +1473,8 @@ class Api:
         return data
 
     def download_submission(self, submission_id: str | None = None,
-                            model_id: str | None = None,
-                            dest_path: str | None = None) -> str:
+                            model_id: str = "",
+                            dest_path: str = "") -> str:
         """ Download previous submissions from numerai
 
         Args:
@@ -1496,7 +1497,7 @@ class Api:
             >>> api.download_submission(submission_id=submission_id)
         """
         msg = "You need to provide one of `model_id` and `submission_id"
-        assert model_id or submission_id, msg
+        assert model_id != "" or submission_id != "", msg
         auth_query = '''
             query($id: String) {
                 submissionDownloadAuth(id: $id) {
@@ -1511,7 +1512,7 @@ class Api:
         data = self.raw_query(
             auth_query, {'id': submission_id},
             authorization=True)['data']["submissionDownloadAuth"]
-        if dest_path is None:
+        if dest_path == "":
             dest_path = data["filename"]
         path = utils.download_file(data["url"], dest_path)
         return path
