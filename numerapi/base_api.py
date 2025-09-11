@@ -637,6 +637,8 @@ class Api:
                 * perEraDiagnostics (`list`) each with the following fields:
                     * era (`int`)
                     * examplePredsCorr (`float`)
+                    * validationAlpha (`float`)
+                    * validationBmc (`float`)
                     * validationCorr (`float`)
                     * validationCorrV4 (`float`)
                     * validationFeatureCorrMax (`float`)
@@ -698,6 +700,11 @@ class Api:
                 * validationRicMean (`float`)
                 * validationRicSharpe (`float`)
                 * validationRicStd (`float`)
+                * validationAlphaCorrWExamplePreds (`float`)
+                * validationAlphaMaxDrawdown (`float`)
+                * validationAlphaMean (`float`)
+                * validationAlphaSharpe (`float`)
+                * validationAlphaStd (`float`)
 
         Example:
             >>> napi = NumerAPI(secret_key="..", public_id="..")
@@ -721,6 +728,9 @@ class Api:
                 perEraDiagnostics {
                     era
                     examplePredsCorr
+                    validationAlpha
+                    validationBmc
+                    validationChurn
                     validationCorr
                     validationCorrV4
                     validationFeatureCorrMax
@@ -730,7 +740,6 @@ class Api:
                     validationFncV4
                     validationIcV2
                     validationRic
-                    validationBmc
                 }
                 status
                 trainedOnVal
@@ -790,6 +799,11 @@ class Api:
                 validationRicMean
                 validationRicSharpe
                 validationRicStd
+                validationAlphaCorrWExamplePreds
+                validationAlphaMaxDrawdown
+                validationAlphaMean
+                validationAlphaSharpe
+                validationAlphaStd
               }
             }
         '''

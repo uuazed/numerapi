@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- added `BMC` and `Alpha` to diagnostics
+
 ## [2.20.7] - 2025-06-13
 - fix `download_dataset`
 - improve type hints
