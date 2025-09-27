@@ -1,5 +1,4 @@
 import pytest
-import datetime
 import responses
 
 import pandas as pd
@@ -54,4 +53,3 @@ def test_upload_predictions_df(api):
 
     assert submission_id == "12345"
     assert len(responses.calls) == 3
-

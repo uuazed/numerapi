@@ -13,3 +13,6 @@ from numerapi.numerapi import NumerAPI
 from numerapi.signalsapi import SignalsAPI
 from numerapi.cryptoapi import CryptoAPI
 # pylint: enable=wrong-import-position
+
+
+__all__ = [NumerAPI, SignalsAPI, CryptoAPI]

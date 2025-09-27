@@ -1,4 +1,3 @@
-import decimal
 import os
 import pytest
 import responses

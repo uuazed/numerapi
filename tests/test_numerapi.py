@@ -1,5 +1,4 @@
 import pytest
-import os
 import datetime
 import pytz
 import responses
