@@ -15,4 +15,4 @@ from numerapi.cryptoapi import CryptoAPI
 # pylint: enable=wrong-import-position
 
 
-__all__ = [NumerAPI, SignalsAPI, CryptoAPI]
+__all__ = ["NumerAPI", "SignalsAPI", "CryptoAPI"]
