@@ -18,8 +18,9 @@ API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
 class Api:
     """Wrapper around the Numerai API"""
 
-    def __init__(self, public_id=None, secret_key=None, verbosity="INFO",
-                 show_progress_bars=True):
+    def __init__(self, public_id: str | None = None,
+                 secret_key: str | None = None, verbosity: str = "INFO",
+                 show_progress_bars: bool = True):
         """
         initialize Numerai API wrapper for Python
 
@@ -951,7 +952,7 @@ class Api:
         return self.round_model_performances_v2(username)
 
 
-    def stake_change(self, nmr, action: str = "decrease",
+    def stake_change(self, nmr: float | str, action: str = "decrease",
                      model_id: str = "") -> Dict:
         """Change stake by `value` NMR.
 
@@ -1004,7 +1005,7 @@ class Api:
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
 
-    def stake_drain(self, model_id: str = None) -> Dict:
+    def stake_drain(self, model_id: str | None = None) -> Dict:
         """Completely remove your stake.
 
         Args:
@@ -1048,7 +1049,7 @@ class Api:
         raw = self.raw_query(query, arguments, authorization=True)
         return raw['data']['releaseStake']
 
-    def stake_decrease(self, nmr, model_id: str) -> Dict:
+    def stake_decrease(self, nmr: float | str, model_id: str) -> Dict:
         """Decrease your stake by `value` NMR.
 
         Args:
@@ -1076,7 +1077,7 @@ class Api:
         """
         return self.stake_change(nmr, 'decrease', model_id)
 
-    def stake_increase(self, nmr, model_id: str) -> Dict:
+    def stake_increase(self, nmr: float | str, model_id: str) -> Dict:
         """Increase your stake by `value` NMR.
 
         Args:
@@ -1274,7 +1275,7 @@ class Api:
         res = self.raw_query(query, arguments, authorization=True)
         return res['data']['model']["name"]
 
-    def pipeline_status(self, date: str = None) -> Dict:
+    def pipeline_status(self, date: str | None = None) -> Dict:
         """Get status of Numerai's scoring pipeline
 
         Args:

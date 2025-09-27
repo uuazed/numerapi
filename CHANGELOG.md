@@ -1,6 +1,9 @@
 # Changelog
 Notable changes to this project.
 
+## [dev]
+- more type hints
+
 ## [2.20.8] - 2025-09-11
 - added `BMC` and `Alpha` to diagnostics
 
