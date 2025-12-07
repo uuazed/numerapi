@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - cli: allow selecting tournaments (Signals/Crypto) via `--tournament`
+- added `mmcMultiplier` and `roundPayoutFactor` to `round_model_performances_v2`
 - more type hints
 
 ## [2.20.8] - 2025-09-11
