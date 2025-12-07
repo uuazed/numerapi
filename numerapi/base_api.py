@@ -828,7 +828,9 @@ class Api:
 
                 * atRisk (`float`)
                 * corrMultiplier (`float` or None)
+                * mmcMultiplier (`float` or None)
                 * tcMultiplier (`float` or None)
+                * roundPayoutFactor (`float` or None)
                 * roundNumber (`int`)
                 * roundOpenTime (`datetime`)
                 * roundResolveTime (`datetime`)
@@ -851,19 +853,21 @@ class Api:
                                      tournament: $tournament) {
                 atRisk
                 corrMultiplier
+                mmcMultiplier
                 tcMultiplier
-                roundNumber,
-                roundOpenTime,
-                roundResolveTime,
-                roundResolved,
-                roundTarget,
+                roundPayoutFactor
+                roundNumber
+                roundOpenTime
+                roundResolveTime
+                roundResolved
+                roundTarget
                 submissionScores {
-                    date,
-                    day,
-                    displayName,
-                    payoutPending,
-                    payoutSettled,
-                    percentile,
+                    date
+                    day
+                    displayName
+                    payoutPending
+                    payoutSettled
+                    percentile
                     value
                 }
             }
