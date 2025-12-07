@@ -2,6 +2,7 @@
 Notable changes to this project.
 
 ## [dev]
+- cli: allow selecting tournaments (Signals/Crypto) via `--tournament`
 - more type hints
 
 ## [2.20.8] - 2025-09-11
