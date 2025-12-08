@@ -1,12 +1,11 @@
-from setuptools import setup
-from setuptools import find_packages
+from setuptools import find_packages, setup
 
 
 def load(path):
-    return open(path, 'r').read()
+    return open(path, "r").read()
 
 
-numerapi_version = '2.20.8'
+numerapi_version = "2.21.0"
 
 
 classifiers = [
@@ -17,7 +16,8 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Topic :: Scientific/Engineering"]
+    "Topic :: Scientific/Engineering",
+]
 
 
 if __name__ == "__main__":
@@ -27,19 +27,21 @@ if __name__ == "__main__":
         maintainer="uuazed",
         maintainer_email="uuazed@gmail.com",
         description="Automatically download and upload data for the Numerai machine learning competition",
-        long_description=load('README.md'),
-        long_description_content_type='text/markdown',
-        url='https://github.com/uuazed/numerapi',
+        long_description=load("README.md"),
+        long_description_content_type="text/markdown",
+        url="https://github.com/uuazed/numerapi",
         platforms="OS Independent",
         classifiers=classifiers,
-        license='MIT License',
-        package_data={'numerapi': ['LICENSE', 'README.md', "py.typed"]},
-        packages=find_packages(exclude=['tests']),
-        install_requires=["requests", "pytz", "python-dateutil",
-                          "tqdm>=4.29.1", "click>=7.0", "pandas>=1.1.0"],
-        entry_points={
-          'console_scripts': [
-              'numerapi = numerapi.cli:cli'
-          ]
-          },
-        )
+        license="MIT License",
+        package_data={"numerapi": ["LICENSE", "README.md", "py.typed"]},
+        packages=find_packages(exclude=["tests"]),
+        install_requires=[
+            "requests",
+            "pytz",
+            "python-dateutil",
+            "tqdm>=4.29.1",
+            "click>=7.0",
+            "pandas>=1.1.0",
+        ],
+        entry_points={"console_scripts": ["numerapi = numerapi.cli:cli"]},
+    )

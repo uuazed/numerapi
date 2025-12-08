@@ -1,7 +1,7 @@
 # Changelog
 Notable changes to this project.
 
-## [dev]
+## [2.21.0] - 2025-12-08 - CLI for signals and crypto!
 - cli: allow selecting tournaments (Classic/Signals/Crypto) via `--tournament` (PR #119)
 - added timezone-aware dates to BaseAPI (PR #119)
 - added `mmcMultiplier` and `roundPayoutFactor` to `round_model_performances_v2`
