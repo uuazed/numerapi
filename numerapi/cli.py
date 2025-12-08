@@ -1,8 +1,8 @@
-""" Access the numerai API via command line"""
+"""Access the numerai API via command line"""
 
-import json
 import datetime
 import decimal
+import json
 
 import click
 
@@ -32,14 +32,15 @@ def _require_method(api, method_name: str, command_name: str):
     if not hasattr(api, method_name):
         raise click.ClickException(
             f"The '{command_name}' command is not available for tournament "
-            f"{api.tournament_id}.")
+            f"{api.tournament_id}."
+        )
     return getattr(api, method_name)
 
 
 def tournament_option(func):
     """Reusable Click option for selecting a tournament."""
     return click.option(
-        '--tournament',
+        "--tournament",
         type=int,
         default=DEFAULT_TOURNAMENT,
         show_default=True,
@@ -52,6 +53,7 @@ class CommonJSONEncoder(json.JSONEncoder):
     Common JSON Encoder
     json.dumps(jsonString, cls=CommonJSONEncoder)
     """
+
     def default(self, o):
         # Encode: Decimal
         if isinstance(o, decimal.Decimal):
@@ -75,8 +77,10 @@ def cli():
 
 @cli.command()
 @click.option(
-    '--round_num', type=int,
-    help='round you are interested in. defaults to the current round')
+    "--round_num",
+    type=int,
+    help="round you are interested in. defaults to the current round",
+)
 @tournament_option
 def list_datasets(round_num, tournament):
     """List of available data files"""
@@ -86,22 +90,34 @@ def list_datasets(round_num, tournament):
 
 @cli.command()
 @click.option(
-    '--round_num', type=int,
-    help='round you are interested in. defaults to the current round')
+    "--round_num",
+    type=int,
+    help="round you are interested in. defaults to the current round",
+)
 @click.option(
-    '--filename', default="numerai_live_data.parquet", show_default=True,
-    help='file to be downloaded')
+    "--filename",
+    default="numerai_live_data.parquet",
+    show_default=True,
+    help="file to be downloaded",
+)
 @click.option(
-    '--dest_path',
-    help='complete destination path, defaults to the name of the source file')
+    "--dest_path",
+    help="complete destination path, defaults to the name of the source file",
+)
 @tournament_option
-def download_dataset(round_num, filename="numerai_live_data.parquet",
-                     dest_path=None, tournament=DEFAULT_TOURNAMENT):
+def download_dataset(
+    round_num,
+    filename="numerai_live_data.parquet",
+    dest_path=None,
+    tournament=DEFAULT_TOURNAMENT,
+):
     """Download specified file for the given round"""
-    click.echo("WARNING to download the old data use `download-dataset-old`")
     api = _get_api(tournament)
-    click.echo(api.download_dataset(
-        round_num=round_num, filename=filename, dest_path=dest_path))
+    click.echo(
+        api.download_dataset(
+            round_num=round_num, filename=filename, dest_path=dest_path
+        )
+    )
 
 
 @cli.command()
@@ -109,7 +125,7 @@ def download_dataset(round_num, filename="numerai_live_data.parquet",
 def competitions(tournament=DEFAULT_TOURNAMENT):
     """Retrieves information about all competitions"""
     api = _get_api(tournament)
-    method = _require_method(api, 'get_competitions', 'competitions')
+    method = _require_method(api, "get_competitions", "competitions")
     click.echo(prettify(method(tournament=tournament)))
 
 
@@ -122,37 +138,41 @@ def current_round(tournament=DEFAULT_TOURNAMENT):
 
 
 @cli.command()
-@click.option('--limit', default=20,
-              help='Number of items to return, defaults to 20')
-@click.option('--offset', default=0,
-              help='Number of items to skip, defaults to 0')
+@click.option("--limit", default=20, help="Number of items to return, defaults to 20")
+@click.option("--offset", default=0, help="Number of items to skip, defaults to 0")
 @tournament_option
 def leaderboard(limit=20, offset=0, tournament=DEFAULT_TOURNAMENT):
     """Get the leaderboard."""
     api = _get_api(tournament)
-    method = _require_method(api, 'get_leaderboard', 'leaderboard')
+    method = _require_method(api, "get_leaderboard", "leaderboard")
     click.echo(prettify(method(limit=limit, offset=offset)))
 
 
 @cli.command()
-@click.option('--round_num', type=int, default=None,
-              help='filter by round number, defaults to None')
 @click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
+    "--round_num",
+    type=int,
+    default=None,
+    help="filter by round number, defaults to None",
+)
+@click.option(
+    "--model_id",
+    type=str,
+    default=None,
+    help="An account model UUID (required for accounts with multiple models",
+)
 @tournament_option
 def submission_filenames(round_num, tournament, model_id):
     """Get filenames of your submissions"""
     api = _get_api(tournament)
-    method = _require_method(
-        api, 'get_submission_filenames', 'submission-filenames')
-    click.echo(prettify(
-        method(tournament=tournament, round_num=round_num, model_id=model_id)))
+    method = _require_method(api, "get_submission_filenames", "submission-filenames")
+    click.echo(
+        prettify(method(tournament=tournament, round_num=round_num, model_id=model_id))
+    )
 
 
 @cli.command()
-@click.option('--hours', default=12,
-              help='timeframe to consider, defaults to 12')
+@click.option("--hours", default=12, help="timeframe to consider, defaults to 12")
 @tournament_option
 def check_new_round(hours=12, tournament=DEFAULT_TOURNAMENT):
     """Check if a new round has started within the last `hours`."""
@@ -182,7 +202,7 @@ def models(tournament=DEFAULT_TOURNAMENT):
 def profile(username, tournament=DEFAULT_TOURNAMENT):
     """Fetch the public profile of a user."""
     api = _get_api(tournament)
-    method = _require_method(api, 'public_user_profile', 'profile')
+    method = _require_method(api, "public_user_profile", "profile")
     click.echo(prettify(method(username)))
 
 
@@ -193,7 +213,8 @@ def daily_model_performances(username, tournament=DEFAULT_TOURNAMENT):
     """Fetch daily performance of a model."""
     api = _get_api(tournament)
     method = _require_method(
-        api, 'daily_model_performances', 'daily-model-performances')
+        api, "daily_model_performances", "daily-model-performances"
+    )
     click.echo(prettify(method(username)))
 
 
@@ -207,9 +228,12 @@ def transactions(tournament=DEFAULT_TOURNAMENT):
 
 @cli.command()
 @click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
-@click.argument('path', type=click.Path(exists=True))
+    "--model_id",
+    type=str,
+    default=None,
+    help="An account model UUID (required for accounts with multiple models",
+)
+@click.argument("path", type=click.Path(exists=True))
 @tournament_option
 def submit(path, model_id, tournament=DEFAULT_TOURNAMENT):
     """Upload predictions from file."""
@@ -223,14 +247,17 @@ def submit(path, model_id, tournament=DEFAULT_TOURNAMENT):
 def stake_get(username, tournament=DEFAULT_TOURNAMENT):
     """Get stake value of a user."""
     api = _get_api(tournament)
-    method = _require_method(api, 'stake_get', 'stake-get')
+    method = _require_method(api, "stake_get", "stake-get")
     click.echo(method(username))
 
 
 @cli.command()
 @click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
+    "--model_id",
+    type=str,
+    default=None,
+    help="An account model UUID (required for accounts with multiple models",
+)
 @tournament_option
 def stake_drain(model_id, tournament=DEFAULT_TOURNAMENT):
     """Completely remove your stake."""
@@ -241,8 +268,11 @@ def stake_drain(model_id, tournament=DEFAULT_TOURNAMENT):
 @cli.command()
 @click.argument("nmr")
 @click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
+    "--model_id",
+    type=str,
+    default=None,
+    help="An account model UUID (required for accounts with multiple models",
+)
 @tournament_option
 def stake_decrease(nmr, model_id, tournament=DEFAULT_TOURNAMENT):
     """Decrease your stake by `value` NMR."""
@@ -253,8 +283,11 @@ def stake_decrease(nmr, model_id, tournament=DEFAULT_TOURNAMENT):
 @cli.command()
 @click.argument("nmr")
 @click.option(
-    '--model_id', type=str, default=None,
-    help="An account model UUID (required for accounts with multiple models")
+    "--model_id",
+    type=str,
+    default=None,
+    help="An account model UUID (required for accounts with multiple models",
+)
 @tournament_option
 def stake_increase(nmr, model_id, tournament=DEFAULT_TOURNAMENT):
     """Increase your stake by `value` NMR."""
