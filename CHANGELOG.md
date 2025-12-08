@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev]
 - more type hints
+- 'round_model_performances_v2' - add 'roundPayoutFactor' and 'mmcMultiplier'
 
 ## [2.20.8] - 2025-09-11
 - added `BMC` and `Alpha` to diagnostics
