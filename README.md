@@ -105,28 +105,25 @@ To get started with the cli interface, let's take a look at the help page:
         --help  Show this message and exit.
 
       Commands:
-        account                         Get all information about your account!
-        check-new-round                 Check if a new round has started within...
-        competitions                    Retrieves information about all...
-        current-round                   Get number of the current active round.
-        daily-model-performances        Fetch daily performance of a model.
-        daily-submissions-performances  Fetch daily performance of a user's...
-        dataset-url                     Fetch url of the current dataset.
-        download-dataset                Download specified file for the given...
-        download-dataset-old            Download dataset for the current active...
-        leaderboard                     Get the leaderboard.
-        list-datasets                   List of available data files
-        models                          Get map of account models!
-        profile                         Fetch the public profile of a user.
-        stake-decrease                  Decrease your stake by `value` NMR.
-        stake-drain                     Completely remove your stake.
-        stake-get                       Get stake value of a user.
-        stake-increase                  Increase your stake by `value` NMR.
-        submission-filenames            Get filenames of your submissions
-        submit                          Upload predictions from file.
-        transactions                    List all your deposits and withdrawals.
-        user                            Get all information about you!...
-        version                         Installed numerapi version.
+        account                   Get all information about your account!
+        check-new-round           Check if a new round has started within the...
+        competitions              Retrieves information about all competitions
+        current-round             Get number of the current active round.
+        daily-model-performances  Fetch daily performance of a model.
+        download-dataset          Download specified file for the given round
+        leaderboard               Get the leaderboard.
+        list-datasets             List of available data files
+        models                    Get map of account models!
+        profile                   Fetch the public profile of a user.
+        stake-decrease            Decrease your stake by `value` NMR.
+        stake-drain               Completely remove your stake.
+        stake-get                 Get stake value of a user.
+        stake-increase            Increase your stake by `value` NMR.
+        submission-filenames      Get filenames of your submissions
+        submit                    Upload predictions from file.
+        transactions              List all your deposits and withdrawals.
+        version                   Installed numerapi version.
+
 
 All CLI commands accept a `--tournament` option. It defaults to `8`
 (the classic tournament), but you can point the CLI at Signals (`11`) or
