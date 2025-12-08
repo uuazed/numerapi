@@ -2,10 +2,10 @@
 Notable changes to this project.
 
 ## [dev]
-- cli: allow selecting tournaments (Signals/Crypto) via `--tournament`
+- cli: allow selecting tournaments (Classic/Signals/Crypto) via `--tournament` (PR #119)
+- added timezone-aware dates to BaseAPI (PR #119)
 - added `mmcMultiplier` and `roundPayoutFactor` to `round_model_performances_v2`
 - more type hints
-- 'round_model_performances_v2' - add 'roundPayoutFactor' and 'mmcMultiplier'
 
 ## [2.20.8] - 2025-09-11
 - added `BMC` and `Alpha` to diagnostics
