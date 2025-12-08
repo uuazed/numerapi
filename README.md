@@ -138,12 +138,11 @@ Each command has it's own help page, for example:
       Upload predictions from file.
 
     Options:
-      --tournament INTEGER  Tournament to target (8 classic, 11 signals, 12
-                            crypto)  [default: 8]
+      --tournament INTEGER  The ID of the tournament, defaults to 8
       --model_id TEXT       An account model UUID (required for accounts with
                             multiple models
-
       --help                Show this message and exit.
+
 
 
 # API Reference
