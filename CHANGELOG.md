@@ -5,6 +5,7 @@ Notable changes to this project.
 - cli: allow selecting tournaments (Signals/Crypto) via `--tournament`
 - added `mmcMultiplier` and `roundPayoutFactor` to `round_model_performances_v2`
 - more type hints
+- 'round_model_performances_v2' - add 'roundPayoutFactor' and 'mmcMultiplier'
 
 ## [2.20.8] - 2025-09-11
 - added `BMC` and `Alpha` to diagnostics

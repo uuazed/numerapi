@@ -1,26 +1,30 @@
 """Parts of the API that is shared between Signals and Classic"""
 
-import os
 import datetime
 import logging
-from typing import Dict, List, Union, Tuple
+import os
 from io import BytesIO
-import pytz
+from typing import Dict, List, Tuple, Union
 
 import pandas as pd
+import pytz
 import requests
 
 from numerapi import utils
 
-API_TOURNAMENT_URL = 'https://api-tournament.numer.ai'
+API_TOURNAMENT_URL = "https://api-tournament.numer.ai"
 
 
 class Api:
     """Wrapper around the Numerai API"""
 
-    def __init__(self, public_id: str | None = None,
-                 secret_key: str | None = None, verbosity: str = "INFO",
-                 show_progress_bars: bool = True):
+    def __init__(
+        self,
+        public_id: str | None = None,
+        secret_key: str | None = None,
+        verbosity: str = "INFO",
+        show_progress_bars: bool = True,
+    ):
         """
         initialize Numerai API wrapper for Python
 
@@ -47,7 +51,9 @@ class Api:
         self.tournament_id = 0
         self.global_data_dir = "."
 
-    def _login(self, public_id: str | None = None, secret_key: str | None = None) -> None:
+    def _login(
+        self, public_id: str | None = None, secret_key: str | None = None
+    ) -> None:
         # check env variables if not set
         if not public_id or not secret_key:
             public_id, secret_key = utils.load_secrets()
@@ -57,8 +63,7 @@ class Api:
         elif not public_id and not secret_key:
             self.token = None
         else:
-            self.logger.warning(
-                "You need to supply both a public id and a secret key.")
+            self.logger.warning("You need to supply both a public id and a secret key.")
             self.token = None
 
     def _handle_call_error(self, errors) -> str:
@@ -66,17 +71,24 @@ class Api:
         if isinstance(errors, list):
             for error in errors:
                 if "message" in error:
-                    msg = error['message']
+                    msg = error["message"]
                     self.logger.error(msg)
         elif isinstance(errors, dict):
             if "detail" in errors:
-                msg = errors['detail']
+                msg = errors["detail"]
                 self.logger.error(msg)
         return msg
 
-    def raw_query(self, query: str, variables: Dict | None = None,
-                  authorization: bool = False,
-                  *, retries: int = 3, delay: int = 5, backoff: int = 2):
+    def raw_query(
+        self,
+        query: str,
+        variables: Dict | None = None,
+        authorization: bool = False,
+        *,
+        retries: int = 3,
+        delay: int = 5,
+        backoff: int = 2,
+    ):
         """Send a raw request to the Numerai's GraphQL API.
 
         This function allows to build your own queries and fetch results from
@@ -111,24 +123,27 @@ class Api:
             >>> NumerAPI().raw_query(query, args)
             {'data': {'rounds': [{'number': 104}]}}
         """
-        body = {'query': query,
-                'variables': variables}
+        body = {"query": query, "variables": variables}
         self.logger.debug(body)
-        headers = {'Content-type': 'application/json',
-                   'Accept': 'application/json'}
+        headers = {"Content-type": "application/json", "Accept": "application/json"}
         if authorization:
             if self.token:
                 public_id, secret_key = self.token
-                headers['Authorization'] = f'Token {public_id}${secret_key}'
+                headers["Authorization"] = f"Token {public_id}${secret_key}"
             else:
                 raise ValueError("API keys required for this action.")
 
         result = utils.post_with_err_handling(
-            API_TOURNAMENT_URL, body, headers,
-            retries=retries, delay=delay, backoff=backoff)
+            API_TOURNAMENT_URL,
+            body,
+            headers,
+            retries=retries,
+            delay=delay,
+            backoff=backoff,
+        )
 
         if result and "errors" in result:
-            err = self._handle_call_error(result['errors'])
+            err = self._handle_call_error(result["errors"])
             # fail!
             raise ValueError(err)
         return result
@@ -156,13 +171,13 @@ class Api:
             listDatasets(round: $round
                          tournament: $tournament)
         }"""
-        args = {'round': round_num, "tournament": self.tournament_id}
-        return self.raw_query(query, args)['data']['listDatasets']
+        args = {"round": round_num, "tournament": self.tournament_id}
+        return self.raw_query(query, args)["data"]["listDatasets"]
 
-    def download_dataset(self, filename: str,
-                         dest_path: str | None = None,
-                         round_num: int | None = None) -> str:
-        """ Download specified file for the given round.
+    def download_dataset(
+        self, filename: str, dest_path: str | None = None, round_num: int | None = None
+    ) -> str:
+        """Download specified file for the given round.
 
         Args:
             filename (str, optional): file to be downloaded
@@ -198,9 +213,13 @@ class Api:
                     tournament: $tournament)
         }
         """
-        args = {'filename': filename, "round": round_num, "tournament": self.tournament_id}
+        args = {
+            "filename": filename,
+            "round": round_num,
+            "tournament": self.tournament_id,
+        }
 
-        dataset_url = self.raw_query(query, args)['data']['dataset']
+        dataset_url = self.raw_query(query, args)["data"]["dataset"]
         utils.download_file(dataset_url, dest_path, self.show_progress_bars)
         return dest_path
 
@@ -211,7 +230,7 @@ class Api:
             directory (str): directory to be used
         """
         self.global_data_dir = directory
-         # create folder if necessary
+        # create folder if necessary
         os.makedirs(directory, exist_ok=True)
 
     def get_account(self) -> Dict:
@@ -290,7 +309,7 @@ class Api:
             }
           }
         """
-        data = self.raw_query(query, authorization=True)['data']['account']
+        data = self.raw_query(query, authorization=True)["data"]["account"]
         # convert strings to python objects
         utils.replace(data, "insertedAt", utils.parse_datetime_string)
         utils.replace(data, "availableNmr", utils.parse_float_string)
@@ -323,9 +342,11 @@ class Api:
             }
         """
         args = {"username": account, "tournament": self.tournament_id}
-        data = self.raw_query(query, args)['data']['accountProfile']['models']
-        return {item["displayName"]: item["id"]
-                for item in sorted(data, key=lambda x: x["displayName"])}
+        data = self.raw_query(query, args)["data"]["accountProfile"]["models"]
+        return {
+            item["displayName"]: item["id"]
+            for item in sorted(data, key=lambda x: x["displayName"])
+        }
 
     def get_models(self, tournament: int | None = None) -> Dict:
         """Get mapping of account model names to model ids for convenience
@@ -354,11 +375,11 @@ class Api:
         """
         if tournament is None:
             tournament = self.tournament_id
-        data = self.raw_query(
-            query, authorization=True)['data']['account']['models']
+        data = self.raw_query(query, authorization=True)["data"]["account"]["models"]
         mapping = {
-            model['name']: model['id'] for model in data
-            if model['tournament'] == tournament
+            model["name"]: model["id"]
+            for model in data
+            if model["tournament"] == tournament
         }
         return mapping
 
@@ -378,16 +399,16 @@ class Api:
         if tournament is None:
             tournament = self.tournament_id
         # zero is an alias for the current round!
-        query = '''
+        query = """
             query($tournament: Int!) {
               rounds(tournament: $tournament
                      number: 0) {
                 number
               }
             }
-        '''
-        arguments = {'tournament': tournament}
-        data = self.raw_query(query, arguments)['data']['rounds'][0]
+        """
+        arguments = {"tournament": tournament}
+        data = self.raw_query(query, arguments)["data"]["rounds"][0]
         if data is None:
             return None
         round_num = data["number"]
@@ -409,14 +430,14 @@ class Api:
             >>> napi.set_bio(model_id, "This model stinks.")
             True
         """
-        mutation = '''
+        mutation = """
             mutation($value: String!
                   $modelId: String) {
                 setUserBio(value: $value
                            modelId: $modelId)
             }
-        '''
-        arguments = {'value': bio, 'modelId': model_id}
+        """
+        arguments = {"value": bio, "modelId": model_id}
         res = self.raw_query(mutation, arguments, authorization=True)
         return res["data"]["setUserBio"]
 
@@ -437,7 +458,7 @@ class Api:
             >>> napi.set_link(model_id, "buy my predictions", "numerbay.ai")
             True
         """
-        mutation = '''
+        mutation = """
             mutation($linkUrl: String!
                      $linkText: String
                      $modelId: String) {
@@ -445,8 +466,8 @@ class Api:
                             linkUrl: $linkUrl
                             modelId: $modelId)
             }
-        '''
-        args = {'linkUrl': link, "linkText": link_text, 'modelId': model_id}
+        """
+        args = {"linkUrl": link, "linkText": link_text, "modelId": model_id}
         res = self.raw_query(mutation, args, authorization=True)
         return res["data"]["setUserLink"]
 
@@ -495,16 +516,14 @@ class Api:
             }
           }
         """
-        txs = self.raw_query(
-            query, authorization=True)['data']['account']['walletTxns']
+        txs = self.raw_query(query, authorization=True)["data"]["account"]["walletTxns"]
         # convert strings to python objects
         for transaction in txs:
             utils.replace(transaction, "time", utils.parse_datetime_string)
             utils.replace(transaction, "amount", utils.parse_float_string)
         return txs
 
-    def set_submission_webhook(self, model_id: str,
-                               webhook: str | None = None) -> bool:
+    def set_submission_webhook(self, model_id: str, webhook: str | None = None) -> bool:
         """Set a model's submission webhook used in Numerai Compute.
         Read More: https://docs.numer.ai/tournament/compute
 
@@ -521,7 +540,7 @@ class Api:
             >>> api.set_submission_webhook(model_id="..", webhook="..")
             True
         """
-        query = '''
+        query = """
           mutation (
             $modelId: String!
             $newSubmissionWebhook: String
@@ -531,14 +550,15 @@ class Api:
               newSubmissionWebhook: $newSubmissionWebhook
             )
           }
-        '''
-        arguments = {'modelId': model_id, 'newSubmissionWebhook': webhook}
+        """
+        arguments = {"modelId": model_id, "newSubmissionWebhook": webhook}
         res = self.raw_query(query, arguments, authorization=True)
-        return res['data']['setSubmissionWebhook'] == "true"
+        return res["data"]["setSubmissionWebhook"] == "true"
 
-    def _upload_auth(self, endpoint: str, file_path: str, tournament: int,
-                     model_id: str) -> Dict[str, str]:
-        auth_query = f'''
+    def _upload_auth(
+        self, endpoint: str, file_path: str, tournament: int, model_id: str
+    ) -> Dict[str, str]:
+        auth_query = f"""
             query($filename: String!
                   $tournament: Int!
                   $modelId: String) {{
@@ -549,18 +569,23 @@ class Api:
                     url
                 }}
             }}
-        '''
-        arguments = {'filename': os.path.basename(file_path),
-                     'tournament': tournament,
-                     'modelId': model_id}
-        return self.raw_query(
-            auth_query, arguments,
-            authorization=True)['data'][endpoint]
+        """
+        arguments = {
+            "filename": os.path.basename(file_path),
+            "tournament": tournament,
+            "modelId": model_id,
+        }
+        return self.raw_query(auth_query, arguments, authorization=True)["data"][
+            endpoint
+        ]
 
-    def upload_diagnostics(self, file_path: str = "predictions.csv",
-                           tournament: int | None = None,
-                           model_id: str = "",
-                           df: pd.DataFrame | None = None) -> str:
+    def upload_diagnostics(
+        self,
+        file_path: str = "predictions.csv",
+        tournament: int | None = None,
+        model_id: str = "",
+        df: pd.DataFrame | None = None,
+    ) -> str:
         """Upload predictions to diagnostics from file.
 
         Args:
@@ -594,11 +619,12 @@ class Api:
             buffer_csv.name = file_path
 
         upload_auth = self._upload_auth(
-            'diagnosticsUploadAuth', file_path, tournament, model_id)
+            "diagnosticsUploadAuth", file_path, tournament, model_id
+        )
 
-        with open(file_path, 'rb') if df is None else buffer_csv as file:
-            requests.put(upload_auth['url'], data=file.read(), timeout=600)
-        create_query = '''
+        with open(file_path, "rb") if df is None else buffer_csv as file:
+            requests.put(upload_auth["url"], data=file.read(), timeout=600)
+        create_query = """
             mutation($filename: String!
                      $tournament: Int!
                      $modelId: String) {
@@ -607,12 +633,14 @@ class Api:
                                   modelId: $modelId) {
                     id
                 }
-            }'''
-        arguments = {'filename': upload_auth['filename'],
-                     'tournament': tournament,
-                     'modelId': model_id}
+            }"""
+        arguments = {
+            "filename": upload_auth["filename"],
+            "tournament": tournament,
+            "modelId": model_id,
+        }
         create = self.raw_query(create_query, arguments, authorization=True)
-        diagnostics_id = create['data']['createDiagnostics']['id']
+        diagnostics_id = create["data"]["createDiagnostics"]["id"]
         return diagnostics_id
 
     def diagnostics(self, model_id: str, diagnostics_id: str | None = None) -> Dict:
@@ -718,7 +746,7 @@ class Api:
             }
 
         """
-        query = '''
+        query = """
             query($id: String
                   $modelId: String!) {
               diagnostics(id: $id
@@ -807,10 +835,9 @@ class Api:
                 validationAlphaStd
               }
             }
-        '''
-        args = {'modelId': model_id, 'id': diagnostics_id}
-        results = self.raw_query(
-            query, args, authorization=True)['data']['diagnostics']
+        """
+        args = {"modelId": model_id, "id": diagnostics_id}
+        results = self.raw_query(query, args, authorization=True)["data"]["diagnostics"]
         utils.replace(results, "updatedAt", utils.parse_datetime_string)
         return results
 
@@ -829,7 +856,6 @@ class Api:
                 * atRisk (`float`)
                 * corrMultiplier (`float` or None)
                 * mmcMultiplier (`float` or None)
-                * tcMultiplier (`float` or None)
                 * roundPayoutFactor (`float` or None)
                 * roundNumber (`int`)
                 * roundOpenTime (`datetime`)
@@ -852,15 +878,14 @@ class Api:
             v2RoundModelPerformances(modelId: $modelId
                                      tournament: $tournament) {
                 atRisk
-                corrMultiplier
-                mmcMultiplier
-                tcMultiplier
-                roundPayoutFactor
-                roundNumber
-                roundOpenTime
-                roundResolveTime
-                roundResolved
-                roundTarget
+                corrMultiplier,
+                mmcMultiplier,
+                roundPayoutFactor,
+                roundNumber,
+                roundOpenTime,
+                roundResolveTime,
+                roundResolved,
+                roundTarget,
                 submissionScores {
                     date
                     day
@@ -873,21 +898,18 @@ class Api:
             }
           }
         """
-        arguments = {'modelId': model_id, 'tournament': self.tournament_id}
-        data = self.raw_query(query, arguments)['data']
-        performances = data['v2RoundModelPerformances']
+        arguments = {"modelId": model_id, "tournament": self.tournament_id}
+        data = self.raw_query(query, arguments)["data"]
+        performances = data["v2RoundModelPerformances"]
         for perf in performances:
             utils.replace(perf, "roundOpenTime", utils.parse_datetime_string)
             utils.replace(perf, "roundResolveTime", utils.parse_datetime_string)
             utils.replace(perf, "atRisk", utils.parse_float_string)
             if perf["submissionScores"]:
                 for submission in perf["submissionScores"]:
-                    utils.replace(
-                        submission, "date", utils.parse_datetime_string)
-                    utils.replace(
-                        submission, "payoutPending", utils.parse_float_string)
-                    utils.replace(
-                        submission, "payoutSettled",utils.parse_float_string)
+                    utils.replace(submission, "date", utils.parse_datetime_string)
+                    utils.replace(submission, "payoutPending", utils.parse_float_string)
+                    utils.replace(submission, "payoutSettled", utils.parse_float_string)
         return performances
 
     def intra_round_scores(self, model_id: str):
@@ -934,9 +956,9 @@ class Api:
             }
           }
         """
-        arguments = {'modelId': model_id, 'tournament': self.tournament_id}
-        data = self.raw_query(query, arguments)['data']
-        performances = data['v2RoundModelPerformances']
+        arguments = {"modelId": model_id, "tournament": self.tournament_id}
+        data = self.raw_query(query, arguments)["data"]
+        performances = data["v2RoundModelPerformances"]
         for perf in performances:
             if perf["intraRoundSubmissionScores"]:
                 for score in perf["intraRoundSubmissionScores"]:
@@ -951,13 +973,12 @@ class Api:
 
         DEPRECATED - please use `round_model_performances_v2` instead
         """
-        self.logger.warning(
-            "Deprecated. Checkout round_model_performances_v2.")
+        self.logger.warning("Deprecated. Checkout round_model_performances_v2.")
         return self.round_model_performances_v2(username)
 
-
-    def stake_change(self, nmr: float | str, action: str = "decrease",
-                     model_id: str = "") -> Dict:
+    def stake_change(
+        self, nmr: float | str, action: str = "decrease", model_id: str = ""
+    ) -> Dict:
         """Change stake by `value` NMR.
 
         Args:
@@ -983,7 +1004,7 @@ class Api:
              'type': 'decrease',
              'status': ''}
         """
-        query = '''
+        query = """
           mutation($value: String!
                    $type: String!
                    $tournamentNumber: Int!
@@ -998,13 +1019,15 @@ class Api:
                 type
               }
         }
-        '''
-        arguments = {'value': str(nmr),
-                     'type': action,
-                     'modelId': model_id,
-                     'tournamentNumber': self.tournament_id}
+        """
+        arguments = {
+            "value": str(nmr),
+            "type": action,
+            "modelId": model_id,
+            "tournamentNumber": self.tournament_id,
+        }
         result = self.raw_query(query, arguments, authorization=True)
-        stake = result['data']['v2ChangeStake']
+        stake = result["data"]["v2ChangeStake"]
         utils.replace(stake, "requestedAmount", utils.parse_float_string)
         utils.replace(stake, "dueDate", utils.parse_datetime_string)
         return stake
@@ -1034,7 +1057,7 @@ class Api:
              'status': '',
              'drain": True}
         """
-        query = '''
+        query = """
             mutation($drain: bool!
                      $amount: String
                      $modelId: String) {
@@ -1048,10 +1071,10 @@ class Api:
                     requestedAmount
                     drain
                 }
-            }'''
-        arguments = {'drain': True, "modelId": model_id, "amount": '11000000'}
+            }"""
+        arguments = {"drain": True, "modelId": model_id, "amount": "11000000"}
         raw = self.raw_query(query, arguments, authorization=True)
-        return raw['data']['releaseStake']
+        return raw["data"]["releaseStake"]
 
     def stake_decrease(self, nmr: float | str, model_id: str) -> Dict:
         """Decrease your stake by `value` NMR.
@@ -1079,7 +1102,7 @@ class Api:
              'type': 'decrease',
              'status': ''}
         """
-        return self.stake_change(nmr, 'decrease', model_id)
+        return self.stake_change(nmr, "decrease", model_id)
 
     def stake_increase(self, nmr: float | str, model_id: str) -> Dict:
         """Increase your stake by `value` NMR.
@@ -1107,7 +1130,7 @@ class Api:
              'type': 'increase',
              'status': ''}
         """
-        return self.stake_change(nmr, 'increase', model_id)
+        return self.stake_change(nmr, "increase", model_id)
 
     def check_round_open(self) -> bool:
         """Check if a round is currently open.
@@ -1119,7 +1142,7 @@ class Api:
             >>> NumerAPI().check_round_open()
             False
         """
-        query = '''
+        query = """
             query($tournament: Int!) {
               rounds(tournament: $tournament
               number: 0) {
@@ -1128,18 +1151,18 @@ class Api:
                 closeStakingTime
               }
             }
-        '''
-        arguments = {'tournament': self.tournament_id}
+        """
+        arguments = {"tournament": self.tournament_id}
         # in some period in between rounds, "number: 0" returns Value error -
         # "Current round not open for submissions", because there is no active
         # round. This is caught by the try / except.
         try:
-            raw = self.raw_query(query, arguments)['data']['rounds'][0]
+            raw = self.raw_query(query, arguments)["data"]["rounds"][0]
         except ValueError:
             return False
         if raw is None:
             return False
-        open_time = utils.parse_datetime_string(raw['openTime'])
+        open_time = utils.parse_datetime_string(raw["openTime"])
         deadline = utils.parse_datetime_string(raw["closeStakingTime"])
         now = datetime.datetime.now(tz=pytz.utc)
         is_open = open_time < now < deadline
@@ -1158,7 +1181,7 @@ class Api:
             >>> NumerAPI().check_new_round()
             False
         """
-        query = '''
+        query = """
             query($tournament: Int!) {
               rounds(tournament: $tournament
                      number: 0) {
@@ -1166,13 +1189,13 @@ class Api:
                 openTime
               }
             }
-        '''
-        arguments = {'tournament': self.tournament_id}
+        """
+        arguments = {"tournament": self.tournament_id}
         # in some period in between rounds, "number: 0" returns Value error -
         # "Current round not open for submissions", because there is no active
         # round. This is caught by the try / except.
         try:
-            raw = self.raw_query(query, arguments)['data']['rounds'][0]
+            raw = self.raw_query(query, arguments)["data"]["rounds"][0]
         except ValueError:
             return False
         if raw is None:
@@ -1182,8 +1205,7 @@ class Api:
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
 
-    def get_account_leaderboard(
-            self, limit: int = 50, offset: int = 0) -> List[Dict]:
+    def get_account_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current account leaderboard
 
         Args:
@@ -1221,7 +1243,7 @@ class Api:
               ...
               }]
         """
-        query = '''
+        query = """
             query($limit: Int!
                   $offset: Int!
                   $tournament: Int) {
@@ -1248,10 +1270,9 @@ class Api:
                 returnAllTimeNmr
               }
             }
-        '''
-        args = {'limit': limit, 'offset': offset,
-                "tournament": self.tournament_id}
-        data = self.raw_query(query, args)['data']['accountLeaderboard']
+        """
+        args = {"limit": limit, "offset": offset, "tournament": self.tournament_id}
+        data = self.raw_query(query, args)["data"]["accountLeaderboard"]
         for item in data:
             utils.replace(item, "nmrStaked", utils.parse_float_string)
             utils.replace(item, "return1yNmr", utils.parse_float_string)
@@ -1275,9 +1296,9 @@ class Api:
                 }
             }
         """
-        arguments = {'modelid': model_id}
+        arguments = {"modelid": model_id}
         res = self.raw_query(query, arguments, authorization=True)
-        return res['data']['model']["name"]
+        return res["data"]["model"]["name"]
 
     def pipeline_status(self, date: str | None = None) -> Dict:
         """Get status of Numerai's scoring pipeline
@@ -1313,18 +1334,21 @@ class Api:
                 }
             }
         """
-        arguments = {'tournament': tournament, "date": date}
+        arguments = {"tournament": tournament, "date": date}
         res = self.raw_query(query, arguments)["data"]["pipelineStatus"]
         for field in res.keys():
             if field.endswith("At"):
                 utils.replace(res, field, utils.parse_datetime_string)
         return res
 
-    def model_upload(self, file_path: str,
-                 tournament: int | None = None,
-                 model_id: str | None = None,
-                 data_version: str | None = None,
-                 docker_image: str  | None = None) -> str:
+    def model_upload(
+        self,
+        file_path: str,
+        tournament: int | None = None,
+        model_id: str | None = None,
+        data_version: str | None = None,
+        docker_image: str | None = None,
+    ) -> str:
         """Upload pickled model to numerai.
 
         Args:
@@ -1362,7 +1386,7 @@ class Api:
                     raise ValueError(msg)
                 docker_image = docker_images[docker_image]
 
-        auth_query = '''
+        auth_query = """
             query($filename: String! $modelId: String) {
                 computePickleUploadAuth(filename: $filename
                                         modelId: $modelId) {
@@ -1370,16 +1394,15 @@ class Api:
                     url
                 }
             }
-        '''
-        arguments = {'filename': os.path.basename(file_path),
-                     'modelId': model_id}
-        upload_auth =  self.raw_query(
-            auth_query, arguments,
-            authorization=True)['data']["computePickleUploadAuth"]
+        """
+        arguments = {"filename": os.path.basename(file_path), "modelId": model_id}
+        upload_auth = self.raw_query(auth_query, arguments, authorization=True)["data"][
+            "computePickleUploadAuth"
+        ]
 
-        with open(file_path, 'rb') as file:
-            requests.put(upload_auth['url'], data=file.read(), timeout=600)
-        create_query = '''
+        with open(file_path, "rb") as file:
+            requests.put(upload_auth["url"], data=file.read(), timeout=600)
+        create_query = """
             mutation($filename: String!
                      $tournament: Int!
                      $modelId: String
@@ -1392,18 +1415,20 @@ class Api:
                                           dockerImageId: $dockerImageId) {
                     id
                 }
-            }'''
+            }"""
         tournament = self.tournament_id if tournament is None else tournament
-        arguments = {'filename': upload_auth['filename'],
-                     'tournament': tournament,
-                     'modelId': model_id,
-                     'dataVersionId': data_version,
-                     'dockerImageId': docker_image}
+        arguments = {
+            "filename": upload_auth["filename"],
+            "tournament": tournament,
+            "modelId": model_id,
+            "dataVersionId": data_version,
+            "dockerImageId": docker_image,
+        }
         create = self.raw_query(create_query, arguments, authorization=True)
-        return create['data']['createComputePickleUpload']['id']
+        return create["data"]["createComputePickleUpload"]["id"]
 
     def model_upload_data_versions(self) -> Dict:
-        """ Get available data version for model uploads
+        """Get available data version for model uploads
 
         Returns:
             dict[str, str]: name to ID mapping
@@ -1414,22 +1439,20 @@ class Api:
             {'v4.1': 'a76bafa1-b25a-4f22-9add-65b528a0f3d0'}
 
         """
-        query = '''
+        query = """
             query {
                 computePickleDataVersions {
                     name
                     id
                 }
             }
-        '''
-        data = self.raw_query(query, authorization=True)['data']
-        res = {
-            item["name"]: item["id"]
-            for item in data["computePickleDataVersions"]}
+        """
+        data = self.raw_query(query, authorization=True)["data"]
+        res = {item["name"]: item["id"] for item in data["computePickleDataVersions"]}
         return res
 
     def model_upload_docker_images(self) -> Dict:
-        """ Get available docker images for model uploads
+        """Get available docker images for model uploads
 
         Returns:
             dict[str, str]: name to ID mapping
@@ -1442,22 +1465,20 @@ class Api:
                ...
             }
         """
-        query = '''
+        query = """
             query {
                 computePickleDockerImages {
                     name
                     id
                 }
             }
-        '''
-        data = self.raw_query(query, authorization=True)['data']
-        res = {
-            item["name"]: item["id"]
-            for item in data["computePickleDockerImages"]}
+        """
+        data = self.raw_query(query, authorization=True)["data"]
+        res = {item["name"]: item["id"] for item in data["computePickleDockerImages"]}
         return res
 
     def submission_ids(self, model_id: str):
-        """ Get all submission ids from a model
+        """Get all submission ids from a model
 
         Args:
             model_id (str)
@@ -1491,10 +1512,10 @@ class Api:
         utils.replace(data, "insertedAt", utils.parse_datetime_string)
         return data
 
-    def download_submission(self, submission_id: str | None = None,
-                            model_id: str = "",
-                            dest_path: str = "") -> str:
-        """ Download previous submissions from numerai
+    def download_submission(
+        self, submission_id: str | None = None, model_id: str = "", dest_path: str = ""
+    ) -> str:
+        """Download previous submissions from numerai
 
         Args:
             submission_id (str, optional): the submission to be downloaded
@@ -1517,31 +1538,33 @@ class Api:
         """
         msg = "You need to provide one of `model_id` and `submission_id"
         assert model_id != "" or submission_id != "", msg
-        auth_query = '''
+        auth_query = """
             query($id: String) {
                 submissionDownloadAuth(id: $id) {
                     filename
                     url
                 }
-            }'''
+            }"""
         if not submission_id:
             ids = self.submission_ids(model_id)
-            submission_id = max(ids, key=lambda x: x['insertedAt'])["id"]
+            submission_id = max(ids, key=lambda x: x["insertedAt"])["id"]
 
-        data = self.raw_query(
-            auth_query, {'id': submission_id},
-            authorization=True)['data']["submissionDownloadAuth"]
+        data = self.raw_query(auth_query, {"id": submission_id}, authorization=True)[
+            "data"
+        ]["submissionDownloadAuth"]
         if dest_path == "":
             dest_path = data["filename"]
         path = utils.download_file(data["url"], dest_path)
         return path
 
-    def upload_predictions(self, file_path: str = "predictions.csv",
-                            model_id: str | None = None,
-                            df: pd.DataFrame | None = None,
-                            data_datestamp: int | None = None,
-                            timeout: Union[None, float, Tuple[float, float]] = (10, 600)
-        ) -> str:
+    def upload_predictions(
+        self,
+        file_path: str = "predictions.csv",
+        model_id: str | None = None,
+        df: pd.DataFrame | None = None,
+        data_datestamp: int | None = None,
+        timeout: Union[None, float, Tuple[float, float]] = (10, 600),
+    ) -> str:
         """Upload predictions from file.
         Will read TRIGGER_ID from the environment if this model is enabled with
         a Numerai Compute cluster setup by Numerai CLI.
@@ -1578,15 +1601,16 @@ class Api:
             buffer_csv.name = file_path
 
         upload_auth = self._upload_auth(
-            'submission_upload_auth', file_path, self.tournament_id, model_id)
+            "submission_upload_auth", file_path, self.tournament_id, model_id
+        )
 
         # get compute id if available and pass it along
         headers = {"x_compute_id": os.getenv("NUMERAI_COMPUTE_ID")}
-        with open(file_path, 'rb') if df is None else buffer_csv as file:
+        with open(file_path, "rb") if df is None else buffer_csv as file:
             requests.put(
-                upload_auth['url'], data=file.read(), headers=headers,
-                timeout=timeout)
-        create_query = '''
+                upload_auth["url"], data=file.read(), headers=headers, timeout=timeout
+            )
+        create_query = """
             mutation($filename: String!
                      $tournament: Int!
                      $modelId: String
@@ -1601,12 +1625,14 @@ class Api:
                     id
                 }
             }
-            '''
-        arguments = {'filename': upload_auth['filename'],
-                     'tournament': self.tournament_id,
-                     'modelId': model_id,
-                     'triggerId': os.getenv('TRIGGER_ID', None),
-                     'dataDatestamp': data_datestamp}
+            """
+        arguments = {
+            "filename": upload_auth["filename"],
+            "tournament": self.tournament_id,
+            "modelId": model_id,
+            "triggerId": os.getenv("TRIGGER_ID", None),
+            "dataDatestamp": data_datestamp,
+        }
         create = self.raw_query(create_query, arguments, authorization=True)
-        submission_id = create['data']['create_submission']['id']
+        submission_id = create["data"]["create_submission"]["id"]
         return submission_id
