@@ -887,12 +887,12 @@ class Api:
                 roundResolved,
                 roundTarget,
                 submissionScores {
-                    date,
-                    day,
-                    displayName,
-                    payoutPending,
-                    payoutSettled,
-                    percentile,
+                    date
+                    day
+                    displayName
+                    payoutPending
+                    payoutSettled
+                    percentile
                     value
                 }
             }
@@ -1164,7 +1164,7 @@ class Api:
             return False
         open_time = utils.parse_datetime_string(raw["openTime"])
         deadline = utils.parse_datetime_string(raw["closeStakingTime"])
-        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        now = datetime.datetime.now(tz=pytz.utc)
         is_open = open_time < now < deadline
         return is_open
 
@@ -1200,8 +1200,8 @@ class Api:
             return False
         if raw is None:
             return False
-        open_time = utils.parse_datetime_string(raw["openTime"])
-        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        open_time = utils.parse_datetime_string(raw['openTime'])
+        now = datetime.datetime.now(tz=pytz.utc)
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
 

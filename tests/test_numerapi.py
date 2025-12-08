@@ -87,7 +87,7 @@ def test_upload_predictions_df(api):
 
 @responses.activate
 def test_check_new_round(api):
-    open_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    open_time = datetime.datetime.now(tz=pytz.utc)
     data = {"data": {"rounds": [{"openTime": open_time.isoformat()}]}}
     responses.add(responses.POST, base_api.API_TOURNAMENT_URL, json=data)
 

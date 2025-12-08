@@ -128,6 +128,10 @@ To get started with the cli interface, let's take a look at the help page:
         user                            Get all information about you!...
         version                         Installed numerapi version.
 
+All CLI commands accept a `--tournament` option. It defaults to `8`
+(the classic tournament), but you can point the CLI at Signals (`11`) or
+Crypto (`12`) on a per-command basis, e.g. `numerapi list-datasets --tournament 11`.
+
 
 Each command has it's own help page, for example:
 
@@ -137,7 +141,8 @@ Each command has it's own help page, for example:
       Upload predictions from file.
 
     Options:
-      --tournament INTEGER  The ID of the tournament, defaults to 1
+      --tournament INTEGER  Tournament to target (8 classic, 11 signals, 12
+                            crypto)  [default: 8]
       --model_id TEXT       An account model UUID (required for accounts with
                             multiple models
 
