@@ -7,14 +7,14 @@ from numerapi import utils
 
 class CryptoAPI(base_api.Api):
     """"API for Numerai Crypto"""
-    #
+
     def __init__(self, *args, **kwargs):
         base_api.Api.__init__(self, *args, **kwargs)
         self.tournament_id = 12
-    #
+
     def get_leaderboard(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Get the current Numerai Crypto leaderboard with a reduced set of fields.
-        #
+
         Returns:
             list of dicts: each dict contains only the requested fields:
                 - nmrStaked
