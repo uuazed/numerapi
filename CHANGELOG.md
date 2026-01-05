@@ -1,6 +1,10 @@
 # Changelog
 Notable changes to this project.
 
+
+## [2.22.0] - 2026-01-05
+-- added `get_leaderboard` for crypto tournament
+
 ## [2.21.0] - 2025-12-08 - CLI for signals and crypto!
 - cli: allow selecting tournaments (Classic/Signals/Crypto) via `--tournament` (PR #119)
 - added timezone-aware dates to BaseAPI (PR #119)
