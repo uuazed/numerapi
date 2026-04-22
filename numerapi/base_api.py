@@ -3,6 +3,7 @@
 import datetime
 import logging
 import os
+import warnings
 from io import BytesIO
 from typing import Dict, List, Tuple, Union
 
@@ -383,6 +384,211 @@ class Api:
         }
         return mapping
 
+    def v3_stake_auth(
+        self,
+        submission_id: str,
+        staker: str,
+        amount: float | str | None = None,
+        max_amount: float | str | None = None,
+    ) -> Dict:
+        """Issue a staking v3 authorization for a selected submission.
+
+        Args:
+            submission_id (str): submission id for the selected submission
+            staker (str): staker wallet address
+            amount (float or str, optional): max stake amount for the
+                authorization. Retained as a backwards-compatible alias for
+                `max_amount`.
+            max_amount (float or str, optional): max stake amount for the
+                authorization.
+
+        Returns:
+            dict: authorization payload with the following fields:
+
+                * authorizationSigner (`str`)
+                * authorizationDigest (`str`)
+                * chainId (`str`)
+                * deadline (`str`)
+                * maxAmount (`str`)
+                * amount (`str`) alias for `maxAmount`
+                * modelId (`str`)
+                * nmrAddress (`str`)
+                * nonce (`str`)
+                * roundId (`str`)
+                * signature (`str`)
+                * staker (`str`)
+                * stakingAddress (`str`)
+                * submissionId (`str`)
+                * submissionHash (`str`)
+                * tournamentId (`str`)
+        """
+        if (amount is None) == (max_amount is None):
+            raise ValueError("Provide exactly one of amount or max_amount.")
+
+        max_amount = max_amount if max_amount is not None else amount
+        query = """
+          query($submissionId: ID!, $staker: String!, $maxAmount: String!) {
+            v3StakeAuth(
+              submissionId: $submissionId
+              staker: $staker
+              maxAmount: $maxAmount
+            ) {
+              authorizationSigner
+              authorizationDigest
+              chainId
+              deadline
+              maxAmount
+              modelId
+              nmrAddress
+              nonce
+              roundId
+              signature
+              staker
+              stakingAddress
+              submissionId
+              submissionHash
+              tournamentId
+            }
+          }
+        """
+        arguments = {
+            "submissionId": submission_id,
+            "staker": staker,
+            "maxAmount": str(max_amount),
+        }
+        authorization = self.raw_query(query, arguments, authorization=True)["data"][
+            "v3StakeAuth"
+        ]
+        authorization["amount"] = authorization["maxAmount"]
+        return authorization
+
+    def v3_stake_config(self) -> Dict:
+        """Fetch staking v3 contract configuration.
+
+        Returns:
+            dict: staking v3 configuration with the following fields:
+
+                * address (`str`)
+                * authorizationSigner (`str`)
+                * nmrAddress (`str`)
+                * owner (`str`)
+                * paused (`bool`)
+                * pendingOwner (`str`)
+                * serviceWallet (`str`)
+        """
+        query = """
+          query {
+            v3StakeConfig {
+              address
+              authorizationSigner
+              nmrAddress
+              owner
+              paused
+              pendingOwner
+              serviceWallet
+            }
+          }
+        """
+        return self.raw_query(query, authorization=True)["data"]["v3StakeConfig"]
+
+    def v3_stake_round(self, round_id: int | str) -> Dict:
+        """Fetch staking v3 round status by round id.
+
+        Args:
+            round_id (int or str): round id
+
+        Returns:
+            dict: staking v3 round data with the following fields:
+
+                * closeTime (`str`)
+                * merkleRoot (`str`)
+                * openTime (`str`)
+                * payoutFactor (`str`)
+                * remainingBurn (`str`)
+                * remainingPayout (`str`)
+                * resolveTime (`str`)
+                * resolved (`bool`)
+                * roundId (`str`)
+                * stakeCap (`str`)
+                * stakeThreshold (`str`)
+                * state (`str`)
+                * totalPayout (`str`)
+                * totalStaked (`str`)
+                * tournamentId (`str`)
+        """
+        query = """
+          query($roundId: String!) {
+            v3StakeRound(roundId: $roundId) {
+              closeTime
+              merkleRoot
+              openTime
+              payoutFactor
+              remainingBurn
+              remainingPayout
+              resolveTime
+              resolved
+              roundId
+              stakeCap
+              stakeThreshold
+              state
+              totalPayout
+              totalStaked
+              tournamentId
+            }
+          }
+        """
+        arguments = {"roundId": str(round_id)}
+        return self.raw_query(query, arguments, authorization=True)["data"][
+            "v3StakeRound"
+        ]
+
+    def v3_stake_claim(self, round_id: int | str, model_id: str, staker: str) -> Dict:
+        """Fetch a staking v3 claim proof for a model and staker.
+
+        Args:
+            round_id (int or str): round id
+            model_id (str): model id
+            staker (str): staker wallet address
+
+        Returns:
+            dict: claim payload with the following fields:
+
+                * apiModelId (`str`)
+                * burnAmountWei (`str`)
+                * merkleRoot (`str`)
+                * modelId (`str`)
+                * payoutAmountWei (`str`)
+                * proof (`list` of `str`)
+                * roundId (`str`)
+                * staker (`str`)
+                * submissionId (`str`)
+                * tournamentId (`str`)
+        """
+        query = """
+          query($roundId: String!, $modelId: ID!, $staker: String!) {
+            v3StakeClaim(roundId: $roundId, modelId: $modelId, staker: $staker) {
+              apiModelId
+              burnAmountWei
+              merkleRoot
+              modelId
+              payoutAmountWei
+              proof
+              roundId
+              staker
+              submissionId
+              tournamentId
+            }
+          }
+        """
+        arguments = {
+            "roundId": str(round_id),
+            "modelId": model_id,
+            "staker": staker,
+        }
+        return self.raw_query(query, arguments, authorization=True)["data"][
+            "v3StakeClaim"
+        ]
+
     def get_current_round(self, tournament: int | None = None) -> int | None:
         """Get number of the current active round.
 
@@ -413,6 +619,79 @@ class Api:
             return None
         round_num = data["number"]
         return round_num
+
+    def list_rounds(
+        self,
+        number: int | None = None,
+        target: str | None = None,
+        status: str | None = None,
+        limit: int | None = None,
+    ) -> List[Dict]:
+        """List rounds with the filters supported by the round resolver.
+
+        Args:
+            number (int, optional): round number filter
+            target (str, optional): round target filter
+            status (str, optional): round status filter. One of `upcoming`,
+                `open`, `resolving`, or `resolved`
+            limit (int, optional): maximum number of rounds to return
+
+        Returns:
+            list of dicts: round entries matching the provided filters
+        """
+        query = """
+            query($tournament: Int
+                  $number: Int
+                  $target: String
+                  $status: RoundStatus
+                  $limit: Int) {
+              rounds(tournament: $tournament
+                     number: $number
+                     target: $target
+                     status: $status
+                     limit: $limit) {
+                id
+                tournament
+                number
+                target
+                closeTime
+                closeStakingTime
+                openTime
+                scoreTime
+                resolveTime
+                resolvedGeneral
+                resolvedStaking
+                payoutFactor
+                stakeThreshold
+                minCorrMultiplier
+                maxCorrMultiplier
+                defaultCorrMultiplier
+                minMmcMultiplier
+                maxMmcMultiplier
+                defaultMmcMultiplier
+                dataDatestamp
+              }
+            }
+        """
+        arguments = {
+            "tournament": self.tournament_id,
+            "number": number,
+            "target": target,
+            "status": None if status is None else status.upper(),
+            "limit": limit,
+        }
+        rounds = self.raw_query(query, arguments)["data"]["rounds"]
+        for round_info in rounds:
+            for field in [
+                "closeTime",
+                "closeStakingTime",
+                "openTime",
+                "scoreTime",
+                "resolveTime",
+            ]:
+                utils.replace(round_info, field, utils.parse_datetime_string)
+            utils.replace(round_info, "payoutFactor", utils.parse_float_string)
+        return rounds
 
     def set_bio(self, model_id: str, bio: str) -> bool:
         """Set bio field for a model id.
@@ -841,8 +1120,143 @@ class Api:
         utils.replace(results, "updatedAt", utils.parse_datetime_string)
         return results
 
+    def submission_scores(
+        self,
+        model_id: str,
+        display_name: str | None = None,
+        version: str | None = None,
+        day: int | None = None,
+        resolved: bool | None = None,
+        last_n_rounds: int | None = None,
+        distinct_on_round: bool | None = None,
+    ) -> List[Dict]:
+        """Fetch submission score history for a model.
+
+        Args:
+            model_id (str): target model UUID
+            display_name (str, optional): score metric name filter
+            version (str, optional): score version filter
+            day (int, optional): day filter
+            resolved (bool, optional): resolved-state filter
+            tournament (int, optional): tournament filter, defaults to the
+                API instance tournament
+            last_n_rounds (int, optional): limit by most recent rounds
+            distinct_on_round (bool, optional): keep only the latest score per
+                round after applying other filters
+
+        Returns:
+            list of dicts: list of submission score entries
+        """
+
+        query = """
+          query($modelId: ID!
+                $displayName: String
+                $version: String
+                $day: Int
+                $resolved: Boolean
+                $tournament: Int
+                $lastNRounds: Int
+                $distinctOnRound: Boolean) {
+            submissionScores(modelId: $modelId
+                             displayName: $displayName
+                             version: $version
+                             day: $day
+                             resolved: $resolved
+                             tournament: $tournament
+                             lastNRounds: $lastNRounds
+                             distinctOnRound: $distinctOnRound) {
+                roundId
+                submissionId
+                roundNumber
+                roundResolveTime
+                roundScoreTime
+                roundCloseStakingTime
+                value
+                percentile
+                displayName
+                version
+                date
+                day
+                resolveDate
+                resolved
+            }
+          }
+        """
+        arguments = {
+            "modelId": model_id,
+            "displayName": display_name,
+            "version": version,
+            "day": day,
+            "resolved": resolved,
+            "tournament": self.tournament_id,
+            "lastNRounds": last_n_rounds,
+            "distinctOnRound": distinct_on_round,
+        }
+        scores = self.raw_query(query, arguments)["data"]["submissionScores"]
+        for score in scores:
+            utils.replace(score, "roundResolveTime", utils.parse_datetime_string)
+            utils.replace(score, "roundScoreTime", utils.parse_datetime_string)
+            utils.replace(score, "roundCloseStakingTime", utils.parse_datetime_string)
+            utils.replace(score, "date", utils.parse_datetime_string)
+            utils.replace(score, "resolveDate", utils.parse_datetime_string)
+        return scores
+
+    def pending_model_payouts(self, tournament: int | None = None) -> Dict:
+        """Fetch actual and pending payouts for the authenticated user's models.
+
+        Args:
+            tournament (int, optional): tournament filter, defaults to the API
+                instance tournament
+
+        Returns:
+            dict: payout groups with `actual` and `pending` lists
+        """
+
+        query = """
+          query($tournament: Int!) {
+            pendingModelPayouts(tournament: $tournament) {
+                actual {
+                    roundId
+                    roundNumber
+                    roundResolveTime
+                    modelId
+                    modelName
+                    modelDisplayName
+                    payoutNmr
+                    payoutValue
+                    currencySymbol
+                }
+                pending {
+                    roundId
+                    roundNumber
+                    roundResolveTime
+                    modelId
+                    modelName
+                    modelDisplayName
+                    payoutNmr
+                    payoutValue
+                    currencySymbol
+                }
+            }
+          }
+        """
+        arguments = {
+            "tournament": self.tournament_id if tournament is None else tournament
+        }
+        payouts = self.raw_query(query, arguments, authorization=True)["data"][
+            "pendingModelPayouts"
+        ]
+        for payout_type in ["actual", "pending"]:
+            for payout in payouts[payout_type]:
+                utils.replace(payout, "roundResolveTime", utils.parse_datetime_string)
+                utils.replace(payout, "payoutNmr", utils.parse_float_string)
+                utils.replace(payout, "payoutValue", utils.parse_float_string)
+        return payouts
+
     def round_model_performances_v2(self, model_id: str):
         """Fetch round model performance of a user.
+
+        DEPRECATED - please use `submission_scores` instead when possible.
 
         Args:
             model_id (str)
@@ -871,6 +1285,13 @@ class Api:
                     * percentile (`float`)
                     * value (`float`): value of the metric
         """
+        warnings.warn(
+            "`round_model_performances_v2` is deprecated because it relies on "
+            "`v2RoundModelPerformances`. Use `submission_scores` instead when "
+            "possible.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         query = """
           query($modelId: String!
@@ -1200,7 +1621,7 @@ class Api:
             return False
         if raw is None:
             return False
-        open_time = utils.parse_datetime_string(raw['openTime'])
+        open_time = utils.parse_datetime_string(raw["openTime"])
         now = datetime.datetime.now(tz=pytz.utc)
         is_new_round = open_time > now - datetime.timedelta(hours=hours)
         return is_new_round
