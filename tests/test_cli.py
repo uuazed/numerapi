@@ -1,8 +1,11 @@
+import importlib
+import importlib.metadata
 import os
 import pytest
 from click.testing import CliRunner
 from unittest.mock import patch
 
+import numerapi
 from numerapi import cli
 
 
@@ -117,3 +120,19 @@ def test_version():
     result = CliRunner().invoke(cli.version)
     # just testing if calling works fine
     assert result.exit_code == 0
+
+
+def test_version_uses_numerapi_distribution_name(monkeypatch):
+    called_package_names = []
+
+    def mock_version(package_name):
+        called_package_names.append(package_name)
+        return "2.23.1"
+
+    with monkeypatch.context() as context:
+        context.setattr(importlib.metadata, "version", mock_version)
+        importlib.reload(numerapi)
+        assert called_package_names == ["numerapi"]
+        assert numerapi.__version__ == "2.23.1"
+
+    importlib.reload(numerapi)
