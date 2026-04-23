@@ -3,9 +3,9 @@
 from importlib.metadata import version, PackageNotFoundError
 
 try:
-    __version__ = version("package-name")
+    __version__ = version("numerapi")
 except PackageNotFoundError:
-    __version__ = 'unknown'
+    __version__ = "unknown"
 
 
 # pylint: disable=wrong-import-position

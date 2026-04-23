@@ -2,6 +2,10 @@
 Notable changes to this project.
 
 
+## [2.23.1] - 2026-04-23
+- fix package version lookup
+
+
 ## [2.22.0] - 2026-01-05
 -- added `get_leaderboard` for crypto tournament
 
